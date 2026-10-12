@@ -1,7 +1,14 @@
-import { Controller, Get, Inject, Param, ParseUUIDPipe, Query } from '@nestjs/common';
+import { Controller, Get, Inject, Param, ParseUUIDPipe, Query, ValidationPipe } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { DiscoveryService } from './discovery.service.js';
 import { NearbyQueryDto } from './dto/nearby-query.dto.js';
+
+const nearbyValidationPipe = new ValidationPipe({
+  transform: true,
+  whitelist: true,
+  forbidNonWhitelisted: true,
+  expectedType: NearbyQueryDto,
+});
 
 @ApiTags('discovery')
 @Controller('discovery')
@@ -16,7 +23,7 @@ export class DiscoveryController {
 
   @Get('nearby')
   @ApiOperation({ summary: 'Find active services within a geospatial radius' })
-  findNearby(@Query() query: NearbyQueryDto) {
+  findNearby(@Query(nearbyValidationPipe) query: NearbyQueryDto) {
     return this.discovery.findNearby(query);
   }
 
