@@ -70,6 +70,23 @@ void describe('Identity and favorites API (e2e)', () => {
     assert.equal(response.statusCode, 401);
   });
 
+  void it('rejects malformed and oversized bearer headers', async () => {
+    for (const authorization of [
+      'Bearer',
+      'Basic user-a',
+      'Bearer  user-a',
+      'Bearer user-a extra',
+      `Bearer ${'a'.repeat(8193)}`,
+    ]) {
+      const response = await app.getHttpAdapter().getInstance().inject({
+        method: 'GET',
+        url: '/v1/me',
+        headers: { authorization },
+      });
+      assert.equal(response.statusCode, 401);
+    }
+  });
+
   void it('creates a local profile without exposing issuer or subject', async () => {
     const response = await app.getHttpAdapter().getInstance().inject({
       method: 'GET',
