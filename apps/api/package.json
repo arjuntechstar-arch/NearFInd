@@ -9,8 +9,8 @@
     "start": "node dist/main.js",
     "lint": "eslint \"src/**/*.ts\" \"test/**/*.ts\"",
     "typecheck": "tsc --noEmit",
-    "test": "jest --runInBand",
-    "test:coverage": "jest --coverage --runInBand",
+    "test": "tsx --test src/**/*.spec.ts",
+    "test:coverage": "node --import tsx --experimental-test-coverage --test src/**/*.spec.ts",
     "test:integration": "jest --config test/jest-e2e.json --runInBand"
   },
   "dependencies": {
@@ -35,20 +35,7 @@
     "eslint": "^9.37.0",
     "jest": "^30.2.0",
     "ts-jest": "^29.4.5",
+    "tsx": "^4.23.15",
     "typescript": "^5.9.3"
-  },
-  "jest": {
-    "preset": "ts-jest/presets/default-esm",
-    "extensionsToTreatAsEsm": [".ts"],
-    "moduleFileExtensions": ["js", "json", "ts"],
-    "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
-    "transform": {
-      "^.+\\.ts$": ["ts-jest", { "useESM": true, "tsconfig": "<rootDir>/../tsconfig.json" }]
-    },
-    "moduleNameMapper": { "^(\\.{1,2}/.*)\\.js$": "$1" },
-    "collectCoverageFrom": ["**/*.(t|j)s"],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
   }
 }
