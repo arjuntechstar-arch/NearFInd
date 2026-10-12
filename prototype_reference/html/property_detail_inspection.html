@@ -1,0 +1,420 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_stack" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "outline": "#907898", "on-primary-fixed": "#3d0028", "tertiary-fixed-dim": "#80d0f0", "on-surface-variant": "#604868", "inverse-on-surface": "#fef7ff", "tertiary-fixed": "#c8eaff", "secondary-fixed-dim": "#c8a8e8", "on-secondary-fixed": "#1a1030", "primary-fixed-dim": "#f0a0cc", "on-background": "#2e1a28", "on-error-container": "#9b1c1c", "surface-variant": "#f2e8f2", "secondary-container": "#eedcff", "surface-container-high": "#f2e8f2", "secondary-fixed": "#eedcff", "surface-container-highest": "#ece2ec", "on-tertiary-fixed": "#001a33", "on-error": "#ffffff", "tertiary-container": "#40c0ee", "inverse-primary": "#f0a0cc", "inverse-surface": "#2e1a28", "primary-container": "#f080c0", "surface-container": "#f8eef8", "on-secondary": "#ffffff", "surface-dim": "#e0d6e0", "error-container": "#ffe8e8", "on-primary-fixed-variant": "#a02070", "outline-variant": "#dcc8e0", "on-primary-container": "#2e1a28", "on-surface": "#2e1a28", "on-tertiary-container": "#00334d", "primary": "#e040a0", "on-primary": "#ffffff", "surface-container-lowest": "#ffffff", "error": "#e53e3e", "on-secondary-fixed-variant": "#4a3068", "surface-container-low": "#fbf2fb", "background": "#fef7ff", "secondary": "#7c52aa", "surface": "#fef7ff", "tertiary": "#0096cc", "on-tertiary": "#ffffff", "on-tertiary-fixed-variant": "#005580", "surface-bright": "#fef7ff", "on-secondary-container": "#2e2040", "surface-tint": "#e040a0", "primary-fixed": "#ffd6ee" }, "borderRadius": { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" }, "spacing": {}, "fontFamily": { "headline": ["DM Sans"], "display": ["DM Sans"], "body": ["DM Sans"], "label": ["DM Sans"] }, "fontSize": {} } } }</script><style>@layer base{html,body{width:100vw;margin:0;padding:0;background-color:#fef7ff;}body{overscroll-behavior:none;font-family:'DM Sans',sans-serif;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}body{min-height:max(884px,100dvh);}</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head><body class="bg-surface text-on-surface font-body flex flex-col min-h-screen selection:bg-primary-fixed selection:text-on-primary-fixed"><header class="fixed top-0 inset-x-0 z-50 bg-surface/85 backdrop-blur-xl shadow-[0_4px_20px_rgba(224,64,160,0.06)] pt-safe"><div class="h-16 px-4 flex items-center justify-between gap-3"><div class="flex items-center gap-2 min-w-0"><button aria-label="Go back" class="w-11 h-11 rounded-full bg-surface-container flex items-center justify-center text-on-surface hover:text-primary active:scale-95 transition-all shadow-[0_2px_8px_rgba(124,82,170,0.12)]" onclick="history.back()"><span class="material-symbols-outlined text-[20px]">arrow_back</span></button><img alt="SpotNear Logo" class="h-7 w-auto object-contain hidden xs:inline-block" src="https://lh3.googleusercontent.com/aida/AEtjO1W-hO1CJoe_ZrGQVw7CaAn8Ojs1s3DFXV8CwRiYf23_e6HEX9NaCMQpe38mqTX5EOigk4JrsKYcQUDi5FGeWIYQZVNCu5iFBrRGvW0ytM63fxlU5tA8Nt0d-46DZVgvTcNo9cN0K7NynCTuWzv04vRrHVtvYB2fg43vK78p2tYZ5WG1ARv7-oZTfnFClv83mkSP-R7ixjsYFhMmhuNSdkFBHy6qe4USMD1pKjBSwLtVx7MCWjLTHhEGWWU"><h1 class="text-base font-headline font-bold text-on-surface truncate tracking-tight">Property Detail &amp; Inspection</h1></div><div class="flex items-center gap-2 flex-shrink-0"><button aria-label="Action" class="w-11 h-11 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-primary active:scale-95 transition-all shadow-[0_2px_8px_rgba(124,82,170,0.12)]"><span class="material-symbols-outlined text-[20px]">share</span></button><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-primary-fixed" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_m3_vx2rFwDSBsQ-d5afnfoqeed2v-2O5xpiwyRnQvmM4OPhJiWCO3p4iqN6j_Ni9eJNsG4HXha5Uc9aWMrR3h-TJP1kF4UT3fIKE8_mzeLt-Hiu_34Pk40YwKQGCf21GgAN84xitBM5gTUFrVKnd2wCoBtwkcoBkvFIwBdpMhG2e3Vc-g-it_BRMFohrWJMC9i2tcKHgwR6C2_3H7xOq1fMnDb1ai8bJoSgTLsFQ9gvWFrjXGyAG"></div></div></header><main class="flex flex-col relative w-full pt-16 pb-safe bg-surface min-h-screen"><div class="flex flex-col w-full pb-24">
+<!-- Top Visual Gallery Hero Section -->
+<div class="relative w-full px-4 pt-3">
+<div class="relative w-full h-72 rounded-2xl overflow-hidden shadow-[0_12px_32px_rgba(224,64,160,0.18)] bg-surface-container">
+<img class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" data-alt="Vibrant modern glass-fronted commercial corner retail showroom on a sunny urban boulevard, wide floor-to-ceiling windows, polished concrete floor, lush tropical landscaping outside, bright daylight with warm pink and purple reflections on architectural glass, architectural photography" id="heroImagePreview" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCX7mD1kmPx1IvZCPISt0aq2W0Dpu1NGMIivUql7024Aa_lBbUyt-zqWk6TUuur9sbzP8yMv9h-BXlSBcOi27ry1u9fv4VFYFziOTIruhd9TI94T-HeEhoJ88yJnRFezXGPhGEf1O-XKSQ0eSJy_dA3FlQh09JvF9nzF5IKbF8bIDJS5eSXKdDT0jxhs49vKrsPBF4InKVe2ZeRFo9WVpllP5IuZkF6jdkw0TlY07NISJ5oG_XI00AC">
+<!-- Gradient Scrim for readable badges -->
+<div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/80 via-inverse-surface/20 to-transparent pointer-events-none"></div>
+<!-- Top Overlay Floating Pills -->
+<div class="absolute top-3 left-3 right-3 flex items-center justify-between gap-2 pointer-events-auto">
+<div class="flex items-center gap-1.5 bg-surface/90 backdrop-blur-md px-3 py-1.5 rounded-full shadow-[0_4px_14px_rgba(224,64,160,0.2)]">
+<span class="inline-block w-2.5 h-2.5 rounded-full bg-primary animate-pulse"></span>
+<span class="text-xs font-bold text-on-surface">For Lease</span>
+<span class="text-xs font-bold text-primary">• $3,400/mo</span>
+</div>
+<button aria-label="Favorite property" class="w-9 h-9 rounded-full bg-surface/90 backdrop-blur-md flex items-center justify-center text-primary active:scale-90 transition-transform shadow-[0_4px_12px_rgba(124,82,170,0.16)]" onclick="toggleSaveProperty(this)">
+<span class="material-symbols-outlined text-[20px]" id="heartIcon">favorite_border</span>
+</button>
+</div>
+<!-- Bottom Floating Media Counter & 360 Tour Trigger -->
+<div class="absolute bottom-3 inset-x-3 flex items-center justify-between gap-2">
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-tertiary text-on-tertiary text-xs font-bold shadow-[0_4px_16px_rgba(0,150,204,0.35)] active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[16px]">view_in_ar</span>
+<span>360° Tour Available</span>
+</button>
+<div class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-surface-container-highest/90 backdrop-blur-md text-on-surface text-xs font-bold shadow-[0_2px_8px_rgba(0,0,0,0.12)]">
+<span class="material-symbols-outlined text-[15px] text-primary">photo_library</span>
+<span>1/14 Photos</span>
+</div>
+</div>
+</div>
+<!-- Thumbnails Mini-Track -->
+<div class="flex items-center gap-2 mt-3 overflow-x-auto pb-1 scrollbar-none">
+<div class="relative flex-shrink-0 w-16 h-14 rounded-xl overflow-hidden shadow-sm ring-2 ring-primary">
+<img class="w-full h-full object-cover" data-alt="High-ceiling bright boutique retail showroom interior with clean white walls and warm downlighting in soft modern aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAi5oviE-k12-GHEKqxmYOVZBqdRGmJsumGaYoyXoIRwq1HcgACcolgxiqMV6E3_5BpA7Z3moQ0qICWX7OLJ_x1tFCnRO7HQAijUopeuC7dBe8vYMdW4kWoDd8Gnko4wJ08jgfCPT9NyV_C11JedyLnoMEan8QhscbGu4OM07ZzZOXF3JiHRP8WUgo8ox5a3wEhJdAfMnwPjf7J3Mis5mkAP8G7tzfcfLByuUUMgk9gMmmLZBcH8ejH">
+</div>
+<div class="relative flex-shrink-0 w-16 h-14 rounded-xl overflow-hidden shadow-sm opacity-80 hover:opacity-100 transition-opacity">
+<img class="w-full h-full object-cover" data-alt="Dedicated retail customer parking lot at modern commercial building with clear painted stalls and vibrant sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBK1-_00lqAyhfrzPO6gLvvjo6P29RlGkTaIM_i0jOFseXgEHwZj0Yx91JnvOSVBJ9YZOx7njUMavWZFt8ChjOjm3yiem-LDH2IkVmNowsqUQGnbqhNASvzqWNrSB5Uz0k-Sxjo-FcQsY86oOQ6iIhDAWfjOPXp-_0v3zGa_SHDcuohJ020iA93XKinaN5-7nGzYWHGgYFwBJbKdzWg5U0ySiqHNerCmUAIltkwDjdS9tNnEXUvG0p">
+</div>
+<div class="relative flex-shrink-0 w-16 h-14 rounded-xl overflow-hidden shadow-sm opacity-80 hover:opacity-100 transition-opacity">
+<img class="w-full h-full object-cover" data-alt="Spacious rear loading dock and storage inventory room of commercial retail property with clean floors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmLDZqZ-gky47ImANUWK9QgJRBFAknNHscMFlqXD12WHnxt8HiHY5wNFMr57fftBUvIT78EDx3mYWlKvXjggbJqsXxEaLaD8AUYplcxY4-qrYjDui-IuxVkI6FbwtCPOfHlorAD1e2Zv83xxaz4pVE4-Ix70-AlBKs1F9414Fn8gX5-uRcYqPmJKYGaLqgLLqZJgScEtvQ7F4EPI2XZBKw7xwD1YSqB56G1JlT2lfM-w-SIM4bSq-9">
+</div>
+<div class="relative flex-shrink-0 w-16 h-14 rounded-xl overflow-hidden shadow-sm opacity-80 hover:opacity-100 transition-opacity">
+<img class="w-full h-full object-cover" data-alt="Architectural street view corner showcase of commercial plaza under warm afternoon lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZbxPPlY4HNVgryK-NluUZzg-qXLHzynyMnGF7iyqjGZfxiJU5v1FPHjLe7knuMeuetvhmepddHy85XSCy4C1KclVXlSaMt5EC2vMjOAM9EPtS5pXVMp_3OwekSeqlXtXi9R8Yb7aXTR6h46jCePuZmZukSLRGhAPIuacAY3flNadlo15FyAEs_kgtHhl4RDe_LEKjQWpRFxrhk3bvDJupNQXuy9NXddHu2E0-wxeqEaq4rdr0vnxT">
+</div>
+<div class="flex-shrink-0 w-14 h-14 rounded-xl bg-secondary-container text-on-secondary-container font-bold text-xs flex flex-col items-center justify-center gap-0.5 shadow-sm">
+<span class="material-symbols-outlined text-[16px]">add_photo_alternate</span>
+<span>+10</span>
+</div>
+</div>
+</div>
+<!-- Title & Verified Badges -->
+<div class="px-4 mt-4">
+<div class="flex flex-wrap items-center gap-2 mb-2">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed text-xs font-bold">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+        Verified Title &amp; Deed
+      </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed text-xs font-bold">
+<span class="material-symbols-outlined text-[14px]">apartment</span>
+        Zoning: C-2 Commercial
+      </span>
+</div>
+<h2 class="text-xl font-headline font-bold text-on-surface tracking-tight leading-snug">Apex Plaza • Corner Retail &amp; Showroom Space</h2>
+<div class="flex items-center gap-1.5 mt-1.5 text-on-surface-variant text-sm">
+<span class="material-symbols-outlined text-primary text-[18px]">location_on</span>
+<span class="truncate font-medium">1420 Metro Parkway, Suite 100, Downtown Metro</span>
+</div>
+</div>
+<!-- Key Stats Bento Grid -->
+<div class="px-4 mt-5">
+<div class="grid grid-cols-2 gap-2.5">
+<!-- Stat 1 -->
+<div class="p-3.5 rounded-2xl bg-surface-container flex items-center gap-3 shadow-[0_4px_16px_rgba(224,64,160,0.06)]">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]">square_foot</span>
+</div>
+<div class="min-w-0">
+<p class="text-xs font-medium text-on-surface-variant truncate">Floor Area</p>
+<p class="text-base font-bold text-on-surface truncate">1,950 sq ft</p>
+</div>
+</div>
+<!-- Stat 2 -->
+<div class="p-3.5 rounded-2xl bg-surface-container flex items-center gap-3 shadow-[0_4px_16px_rgba(124,82,170,0.06)]">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center text-secondary flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]">store</span>
+</div>
+<div class="min-w-0">
+<p class="text-xs font-medium text-on-surface-variant truncate">Level</p>
+<p class="text-base font-bold text-on-surface truncate">Ground Floor</p>
+</div>
+</div>
+<!-- Stat 3 -->
+<div class="p-3.5 rounded-2xl bg-surface-container flex items-center gap-3 shadow-[0_4px_16px_rgba(0,150,204,0.06)]">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center text-tertiary flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]">local_parking</span>
+</div>
+<div class="min-w-0">
+<p class="text-xs font-medium text-on-surface-variant truncate">Dedicated Slots</p>
+<p class="text-base font-bold text-on-surface truncate">14 Car Stalls</p>
+</div>
+</div>
+<!-- Stat 4 -->
+<div class="p-3.5 rounded-2xl bg-surface-container flex items-center gap-3 shadow-[0_4px_16px_rgba(224,64,160,0.06)]">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]">trending_up</span>
+</div>
+<div class="min-w-0">
+<p class="text-xs font-medium text-on-surface-variant truncate">Corridor Traffic</p>
+<p class="text-base font-bold text-on-surface truncate">18k Daily</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Pricing & Lease Terms Breakdown Card -->
+<div class="px-4 mt-6">
+<div class="p-4 rounded-2xl bg-surface-container-low shadow-[0_6px_20px_rgba(124,82,170,0.08)]">
+<div class="flex items-center justify-between pb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[22px]">receipt_long</span>
+<h3 class="text-base font-headline font-bold text-on-surface">Pricing &amp; Lease Terms</h3>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-primary-fixed text-on-primary-fixed text-xs font-bold">NNN Lease</span>
+</div>
+<div class="space-y-2.5 pt-1">
+<div class="flex items-center justify-between py-1.5 px-3 rounded-xl bg-surface">
+<div>
+<p class="text-xs text-on-surface-variant font-medium">Base Monthly Rent</p>
+<p class="text-sm font-bold text-on-surface">$3,400 <span class="text-xs font-normal text-on-surface-variant">($1.74/sq ft/mo)</span></p>
+</div>
+<span class="material-symbols-outlined text-secondary text-[20px]">check_circle</span>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<div class="p-2.5 rounded-xl bg-surface">
+<p class="text-xs text-on-surface-variant font-medium">Security Deposit</p>
+<p class="text-sm font-bold text-on-surface mt-0.5">$6,800 <span class="text-xs font-normal text-on-surface-variant">(2 mos)</span></p>
+</div>
+<div class="p-2.5 rounded-xl bg-surface">
+<p class="text-xs text-on-surface-variant font-medium">Lease Term</p>
+<p class="text-sm font-bold text-on-surface mt-0.5">12 – 36 Mo. <span class="text-xs font-normal text-tertiary">Flexible</span></p>
+</div>
+</div>
+<!-- CAM and Utility Perks -->
+<div class="p-3 rounded-xl bg-surface-variant flex items-start gap-2.5">
+<span class="material-symbols-outlined text-secondary text-[20px] mt-0.5">verified_user</span>
+<div class="text-xs text-on-surface">
+<span class="font-bold">Included Amenities:</span> Exterior landscaping, commercial trash removal, and common area lighting are fully covered under base CAM agreement.
+          </div>
+</div>
+</div>
+</div>
+</div>
+<!-- SpotNear Telemetry Radar: Nearby Conveniences -->
+<div class="px-4 mt-6">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary text-[22px]">radar</span>
+<h3 class="text-base font-headline font-bold text-on-surface">SpotNear Telemetry Radar</h3>
+</div>
+<span class="text-xs font-bold text-tertiary bg-tertiary-fixed px-2.5 py-1 rounded-full">Within 0.5 mi</span>
+</div>
+<!-- Map Preview Placeholder Card -->
+<div class="relative w-full h-44 rounded-2xl overflow-hidden mb-3.5 shadow-[0_4px_16px_rgba(0,150,204,0.12)]">
+<div class="w-full h-full bg-cover bg-center" data-location="1420 Metro Parkway, Downtown Metro" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBnlABo3OseWU7Kq3IHCC9nrPE0qUhOlsUnoHL2NOOidsKCxOfsRswHwJBFngM4VLwhlx1VwFWLgQRIwDYH-9iQ_GR8OIphHUVpo_AI4pC0UHIV4nMHredQb75k3YtNhVnwJ6aNBH-pBSZVO70s9dItLJtrVM9OyieAOB-kbPkh7Jsu2mnNKfJmOhY6gUtbMadZFL-5pKHaA4Rg9hXFiQbSZ6WauuV-AzVz3ghYfeerjNpe-zU_2bkk')"></div>
+<div class="absolute inset-0 bg-inverse-surface/30 backdrop-blur-[1px]"></div>
+<!-- Center Pin on Radar Map -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+<div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-on-primary shadow-[0_0_20px_rgba(224,64,160,0.8)] animate-bounce">
+<span class="material-symbols-outlined text-[20px]">storefront</span>
+</div>
+<span class="px-2 py-0.5 mt-1 rounded-full bg-inverse-surface/90 text-inverse-on-surface text-[10px] font-bold">Apex Plaza</span>
+</div>
+<!-- Quick stats overlay -->
+<div class="absolute bottom-2 left-2 right-2 flex items-center justify-between bg-surface/90 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold text-on-surface">
+<span class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-[14px]">directions_walk</span>
+          WalkScore: 92
+        </span>
+<span class="flex items-center gap-1 text-secondary">
+<span class="material-symbols-outlined text-[14px]">local_shipping</span>
+          Freight Alley: Yes
+        </span>
+</div>
+</div>
+<!-- Proximity Chips Stack -->
+<div class="grid grid-cols-2 gap-2">
+<!-- Item 1 -->
+<div class="p-2.5 rounded-xl bg-surface-container flex items-center gap-2 shadow-sm">
+<div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-primary flex-shrink-0">
+<span class="material-symbols-outlined text-[18px]">local_gas_station</span>
+</div>
+<div class="min-w-0">
+<p class="text-xs font-bold text-on-surface truncate">Apex Fuel &amp; EV Hub</p>
+<p class="text-[11px] text-on-surface-variant font-medium">0.2 mi • 3 min walk</p>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="p-2.5 rounded-xl bg-surface-container flex items-center gap-2 shadow-sm">
+<div class="w-8 h-8 rounded-full bg-tertiary-fixed flex items-center justify-center text-tertiary flex-shrink-0">
+<span class="material-symbols-outlined text-[18px]">atm</span>
+</div>
+<div class="min-w-0">
+<p class="text-xs font-bold text-on-surface truncate">Chase ATM Plaza</p>
+<p class="text-[11px] text-on-surface-variant font-medium">0.3 mi • 5 min walk</p>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="p-2.5 rounded-xl bg-surface-container flex items-center gap-2 shadow-sm">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed flex items-center justify-center text-secondary flex-shrink-0">
+<span class="material-symbols-outlined text-[18px]">local_cafe</span>
+</div>
+<div class="min-w-0">
+<p class="text-xs font-bold text-on-surface truncate">Metro Artisan Cafe</p>
+<p class="text-[11px] text-on-surface-variant font-medium">0.1 mi • 1 min walk</p>
+</div>
+</div>
+<!-- Item 4 -->
+<div class="p-2.5 rounded-xl bg-surface-container flex items-center gap-2 shadow-sm">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant flex-shrink-0">
+<span class="material-symbols-outlined text-[18px]">local_hospital</span>
+</div>
+<div class="min-w-0">
+<p class="text-xs font-bold text-on-surface truncate">Downtown ER Hosp.</p>
+<p class="text-[11px] text-on-surface-variant font-medium">0.6 mi • 2 min drive</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Interactive Property Inspection & Booking Card -->
+<div class="px-4 mt-6">
+<div class="p-4 rounded-2xl bg-surface-container shadow-[0_8px_24px_rgba(224,64,160,0.1)]">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-primary text-[22px]">calendar_month</span>
+<h3 class="text-base font-headline font-bold text-on-surface">Schedule an Inspection</h3>
+</div>
+<p class="text-xs text-on-surface-variant mb-4">Book an in-person site visit or live virtual walkthrough with the listing agent.</p>
+<!-- Inspection Type Tabs -->
+<div class="flex p-1 bg-surface-container-high rounded-full mb-3.5">
+<button class="flex-1 py-1.5 rounded-full text-xs font-bold bg-primary text-on-primary shadow-[0_2px_10px_rgba(224,64,160,0.3)] transition-all flex items-center justify-center gap-1" id="modeInPerson" onclick="selectInspectionType('in-person')">
+<span class="material-symbols-outlined text-[15px]">person_pin_circle</span> In-Person Visit
+        </button>
+<button class="flex-1 py-1.5 rounded-full text-xs font-bold text-on-surface-variant hover:text-on-surface transition-all flex items-center justify-center gap-1" id="modeVirtual" onclick="selectInspectionType('virtual')">
+<span class="material-symbols-outlined text-[15px]">videocam</span> 360° Virtual
+        </button>
+</div>
+<!-- Date Selection Pills -->
+<p class="text-xs font-bold text-on-surface mb-2">Select Date</p>
+<div class="flex gap-2 overflow-x-auto pb-1 mb-3 scrollbar-none" id="datePickerContainer">
+<button class="date-btn flex-shrink-0 px-3.5 py-2 rounded-full text-xs font-bold bg-primary text-on-primary shadow-[0_4px_12px_rgba(224,64,160,0.25)] active:scale-95 transition-transform" onclick="selectDate(this, 'Today, Oct 24')">
+          Today, Oct 24
+        </button>
+<button class="date-btn flex-shrink-0 px-3.5 py-2 rounded-full text-xs font-bold bg-surface text-on-surface-variant hover:bg-surface-variant active:scale-95 transition-transform" onclick="selectDate(this, 'Tomorrow, Oct 25')">
+          Tomorrow, Oct 25
+        </button>
+<button class="date-btn flex-shrink-0 px-3.5 py-2 rounded-full text-xs font-bold bg-surface text-on-surface-variant hover:bg-surface-variant active:scale-95 transition-transform" onclick="selectDate(this, 'Sat, Oct 26')">
+          Sat, Oct 26
+        </button>
+</div>
+<!-- Time Slot Selection Pills -->
+<p class="text-xs font-bold text-on-surface mb-2">Select Time Window</p>
+<div class="grid grid-cols-3 gap-2 mb-4" id="timeSlotContainer">
+<button class="time-btn py-2 rounded-full text-xs font-bold bg-surface text-on-surface-variant hover:bg-surface-variant transition-all" onclick="selectTime(this)">
+          10:30 AM
+        </button>
+<button class="time-btn py-2 rounded-full text-xs font-bold bg-secondary text-on-secondary shadow-[0_4px_12px_rgba(124,82,170,0.25)] transition-all" onclick="selectTime(this)">
+          2:00 PM
+        </button>
+<button class="time-btn py-2 rounded-full text-xs font-bold bg-surface text-on-surface-variant hover:bg-surface-variant transition-all" onclick="selectTime(this)">
+          4:30 PM
+        </button>
+</div>
+<!-- Verified Agent Profile Subcard -->
+<div class="p-3 rounded-2xl bg-surface flex items-center justify-between gap-3 shadow-sm">
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="relative flex-shrink-0">
+<img class="w-11 h-11 rounded-full object-cover shadow-sm ring-2 ring-primary-fixed" data-alt="Warm and friendly portrait of David Lin, professional licensed commercial real estate broker in tailored blazer smiling in bright natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyCqwIexBzImoL2RC094J1mjdgIFIRUypyYfOwAa1Bu6UaVuGhnqt4WgxseSAP1qQ5CIFMUEDxl2RwZVGCbA0wuA9LCyXtCug9Dl7UGPz9Z9ssLYoQ3qmsI2BxadGSv12m6VJ99Zr2MLpwkXJbKA581ax47Q9ikZvPIiMN2Fmp4vtYCvMpGS_ymVMRJdo3wPrGJFD-mnPkiarbi5g8BOmwAvuutYIhhHi2H_kSt5fQCnbDD0L0XJRg">
+<span class="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-surface"></span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center gap-1">
+<p class="text-xs font-bold text-on-surface truncate">David Lin</p>
+<span class="material-symbols-outlined text-[14px] text-tertiary">check_circle</span>
+</div>
+<p class="text-[11px] text-on-surface-variant truncate">Lic #RE-8821 • Senior Advisor</p>
+</div>
+</div>
+<div class="flex items-center gap-1.5 flex-shrink-0">
+<button aria-label="Call Agent David Lin" class="w-9 h-9 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center hover:bg-secondary-fixed-dim active:scale-95 transition-transform shadow-sm" onclick="agentInteraction('call')">
+<span class="material-symbols-outlined text-[18px]">call</span>
+</button>
+<button aria-label="Chat with Agent David Lin" class="w-9 h-9 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center hover:bg-primary-fixed-dim active:scale-95 transition-transform shadow-sm" onclick="agentInteraction('chat')">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Sticky Bottom Reservation Bar -->
+<div class="fixed bottom-0 inset-x-0 z-40 bg-surface/90 backdrop-blur-xl px-4 py-3 shadow-[0_-4px_24px_rgba(224,64,160,0.12)]">
+<div class="flex items-center justify-between gap-3 max-w-lg mx-auto">
+<div>
+<p class="text-[11px] text-on-surface-variant font-bold uppercase tracking-wider">Lease Rate</p>
+<p class="text-lg font-headline font-bold text-primary leading-tight">$3,400<span class="text-xs font-medium text-on-surface"> /mo</span></p>
+</div>
+<button class="flex-1 max-w-[220px] py-3 px-4 rounded-full bg-primary text-on-primary font-bold text-sm flex items-center justify-center gap-2 shadow-[0_6px_20px_rgba(224,64,160,0.35)] active:scale-95 transition-all" id="reserveBtn" onclick="confirmInspectionBooking()">
+<span class="material-symbols-outlined text-[18px]">how_to_reg</span>
+<span>Reserve Slot</span>
+</button>
+</div>
+</div>
+<!-- Toast Notification element -->
+<div class="fixed top-20 inset-x-4 z-50 pointer-events-none transition-all duration-300 opacity-0 translate-y-[-10px] flex justify-center" id="bookingToast">
+<div class="bg-inverse-surface text-inverse-on-surface px-4 py-2.5 rounded-full shadow-[0_8px_20px_rgba(0,0,0,0.25)] flex items-center gap-2 text-xs font-bold">
+<span class="material-symbols-outlined text-primary text-[18px]" id="toastIcon">check_circle</span>
+<span id="toastMessage">Inspection slot confirmed with David Lin!</span>
+</div>
+</div>
+</div>
+<script>
+  let selectedMode = 'in-person';
+  let selectedDateStr = 'Today, Oct 24';
+  let selectedTimeStr = '2:00 PM';
+  let isSaved = false;
+
+  function selectInspectionType(mode) {
+    selectedMode = mode;
+    const btnInPerson = document.getElementById('modeInPerson');
+    const btnVirtual = document.getElementById('modeVirtual');
+
+    if (mode === 'in-person') {
+      btnInPerson.className = 'flex-1 py-1.5 rounded-full text-xs font-bold bg-primary text-on-primary shadow-[0_2px_10px_rgba(224,64,160,0.3)] transition-all flex items-center justify-center gap-1';
+      btnVirtual.className = 'flex-1 py-1.5 rounded-full text-xs font-bold text-on-surface-variant hover:text-on-surface transition-all flex items-center justify-center gap-1';
+      showToast('Switched to On-Site Visit');
+    } else {
+      btnVirtual.className = 'flex-1 py-1.5 rounded-full text-xs font-bold bg-tertiary text-on-tertiary shadow-[0_2px_10px_rgba(0,150,204,0.3)] transition-all flex items-center justify-center gap-1';
+      btnInPerson.className = 'flex-1 py-1.5 rounded-full text-xs font-bold text-on-surface-variant hover:text-on-surface transition-all flex items-center justify-center gap-1';
+      showToast('Switched to 360° Virtual Walkthrough');
+    }
+  }
+
+  function selectDate(element, dateStr) {
+    selectedDateStr = dateStr;
+    const allDateButtons = document.querySelectorAll('.date-btn');
+    allDateButtons.forEach(btn => {
+      btn.className = 'date-btn flex-shrink-0 px-3.5 py-2 rounded-full text-xs font-bold bg-surface text-on-surface-variant hover:bg-surface-variant active:scale-95 transition-transform';
+    });
+    element.className = 'date-btn flex-shrink-0 px-3.5 py-2 rounded-full text-xs font-bold bg-primary text-on-primary shadow-[0_4px_12px_rgba(224,64,160,0.25)] active:scale-95 transition-transform';
+  }
+
+  function selectTime(element) {
+    selectedTimeStr = element.innerText.trim();
+    const allTimeButtons = document.querySelectorAll('.time-btn');
+    allTimeButtons.forEach(btn => {
+      btn.className = 'time-btn py-2 rounded-full text-xs font-bold bg-surface text-on-surface-variant hover:bg-surface-variant transition-all';
+    });
+    element.className = 'time-btn py-2 rounded-full text-xs font-bold bg-secondary text-on-secondary shadow-[0_4px_12px_rgba(124,82,170,0.25)] transition-all';
+  }
+
+  function toggleSaveProperty(btn) {
+    isSaved = !isSaved;
+    const icon = document.getElementById('heartIcon');
+    if (isSaved) {
+      icon.innerText = 'favorite';
+      icon.style.fontVariationSettings = "'FILL' 1";
+      showToast('Property saved to Favorites!');
+    } else {
+      icon.innerText = 'favorite_border';
+      icon.style.fontVariationSettings = "'FILL' 0";
+      showToast('Removed from Favorites');
+    }
+  }
+
+  function agentInteraction(type) {
+    if (type === 'call') {
+      showToast('Connecting to David Lin (+1 555-019-8821)...');
+    } else {
+      showToast('Opening instant chat window...');
+    }
+  }
+
+  function confirmInspectionBooking() {
+    const reserveBtn = document.getElementById('reserveBtn');
+    reserveBtn.disabled = true;
+    reserveBtn.innerHTML = `
+      <span class="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+      <span>Confirming...</span>
+    `;
+
+    setTimeout(() => {
+      reserveBtn.disabled = false;
+      reserveBtn.innerHTML = `
+        <span class="material-symbols-outlined text-[18px]">done_all</span>
+        <span>Reserved!</span>
+      `;
+      reserveBtn.classList.remove('bg-primary');
+      reserveBtn.classList.add('bg-secondary');
+
+      showToast(`Reserved for ${selectedDateStr} @ ${selectedTimeStr}!`);
+    }, 700);
+  }
+
+  function showToast(msg) {
+    const toast = document.getElementById('bookingToast');
+    const toastMsg = document.getElementById('toastMessage');
+    toastMsg.innerText = msg;
+    toast.classList.remove('opacity-0', 'translate-y-[-10px]');
+    toast.classList.add('opacity-100', 'translate-y-0');
+
+    setTimeout(() => {
+      toast.classList.remove('opacity-100', 'translate-y-0');
+      toast.classList.add('opacity-0', 'translate-y-[-10px]');
+    }, 2400);
+  }
+</script></main></body></html>

@@ -1,0 +1,428 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_tab" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "outline": "#907898", "on-primary-fixed": "#3d0028", "tertiary-fixed-dim": "#80d0f0", "on-surface-variant": "#604868", "inverse-on-surface": "#fef7ff", "tertiary-fixed": "#c8eaff", "secondary-fixed-dim": "#c8a8e8", "on-secondary-fixed": "#1a1030", "primary-fixed-dim": "#f0a0cc", "on-background": "#2e1a28", "on-error-container": "#9b1c1c", "surface-variant": "#f2e8f2", "secondary-container": "#eedcff", "surface-container-high": "#f2e8f2", "secondary-fixed": "#eedcff", "surface-container-highest": "#ece2ec", "on-tertiary-fixed": "#001a33", "on-error": "#ffffff", "tertiary-container": "#40c0ee", "inverse-primary": "#f0a0cc", "inverse-surface": "#2e1a28", "primary-container": "#f080c0", "surface-container": "#f8eef8", "on-secondary": "#ffffff", "surface-dim": "#e0d6e0", "error-container": "#ffe8e8", "on-primary-fixed-variant": "#a02070", "outline-variant": "#dcc8e0", "on-primary-container": "#2e1a28", "on-surface": "#2e1a28", "on-tertiary-container": "#00334d", "primary": "#e040a0", "on-primary": "#ffffff", "surface-container-lowest": "#ffffff", "error": "#e53e3e", "on-secondary-fixed-variant": "#4a3068", "surface-container-low": "#fbf2fb", "background": "#fef7ff", "secondary": "#7c52aa", "surface": "#fef7ff", "tertiary": "#0096cc", "on-tertiary": "#ffffff", "on-tertiary-fixed-variant": "#005580", "surface-bright": "#fef7ff", "on-secondary-container": "#2e2040", "surface-tint": "#e040a0", "primary-fixed": "#ffd6ee" }, "borderRadius": { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" }, "spacing": {}, "fontFamily": { "headline": ["DM Sans"], "display": ["DM Sans"], "body": ["DM Sans"], "label": ["DM Sans"] }, "fontSize": {} } } }</script><style>@layer base{html,body{width:100vw;margin:0;padding:0;background-color:#fef7ff;}body{overscroll-behavior:none;font-family:'DM Sans',sans-serif;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}body{min-height:max(884px,100dvh);}</style></head><body class="bg-surface text-on-surface font-body flex flex-col min-h-screen selection:bg-primary-fixed selection:text-on-primary-fixed"><header class="fixed top-0 inset-x-0 z-50 bg-surface/85 backdrop-blur-xl shadow-[0_4px_20px_rgba(224,64,160,0.06)] pt-safe"><div class="h-16 px-4 flex items-center justify-between gap-3"><div class="flex items-center gap-2.5 min-w-0"><img alt="SpotNear Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1W-hO1CJoe_ZrGQVw7CaAn8Ojs1s3DFXV8CwRiYf23_e6HEX9NaCMQpe38mqTX5EOigk4JrsKYcQUDi5FGeWIYQZVNCu5iFBrRGvW0ytM63fxlU5tA8Nt0d-46DZVgvTcNo9cN0K7NynCTuWzv04vRrHVtvYB2fg43vK78p2tYZ5WG1ARv7-oZTfnFClv83mkSP-R7ixjsYFhMmhuNSdkFBHy6qe4USMD1pKjBSwLtVx7MCWjLTHhEGWWU"><div class="flex flex-col min-w-0"><span class="font-headline font-bold text-base leading-tight tracking-tight text-on-surface flex items-center gap-1.5">SpotNear <span class="text-xs font-medium text-primary hidden sm:inline">• Essential Hub</span></span><button class="flex items-center gap-1 text-xs text-on-surface-variant font-medium hover:text-primary transition-colors text-left truncate"><span class="material-symbols-outlined text-sm text-secondary">location_on</span><span class="truncate font-label max-w-[130px]">Downtown, Metro City</span><span class="material-symbols-outlined text-xs text-outline">expand_more</span></button></div></div><div class="flex items-center gap-2 flex-shrink-0"><a aria-label="Report or add spot" class="w-11 h-11 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-primary active:scale-95 transition-all shadow-[0_2px_8px_rgba(124,82,170,0.12)]" data-path="add-report-service-community-contribution" href="#"><span class="material-symbols-outlined text-[20px]">add_location_alt</span></a><a aria-label="User profile and settings" class="relative rounded-full focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-transform active:scale-95" data-path="user-profile-vehicle-emergency-contacts-settings" href="#"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-primary-fixed" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_m3_vx2rFwDSBsQ-d5afnfoqeed2v-2O5xpiwyRnQvmM4OPhJiWCO3p4iqN6j_Ni9eJNsG4HXha5Uc9aWMrR3h-TJP1kF4UT3fIKE8_mzeLt-Hiu_34Pk40YwKQGCf21GgAN84xitBM5gTUFrVKnd2wCoBtwkcoBkvFIwBdpMhG2e3Vc-g-it_BRMFohrWJMC9i2tcKHgwR6C2_3H7xOq1fMnDb1ai8bJoSgTLsFQ9gvWFrjXGyAG"><span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-primary rounded-full ring-2 ring-surface"></span></a></div></div></header><main class="flex flex-col relative w-full pt-16 pb-28 bg-surface min-h-screen"><div class="flex flex-col w-full px-4 pt-2 pb-8 gap-5 max-w-md mx-auto">
+<!-- Top Fuel Type Switcher -->
+<section class="flex flex-col gap-2.5">
+<div class="flex items-center justify-between">
+<span class="font-headline font-bold text-base text-on-surface flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings: 'FILL' 1;">local_gas_station</span>
+        Select Fuel Type
+      </span>
+<span class="text-xs font-label font-medium text-secondary bg-secondary-container px-2.5 py-0.5 rounded-full">
+        Realtime Radar
+      </span>
+</div>
+<!-- Horizontal scrollable fuel pills -->
+<div class="flex items-center gap-2 overflow-x-auto py-1 -mx-4 px-4 scrollbar-none" id="fuel-type-selector">
+<button class="fuel-tab flex-shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-full text-xs font-label font-bold bg-primary text-on-primary shadow-[0_4px_16px_rgba(224,64,160,0.28)] transition-transform active:scale-95" data-fuel="regular">
+<span class="material-symbols-outlined text-[16px]">local_gas_station</span>
+        Regular 87
+      </button>
+<button class="fuel-tab flex-shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-full text-xs font-label font-bold bg-surface-container text-on-surface-variant hover:text-primary transition-all active:scale-95" data-fuel="diesel">
+<span class="material-symbols-outlined text-[16px]">oil_barrel</span>
+        Diesel Clean
+      </button>
+<button class="fuel-tab flex-shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-full text-xs font-label font-bold bg-surface-container text-on-surface-variant hover:text-primary transition-all active:scale-95" data-fuel="premium">
+<span class="material-symbols-outlined text-[16px]">speed</span>
+        Premium 93
+      </button>
+<button class="fuel-tab flex-shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-full text-xs font-label font-bold bg-surface-container text-on-surface-variant hover:text-primary transition-all active:scale-95" data-fuel="ev">
+<span class="material-symbols-outlined text-[16px]">bolt</span>
+        EV Supercharge
+      </button>
+</div>
+</section>
+<!-- Route Corridor & Optimization Bar -->
+<section class="bg-surface-container-lowest rounded-2xl p-4 shadow-[0_4px_20px_rgba(124,82,170,0.08)] flex flex-col gap-3">
+<div class="flex items-center justify-between gap-2">
+<div class="flex items-center gap-2 min-w-0">
+<div class="w-9 h-9 rounded-full bg-primary-fixed flex items-center justify-center text-primary flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]">alt_route</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="text-[11px] font-label font-bold uppercase tracking-wider text-secondary">Active Corridor</span>
+<span class="text-xs font-headline font-bold text-on-surface truncate">Downtown Metro → North Airport</span>
+</div>
+</div>
+<button class="flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold font-label bg-primary text-on-primary shadow-[0_4px_12px_rgba(224,64,160,0.24)] hover:scale-105 active:scale-95 transition-all flex items-center gap-1" id="optimize-btn">
+<span class="material-symbols-outlined text-[15px]">auto_fix_high</span>
+        Optimize
+      </button>
+</div>
+<div class="flex items-center justify-between text-xs text-on-surface-variant font-medium bg-surface-container-low px-3 py-1.5 rounded-full">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm text-tertiary">straighten</span>
+        14.2 mi corridor
+      </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm text-primary">traffic</span>
+        Moderate Flow (+3m)
+      </span>
+<span class="text-secondary font-bold">I-94 Expwy</span>
+</div>
+<!-- Savings Callout Card -->
+<div class="relative overflow-hidden rounded-xl bg-gradient-to-r from-primary-fixed to-secondary-container p-3.5 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-lowest flex items-center justify-center text-primary shadow-[0_2px_8px_rgba(224,64,160,0.18)] flex-shrink-0">
+<span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">savings</span>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<div class="flex items-center gap-1.5">
+<span class="text-xs font-bold text-on-primary-fixed leading-tight">Smart Stop Suggestion</span>
+<span class="px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-primary text-on-primary">Save $4.80</span>
+</div>
+<p class="text-[11px] text-on-secondary-container leading-normal mt-0.5">
+          Refuel at <strong class="text-on-primary-fixed">Exit 14</strong> instead of Exit 8 for optimal tank pricing.
+        </p>
+</div>
+<!-- Mini Sparkline inline indicator -->
+<svg class="w-12 h-8 flex-shrink-0" fill="none" viewBox="0 0 48 32">
+<path d="M2 24 C 10 24, 14 8, 24 16 C 32 22, 38 6, 46 4" stroke="#e040a0" stroke-linecap="round" stroke-width="2.5"></path>
+<circle cx="46" cy="4" fill="#e040a0" r="3"></circle>
+</svg>
+</div>
+</section>
+<!-- Interactive Corridor Price Tracker -->
+<section class="bg-surface-container-lowest rounded-2xl p-4 shadow-[0_4px_20px_rgba(124,82,170,0.08)] flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-secondary text-[18px]">timeline</span>
+<span class="font-headline font-bold text-sm text-on-surface">Highway Elevation &amp; Price Strip</span>
+</div>
+<span class="text-[11px] font-label text-tertiary font-bold flex items-center gap-0.5">
+        Exit 4 to 22
+      </span>
+</div>
+<!-- Visual Strip Diagram -->
+<div class="relative w-full py-4 px-2">
+<!-- Gradient track line -->
+<div class="h-2 w-full bg-gradient-to-r from-secondary-fixed via-tertiary-fixed to-primary-fixed rounded-full relative"></div>
+<!-- Station Markers positioned along corridor -->
+<div class="flex justify-between items-end relative -mt-5 px-1">
+<!-- Station 1: Exit 6 -->
+<div class="flex flex-col items-center gap-1 cursor-pointer group active:scale-95 transition-transform" onclick="selectPin(1)">
+<div class="bg-surface-container px-1.5 py-0.5 rounded-full text-[10px] font-bold text-on-surface-variant shadow-sm group-hover:bg-primary-fixed">
+            Exit 6
+          </div>
+<div class="w-6 h-6 rounded-full bg-error text-on-error flex items-center justify-center font-bold text-[10px] shadow-[0_2px_8px_rgba(229,62,62,0.35)] ring-2 ring-surface-container-lowest">
+            $3.55
+          </div>
+<span class="text-[9px] font-medium text-on-surface-variant">Shell</span>
+</div>
+<!-- Station 2: Exit 11 (Lowest / Best) -->
+<div class="flex flex-col items-center gap-1 cursor-pointer group active:scale-95 transition-transform" onclick="selectPin(2)">
+<div class="bg-primary text-on-primary px-2 py-0.5 rounded-full text-[9px] font-bold shadow-sm animate-pulse">
+            ★ Best Pick
+          </div>
+<div class="w-7 h-7 rounded-full bg-tertiary text-on-tertiary flex items-center justify-center font-bold text-[11px] shadow-[0_3px_12px_rgba(0,150,204,0.4)] ring-2 ring-surface-container-lowest">
+            $3.37
+          </div>
+<span class="text-[9px] font-bold text-tertiary">Downtown Ex.</span>
+</div>
+<!-- Station 3: Exit 15 -->
+<div class="flex flex-col items-center gap-1 cursor-pointer group active:scale-95 transition-transform" onclick="selectPin(3)">
+<div class="bg-surface-container px-1.5 py-0.5 rounded-full text-[10px] font-bold text-on-surface-variant shadow-sm group-hover:bg-primary-fixed">
+            Exit 15
+          </div>
+<div class="w-6 h-6 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-bold text-[10px] shadow-[0_2px_8px_rgba(124,82,170,0.35)] ring-2 ring-surface-container-lowest">
+            $3.49
+          </div>
+<span class="text-[9px] font-medium text-on-surface-variant">Apex</span>
+</div>
+<!-- Station 4: Exit 21 -->
+<div class="flex flex-col items-center gap-1 cursor-pointer group active:scale-95 transition-transform" onclick="selectPin(4)">
+<div class="bg-surface-container px-1.5 py-0.5 rounded-full text-[10px] font-bold text-on-surface-variant shadow-sm group-hover:bg-primary-fixed">
+            Exit 21
+          </div>
+<div class="w-6 h-6 rounded-full bg-error text-on-error flex items-center justify-center font-bold text-[10px] shadow-[0_2px_8px_rgba(229,62,62,0.35)] ring-2 ring-surface-container-lowest">
+            $3.62
+          </div>
+<span class="text-[9px] font-medium text-on-surface-variant">Airport Gate</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Ranked Price Comparison Cards -->
+<section class="flex flex-col gap-3">
+<div class="flex items-center justify-between px-1">
+<h2 class="font-headline font-bold text-base text-on-surface flex items-center gap-1.5">
+<span>Ranked Corridor Stops</span>
+<span class="text-xs font-label font-bold text-primary bg-primary-fixed px-2 py-0.5 rounded-full">4 Options</span>
+</h2>
+<span class="text-xs text-on-surface-variant font-medium">Sorted by Best Value</span>
+</div>
+<!-- Card 1: Best Pick / Lowest -->
+<article class="bg-surface-container-lowest rounded-2xl p-4 shadow-[0_6px_24px_rgba(224,64,160,0.12)] flex flex-col gap-3 relative overflow-hidden transition-all duration-200 hover:scale-[1.01]" id="station-card-1">
+<div class="absolute top-0 right-0 bg-primary text-on-primary text-[10px] font-bold px-3 py-1 rounded-bl-xl shadow-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+        Lowest on Corridor
+      </div>
+<div class="flex items-start gap-3 pt-1">
+<div class="w-16 h-16 rounded-xl bg-surface-container overflow-hidden flex-shrink-0 shadow-sm relative">
+<img class="w-full h-full object-cover" data-alt="A modern, cheerful urban gas station with clean pink and bright blue illuminated pump canopies at golden hour, crisp friendly architectural photography, candy aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDljk3ExQCtMLbR3p102MGafomIGulR8I4aik7PZkI0KMbKa5ECU7l0qVf5Ts3KwU258KjrgFe39ejtBvSaJDHQckyFS1sVp13unThf4bYyiN_qDBcA3yj6SlsYh2sh7oOjMiZ-dODBA4CVBCMUnj3E_IgK_k9yjp1jhCeIkcMXarxbAj8jiilPI9V5w8cO4iYA0VGmLLbQsYIKK7c7Zc8ZhAgrMY3hT_upglLTpKNhFUNBhb4JhMVw">
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<div class="flex items-center gap-1">
+<h3 class="font-headline font-bold text-sm text-on-surface truncate">Downtown Express Fuel</h3>
+</div>
+<div class="flex items-baseline gap-1.5 mt-0.5">
+<span class="text-2xl font-display font-extrabold text-primary leading-tight">$3.37</span>
+<span class="text-xs font-label text-on-surface-variant font-medium">/ gal</span>
+<span class="text-[11px] font-bold text-tertiary bg-tertiary-fixed px-1.5 py-0.2 rounded-full">12¢ under avg</span>
+</div>
+<div class="flex items-center gap-2 text-[11px] text-on-surface-variant mt-1">
+<span class="flex items-center gap-0.5 font-bold text-secondary">
+<span class="material-symbols-outlined text-[13px]">navigation</span>
+              0.8 mi on route
+            </span>
+<span>•</span>
+<span class="text-on-surface-variant">Exit 11</span>
+</div>
+</div>
+</div>
+<!-- Perks Badges -->
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="px-2.5 py-1 rounded-full text-[11px] font-medium bg-surface-container text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-tertiary">schedule</span>
+          Open 24/7
+        </span>
+<span class="px-2.5 py-1 rounded-full text-[11px] font-medium bg-surface-container text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-secondary">air</span>
+          Free Tire Air
+        </span>
+<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-primary-fixed text-primary flex items-center gap-1 ml-auto">
+<span class="material-symbols-outlined text-[13px]">payments</span>
+          Save $3.40 / tank
+        </span>
+</div>
+<div class="flex items-center gap-2 pt-1">
+<button class="flex-1 py-2.5 px-4 rounded-full bg-primary text-on-primary font-bold text-xs shadow-[0_4px_16px_rgba(224,64,160,0.25)] flex items-center justify-center gap-1.5 hover:scale-102 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[17px]">directions_car</span>
+          Navigate to Exit 11
+        </button>
+<button aria-label="Save Station" class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-primary active:scale-90 transition-all flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]">bookmark_border</span>
+</button>
+</div>
+</article>
+<!-- Card 2: Apex Fuel Hub & EV -->
+<article class="bg-surface-container-lowest rounded-2xl p-4 shadow-[0_4px_16px_rgba(124,82,170,0.06)] flex flex-col gap-3 transition-all duration-200 hover:scale-[1.01]" id="station-card-2">
+<div class="flex items-start gap-3">
+<div class="w-16 h-16 rounded-xl bg-surface-container overflow-hidden flex-shrink-0 shadow-sm relative">
+<img class="w-full h-full object-cover" data-alt="Vibrant clean highway convenience depot and ultra modern electric charging station with warm neon lighting and lavender purple accents, energetic candy palette photo." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbhMUHfZLRN0mqNlkj2IeOcGiGcQ_mfy3GshiDVrnkQTYNIBm1rVczPpydG-_HJUPZRbdBPjZleoAGwSMdU2mM2qZFmsx3bJ2NbL1D5jgkNXea8WIxi8bvKh8HjME5S8ByponfD8I4ec0XsVsl4LygfAKudG6BEwyQWWQw7WISzzTYq4CkwmlbosjVsu4nESyIptRHf51ujxzA6ch3DcUXGDKFOnuh9iLBMrf6bcIhEbjb2cGVqxvp">
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<div class="flex items-center gap-1.5">
+<h3 class="font-headline font-bold text-sm text-on-surface truncate">Apex Fuel Hub &amp; EV</h3>
+<span class="material-symbols-outlined text-secondary text-[16px]" title="SpotNear Verified">check_circle</span>
+</div>
+<div class="flex items-baseline gap-1.5 mt-0.5">
+<span class="text-2xl font-display font-extrabold text-on-surface leading-tight">$3.45</span>
+<span class="text-xs font-label text-on-surface-variant font-medium">/ gal</span>
+<span class="text-[11px] font-bold text-secondary bg-secondary-container px-1.5 py-0.2 rounded-full">4.8 ★ (140)</span>
+</div>
+<div class="flex items-center gap-2 text-[11px] text-on-surface-variant mt-1">
+<span class="flex items-center gap-0.5 font-bold text-secondary">
+<span class="material-symbols-outlined text-[13px]">navigation</span>
+              0.4 mi detour
+            </span>
+<span>•</span>
+<span class="text-on-surface-variant">Exit 15</span>
+</div>
+</div>
+</div>
+<!-- Perks Badges -->
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="px-2.5 py-1 rounded-full text-[11px] font-medium bg-surface-container text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-tertiary">local_car_wash</span>
+          Touchless Wash -20%
+        </span>
+<span class="px-2.5 py-1 rounded-full text-[11px] font-medium bg-surface-container text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-primary">local_cafe</span>
+          Craft Coffee
+        </span>
+</div>
+<div class="flex items-center gap-2 pt-1">
+<button class="flex-1 py-2.5 px-4 rounded-full bg-secondary text-on-secondary font-bold text-xs shadow-[0_4px_16px_rgba(124,82,170,0.22)] flex items-center justify-center gap-1.5 hover:scale-102 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[17px]">directions_car</span>
+          Navigate to Exit 15
+        </button>
+<button aria-label="Save Station" class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-primary active:scale-90 transition-all flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]">bookmark_border</span>
+</button>
+</div>
+</article>
+<!-- Card 3: Costco Wholesale Gas -->
+<article class="bg-surface-container-lowest rounded-2xl p-4 shadow-[0_4px_16px_rgba(124,82,170,0.06)] flex flex-col gap-3 transition-all duration-200 hover:scale-[1.01]" id="station-card-3">
+<div class="flex items-start gap-3">
+<div class="w-16 h-16 rounded-xl bg-surface-container overflow-hidden flex-shrink-0 shadow-sm relative">
+<img class="w-full h-full object-cover" data-alt="Multi lane busy warehouse gas pumps on sunny afternoon with cheerful signage and blue sky, high key lively photo, bright clean saturated candy aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDi8YXy-qpc7PSKxMCsRv8imnFgcvECIQ-3lY3rF_fEotugs0lfsOckJrf7h66jpMCXTPZjMLU8KPrviHq33pijkqf--n2pFxaMEwLlIsG34IhdgfmDrBvmEMqeA_xIHmuXawcMk8dD5cdKvaVzhtO1gpSHzgqEYIB4nnxqs85jot9VjiMDMV6FIXQSjOdIquLixKv4GHHR4dYQ-uBmoii69XNmYJO1h7tDd8utUq_ReQWP_PTjzKi-">
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<div class="flex items-center gap-1.5">
+<h3 class="font-headline font-bold text-sm text-on-surface truncate">Costco Wholesale Gas</h3>
+<span class="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-surface-container-high text-on-surface-variant">Member</span>
+</div>
+<div class="flex items-baseline gap-1.5 mt-0.5">
+<span class="text-2xl font-display font-extrabold text-on-surface leading-tight">$3.32</span>
+<span class="text-xs font-label text-on-surface-variant font-medium">/ gal</span>
+<span class="text-[10px] font-bold text-error bg-error-container px-1.5 py-0.2 rounded-full flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[10px]">hourglass_top</span>
+              12m wait
+            </span>
+</div>
+<div class="flex items-center gap-2 text-[11px] text-on-surface-variant mt-1">
+<span class="flex items-center gap-0.5 font-bold text-error">
+<span class="material-symbols-outlined text-[13px]">warning</span>
+              2.4 mi detour (+6 mins)
+            </span>
+</div>
+</div>
+</div>
+<!-- Perks Badges -->
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="px-2.5 py-1 rounded-full text-[11px] font-medium bg-surface-container text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-secondary">credit_card</span>
+          Membership Required
+        </span>
+<span class="px-2.5 py-1 rounded-full text-[11px] font-medium bg-surface-container text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-primary">verified_user</span>
+          Top Tier Detergent
+        </span>
+</div>
+<div class="flex items-center gap-2 pt-1">
+<button class="flex-1 py-2 px-4 rounded-full bg-surface-container text-on-surface-variant hover:text-primary font-bold text-xs flex items-center justify-center gap-1.5 hover:scale-102 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+          View Detour Details
+        </button>
+</div>
+</article>
+<!-- Card 4: Shell Helix Interstate -->
+<article class="bg-surface-container-lowest rounded-2xl p-4 shadow-[0_4px_16px_rgba(124,82,170,0.06)] flex flex-col gap-3 transition-all duration-200 hover:scale-[1.01]" id="station-card-4">
+<div class="flex items-start gap-3">
+<div class="w-16 h-16 rounded-xl bg-surface-container overflow-hidden flex-shrink-0 shadow-sm relative">
+<img class="w-full h-full object-cover" data-alt="High traffic highway roadside gas stop station with large digital LED pricing billboard, soft evening violet sky lighting, crisp clean aesthetic photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDv2KDXPPBvoYaCEwgAF8uFekWtDke8nzXX5wqL1IthrKdwCQRx1Nk6Na_NYIRfhF7hUFnevk46uOPvGkz0SnTQlpmrzvsQ_smW9qXz_uvta96fqk80L5vPqfyFENborOUfEENpj1zS-cXIL1qP1s0zTKL-5hXl_een_Bbdx7rTTQunzeN6vDKgdQ2XkXXoUzxwy9WTDSDQnWZdIBEuV8Ln9KAnPXHf56ntgl8clSTZq0ZNKofWPncQ">
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<div class="flex items-center gap-1">
+<h3 class="font-headline font-bold text-sm text-on-surface truncate">Shell Helix Interstate</h3>
+</div>
+<div class="flex items-baseline gap-1.5 mt-0.5">
+<span class="text-2xl font-display font-extrabold text-on-surface-variant leading-tight">$3.59</span>
+<span class="text-xs font-label text-on-surface-variant font-medium">/ gal</span>
+<span class="text-[11px] font-bold text-on-surface-variant bg-surface-container px-1.5 py-0.2 rounded-full">+10¢ vs route avg</span>
+</div>
+<div class="flex items-center gap-2 text-[11px] text-on-surface-variant mt-1">
+<span class="flex items-center gap-0.5 font-bold text-on-surface-variant">
+<span class="material-symbols-outlined text-[13px]">location_on</span>
+              4.1 mi ahead
+            </span>
+<span>•</span>
+<span class="text-on-surface-variant">Exit 18</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2 pt-1">
+<button class="flex-1 py-2 px-4 rounded-full bg-surface-container text-on-surface-variant hover:text-primary font-bold text-xs flex items-center justify-center gap-1.5 hover:scale-102 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[16px]">info</span>
+          View Details
+        </button>
+</div>
+</article>
+</section>
+<!-- Price Trend & Community Scouts Banner -->
+<section class="bg-gradient-to-br from-surface-container to-surface-container-high rounded-2xl p-4 shadow-[0_4px_20px_rgba(124,82,170,0.06)] flex flex-col gap-3">
+<div class="flex items-start gap-3">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed text-tertiary flex items-center justify-center flex-shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[22px]">trending_down</span>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<div class="flex items-center gap-1.5">
+<span class="text-xs font-bold text-on-surface">Downtown Metro Price Trend</span>
+<span class="text-[10px] font-bold text-tertiary bg-tertiary-fixed px-1.5 py-0.2 rounded-full">-4¢ in 24h</span>
+</div>
+<p class="text-[11px] text-on-surface-variant leading-relaxed mt-0.5">
+          Corridor prices are trending downwards. Verified by <strong class="text-secondary font-bold">340 active Scouts</strong> today.
+        </p>
+</div>
+</div>
+<!-- Quick scout contribution action -->
+<div class="flex items-center justify-between bg-surface-container-lowest p-2.5 rounded-xl shadow-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">verified</span>
+<span class="text-xs font-bold text-on-surface">Spot a different price?</span>
+</div>
+<button class="px-3.5 py-1.5 rounded-full text-xs font-bold font-label bg-primary-fixed text-on-primary-fixed hover:bg-primary hover:text-on-primary active:scale-95 transition-all flex items-center gap-1 shadow-[0_2px_8px_rgba(224,64,160,0.15)]" id="report-price-btn">
+<span class="material-symbols-outlined text-[15px]">add_task</span>
+        Report Price +10 XP
+      </button>
+</div>
+</section>
+<!-- Toast Notification Container for interactive delight -->
+<div class="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 bg-inverse-surface text-inverse-on-surface px-4 py-2.5 rounded-full shadow-2xl flex items-center gap-2 text-xs font-bold opacity-0 pointer-events-none transition-all duration-300" id="scout-toast">
+<span class="material-symbols-outlined text-primary text-sm">celebration</span>
+<span id="toast-message">Thanks Scout! +10 XP awarded!</span>
+</div>
+</div>
+<script>
+  // Fuel Tab Selection micro-interaction
+  const fuelTabs = document.querySelectorAll('.fuel-tab');
+  fuelTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      fuelTabs.forEach(t => {
+        t.classList.remove('bg-primary', 'text-on-primary', 'shadow-[0_4px_16px_rgba(224,64,160,0.28)]');
+        t.classList.add('bg-surface-container', 'text-on-surface-variant');
+      });
+      tab.classList.remove('bg-surface-container', 'text-on-surface-variant');
+      tab.classList.add('bg-primary', 'text-on-primary', 'shadow-[0_4px_16px_rgba(224,64,160,0.28)]');
+      showToast('Corridor radar updated for ' + tab.innerText.trim());
+    });
+  });
+
+  // Optimize Route Button Pulse Action
+  const optimizeBtn = document.getElementById('optimize-btn');
+  if (optimizeBtn) {
+    optimizeBtn.addEventListener('click', () => {
+      optimizeBtn.innerHTML = '<span class="material-symbols-outlined text-[15px] animate-spin">refresh</span> Optimizing...';
+      setTimeout(() => {
+        optimizeBtn.innerHTML = '<span class="material-symbols-outlined text-[15px]">done</span> Saved $4.80!';
+        optimizeBtn.classList.remove('bg-primary');
+        optimizeBtn.classList.add('bg-secondary');
+        showToast('Route optimized! Exit 11 stop locked in.');
+      }, 700);
+    });
+  }
+
+  // Report Price XP Trigger
+  const reportBtn = document.getElementById('report-price-btn');
+  if (reportBtn) {
+    reportBtn.addEventListener('click', () => {
+      showToast('🎉 +10 XP Scout points added to your profile!');
+    });
+  }
+
+  // Interactive Pin Click
+  function selectPin(index) {
+    const card = document.getElementById('station-card-' + index);
+    if (card) {
+      card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      card.classList.add('scale-[1.02]');
+      setTimeout(() => {
+        card.classList.remove('scale-[1.02]');
+      }, 350);
+    }
+  }
+
+  // Delight Toast
+  function showToast(message) {
+    const toast = document.getElementById('scout-toast');
+    const toastMsg = document.getElementById('toast-message');
+    if (toast && toastMsg) {
+      toastMsg.innerText = message;
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      toast.classList.add('opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('opacity-100');
+        toast.classList.add('opacity-0', 'pointer-events-none');
+      }, 2500);
+    }
+  }
+</script></main><nav class="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-4px_24px_rgba(224,64,160,0.08)]" data-active-classes="bg-primary-fixed text-primary font-bold shadow-[0_4px_16px_rgba(224,64,160,0.2)] scale-[1.03]"><div class="flex justify-around items-center h-20 px-2 max-w-md mx-auto"><a class="flex flex-col items-center justify-center gap-1 py-1 px-2 rounded-full min-w-[52px] min-h-[44px] text-on-surface-variant hover:text-primary active:scale-95 transition-all duration-200" data-path="explore-home-nearby-services" href="#"><span class="material-symbols-outlined text-[22px]">explore</span><span class="text-[11px] font-label font-medium tracking-tight">Explore</span></a><a class="flex flex-col items-center justify-center gap-1 py-1 px-2 rounded-full min-w-[52px] min-h-[44px] text-on-surface-variant hover:text-primary active:scale-95 transition-all duration-200" data-path="fuel-price-comparison-smart-route-optimizer" href="#"><span class="material-symbols-outlined text-[22px]">local_gas_station</span><span class="text-[11px] font-label font-medium tracking-tight">Radar</span></a><a class="flex flex-col items-center justify-center gap-1 py-1 px-2 rounded-full min-w-[52px] min-h-[44px] text-on-surface-variant hover:text-primary active:scale-95 transition-all duration-200" data-path="saved-emergency-hub" href="#"><span class="material-symbols-outlined text-[22px]">shield_with_heart</span><span class="text-[11px] font-label font-medium tracking-tight">Saved &amp; SOS</span></a><a class="flex flex-col items-center justify-center gap-1 py-1 px-2 rounded-full min-w-[52px] min-h-[44px] text-on-surface-variant hover:text-primary active:scale-95 transition-all duration-200" data-path="scout-rewards-community-leaderboard" href="#"><span class="material-symbols-outlined text-[22px]">military_tech</span><span class="text-[11px] font-label font-medium tracking-tight">Rewards</span></a><a class="flex flex-col items-center justify-center gap-1 py-1 px-2 rounded-full min-w-[52px] min-h-[44px] text-on-surface-variant hover:text-primary active:scale-95 transition-all duration-200" data-path="user-profile-vehicle-emergency-contacts-settings" href="#"><span class="material-symbols-outlined text-[22px]">manage_accounts</span><span class="text-[11px] font-label font-medium tracking-tight">Profile</span></a></div></nav></body></html>

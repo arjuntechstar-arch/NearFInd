@@ -1,0 +1,396 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_tab" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "outline": "#907898", "on-primary-fixed": "#3d0028", "tertiary-fixed-dim": "#80d0f0", "on-surface-variant": "#604868", "inverse-on-surface": "#fef7ff", "tertiary-fixed": "#c8eaff", "secondary-fixed-dim": "#c8a8e8", "on-secondary-fixed": "#1a1030", "primary-fixed-dim": "#f0a0cc", "on-background": "#2e1a28", "on-error-container": "#9b1c1c", "surface-variant": "#f2e8f2", "secondary-container": "#eedcff", "surface-container-high": "#f2e8f2", "secondary-fixed": "#eedcff", "surface-container-highest": "#ece2ec", "on-tertiary-fixed": "#001a33", "on-error": "#ffffff", "tertiary-container": "#40c0ee", "inverse-primary": "#f0a0cc", "inverse-surface": "#2e1a28", "primary-container": "#f080c0", "surface-container": "#f8eef8", "on-secondary": "#ffffff", "surface-dim": "#e0d6e0", "error-container": "#ffe8e8", "on-primary-fixed-variant": "#a02070", "outline-variant": "dcc8e0", "on-primary-container": "#2e1a28", "on-surface": "#2e1a28", "on-tertiary-container": "#00334d", "primary": "#e040a0", "on-primary": "#ffffff", "surface-container-lowest": "#ffffff", "error": "#e53e3e", "on-secondary-fixed-variant": "#4a3068", "surface-container-low": "#fbf2fb", "background": "#fef7ff", "secondary": "#7c52aa", "surface": "#fef7ff", "tertiary": "#0096cc", "on-tertiary": "#ffffff", "on-tertiary-fixed-variant": "#005580", "surface-bright": "#fef7ff", "on-secondary-container": "#2e2040", "surface-tint": "#e040a0", "primary-fixed": "#ffd6ee" }, "borderRadius": { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" }, "spacing": {}, "fontFamily": { "headline": ["DM Sans"], "display": ["DM Sans"], "body": ["DM Sans"], "label": ["DM Sans"] }, "fontSize": {} } } }</script><style>@layer base{html,body{width:100vw;margin:0;padding:0;background-color:#fef7ff;}body{overscroll-behavior:none;font-family:'DM Sans',sans-serif;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface text-on-surface font-body flex flex-col min-h-screen selection:bg-primary-fixed selection:text-on-primary-fixed"><header class="fixed top-0 inset-x-0 z-50 bg-surface/85 backdrop-blur-xl shadow-[0_4px_20px_rgba(224,64,160,0.06)] pt-safe"><div class="h-16 px-4 flex items-center justify-between gap-3"><div class="flex items-center gap-2.5 min-w-0"><img alt="SpotNear Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1W-hO1CJoe_ZrGQVw7CaAn8Ojs1s3DFXV8CwRiYf23_e6HEX9NaCMQpe38mqTX5EOigk4JrsKYcQUDi5FGeWIYQZVNCu5iFBrRGvW0ytM63fxlU5tA8Nt0d-46DZVgvTcNo9cN0K7NynCTuWzv04vRrHVtvYB2fg43vK78p2tYZ5WG1ARv7-oZTfnFClv83mkSP-R7ixjsYFhMmhuNSdkFBHy6qe4USMD1pKjBSwLtVx7MCWjLTHhEGWWU"><div class="flex flex-col min-w-0"><span class="font-headline font-bold text-base leading-tight tracking-tight text-on-surface flex items-center gap-1.5">SpotNear <span class="text-xs font-medium text-primary hidden sm:inline">• Explore</span></span><button class="flex items-center gap-1 text-xs text-on-surface-variant font-medium hover:text-primary transition-colors text-left truncate"><span class="material-symbols-outlined text-sm text-secondary">location_on</span><span class="truncate font-label max-w-[130px]">Downtown, Metro City</span><span class="material-symbols-outlined text-xs text-outline">expand_more</span></button></div></div><div class="flex items-center gap-2 flex-shrink-0"><button aria-label="Search services" class="w-11 h-11 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-primary active:scale-95 transition-all shadow-[0_2px_8px_rgba(124,82,170,0.12)]"><span class="material-symbols-outlined text-[20px]">search</span></button><button aria-label="User profile" class="relative rounded-full focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-transform active:scale-95"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-primary-fixed" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_m3_vx2rFwDSBsQ-d5afnfoqeed2v-2O5xpiwyRnQvmM4OPhJiWCO3p4iqN6j_Ni9eJNsG4HXha5Uc9aWMrR3h-TJP1kF4UT3fIKE8_mzeLt-Hiu_34Pk40YwKQGCf21GgAN84xitBM5gTUFrVKnd2wCoBtwkcoBkvFIwBdpMhG2e3Vc-g-it_BRMFohrWJMC9i2tcKHgwR6C2_3H7xOq1fMnDb1ai8bJoSgTLsFQ9gvWFrjXGyAG"><span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-primary rounded-full ring-2 ring-surface"></span></button></div></div></header><main class="flex flex-col relative w-full pt-16 pb-28 bg-surface min-h-screen"><div class="flex flex-col w-full space-y-4 px-4 pt-1">
+<!-- Search & Voice Filter Bar -->
+<div class="relative w-full">
+<div class="flex items-center gap-2 bg-surface-container-lowest p-1.5 rounded-full shadow-[0_6px_20px_rgba(224,64,160,0.12)]">
+<div class="flex items-center justify-center w-10 h-10 rounded-full bg-primary-fixed text-primary shrink-0">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<input class="w-full bg-transparent text-sm text-on-surface placeholder:text-on-surface-variant font-medium outline-none px-1" id="exploreSearchInput" placeholder="Search ATMs, Petrol, ER, Mechanics..." type="text">
+<div class="flex items-center gap-1.5 shrink-0 pr-1">
+<button aria-label="Voice Search" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-secondary hover:bg-secondary-container transition-all active:scale-90" id="micBtn">
+<span class="material-symbols-outlined text-[19px]">mic</span>
+</button>
+<button aria-label="Filter Options" class="w-9 h-9 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-[0_4px_12px_rgba(224,64,160,0.3)] hover:scale-105 active:scale-95 transition-all" id="filterToggleBtn">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Horizontal Animated Category Pills -->
+<div class="w-full overflow-hidden -mx-4 px-4">
+<div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+<button class="cat-pill active flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap bg-primary text-on-primary shadow-[0_4px_14px_rgba(224,64,160,0.25)] transition-all transform active:scale-95">
+<span class="material-symbols-outlined text-sm">explore</span>
+<span>All Near Me</span>
+</button>
+<button class="cat-pill flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium whitespace-nowrap bg-surface-container-lowest text-on-surface-variant shadow-[0_2px_8px_rgba(124,82,170,0.08)] hover:bg-surface-container-high transition-all">
+<span class="text-sm">⛽</span>
+<span class="font-bold text-on-surface">Petrol Bunks</span>
+<span class="bg-primary-fixed text-primary px-1.5 py-0.5 rounded-full text-[10px] font-bold">8</span>
+</button>
+<button class="cat-pill flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium whitespace-nowrap bg-surface-container-lowest text-on-surface-variant shadow-[0_2px_8px_rgba(124,82,170,0.08)] hover:bg-surface-container-high transition-all">
+<span class="text-sm">🏧</span>
+<span class="font-bold text-on-surface">ATMs &amp; Cash</span>
+<span class="bg-secondary-fixed text-secondary px-1.5 py-0.5 rounded-full text-[10px] font-bold">12</span>
+</button>
+<button class="cat-pill flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium whitespace-nowrap bg-surface-container-lowest text-on-surface-variant shadow-[0_2px_8px_rgba(124,82,170,0.08)] hover:bg-surface-container-high transition-all">
+<span class="text-sm">🏥</span>
+<span class="font-bold text-on-surface">Hospitals &amp; ER</span>
+<span class="bg-error-container text-error px-1.5 py-0.5 rounded-full text-[10px] font-bold">3</span>
+</button>
+<button class="cat-pill flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium whitespace-nowrap bg-surface-container-lowest text-on-surface-variant shadow-[0_2px_8px_rgba(124,82,170,0.08)] hover:bg-surface-container-high transition-all">
+<span class="text-sm">🔧</span>
+<span class="font-bold text-on-surface">Mechanic &amp; Tow</span>
+<span class="bg-tertiary-fixed text-tertiary px-1.5 py-0.5 rounded-full text-[10px] font-bold">5</span>
+</button>
+<button class="cat-pill flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium whitespace-nowrap bg-surface-container-lowest text-on-surface-variant shadow-[0_2px_8px_rgba(124,82,170,0.08)] hover:bg-surface-container-high transition-all">
+<span class="text-sm">🏦</span>
+<span class="font-bold text-on-surface">Banks</span>
+<span class="bg-surface-container-highest text-on-surface px-1.5 py-0.5 rounded-full text-[10px] font-bold">6</span>
+</button>
+</div>
+</div>
+<!-- Interactive Mock Map Canvas with Vector Stylings -->
+<div class="relative w-full h-64 rounded-2xl overflow-hidden shadow-[0_8px_24px_rgba(124,82,170,0.14)] bg-surface-container-high flex items-center justify-center">
+<!-- Stylized Map Vector Roads & Land -->
+<svg class="absolute inset-0 w-full h-full opacity-65" fill="none" preserveAspectRatio="none" viewBox="0 0 360 260">
+<rect fill="#f8eef8" height="260" width="360"></rect>
+<!-- Soft Water/Park Blobs -->
+<path d="M-10 180 C40 160 80 200 130 190 C180 180 220 220 280 210 C320 200 350 240 370 250 L370 270 L-10 270 Z" fill="#c8eaff" opacity="0.65"></path>
+<path d="M260 -10 C290 30 330 40 370 20 L370 -10 Z" fill="#eedcff" opacity="0.7"></path>
+<!-- City Grid Network -->
+<path d="M-20 40 L380 90 M-10 120 L370 140 M-20 200 L380 180" stroke="#ece2ec" stroke-linecap="round" stroke-width="14"></path>
+<path d="M70 -10 L100 270 M190 -20 L180 280 M290 -10 L310 270" stroke="#ece2ec" stroke-linecap="round" stroke-width="14"></path>
+<!-- Main Arterial Roadways -->
+<path d="M-10 95 C120 105 210 130 370 115" stroke="#ffffff" stroke-linecap="round" stroke-width="8"></path>
+<path d="M140 -10 C150 90 140 180 160 270" stroke="#ffffff" stroke-linecap="round" stroke-width="8"></path>
+<path d="M140 115 L280 20" stroke="#ffd6ee" stroke-dasharray="4 4" stroke-width="5"></path>
+</svg>
+<!-- Radar Pulse Wave (Around Current User Position) -->
+<div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none flex items-center justify-center">
+<div class="w-36 h-36 rounded-full bg-primary/10 animate-ping opacity-60"></div>
+<div class="absolute w-24 h-24 rounded-full bg-secondary/15 animate-pulse"></div>
+<!-- User Blue GPS Pin -->
+<div class="relative w-5 h-5 rounded-full bg-tertiary flex items-center justify-center shadow-[0_0_12px_rgba(0,150,204,0.6)]">
+<div class="w-2.5 h-2.5 rounded-full bg-on-tertiary"></div>
+</div>
+</div>
+<!-- Themed Location Pin 1: Petrol Bunk -->
+<div class="absolute top-10 left-8 flex flex-col items-center group cursor-pointer animate-bounce" style="animation-duration: 2.4s;">
+<div class="px-2 py-0.5 rounded-full bg-surface-container-lowest text-[10px] font-bold text-primary shadow-md flex items-center gap-0.5 mb-1">
+<span>⛽</span>
+<span>350m</span>
+</div>
+<div class="w-7 h-7 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-[0_4px_10px_rgba(224,64,160,0.4)]">
+<span class="material-symbols-outlined text-[15px]">local_gas_station</span>
+</div>
+</div>
+<!-- Themed Location Pin 2: General Hospital (Urgent) -->
+<div class="absolute top-12 right-12 flex flex-col items-center group cursor-pointer animate-pulse" style="animation-duration: 1.8s;">
+<div class="px-2 py-0.5 rounded-full bg-surface-container-lowest text-[10px] font-bold text-error shadow-md flex items-center gap-0.5 mb-1">
+<span>🏥</span>
+<span>1.1km</span>
+</div>
+<div class="w-8 h-8 rounded-full bg-error text-on-error flex items-center justify-center shadow-[0_4px_12px_rgba(229,62,62,0.4)]">
+<span class="material-symbols-outlined text-[17px]">emergency</span>
+</div>
+</div>
+<!-- Themed Location Pin 3: Multi-Bank ATM Hub -->
+<div class="absolute bottom-10 left-20 flex flex-col items-center group cursor-pointer">
+<div class="px-2 py-0.5 rounded-full bg-surface-container-lowest text-[10px] font-bold text-secondary shadow-md flex items-center gap-0.5 mb-1">
+<span>🏧</span>
+<span>250m</span>
+</div>
+<div class="w-7 h-7 rounded-full bg-secondary text-on-secondary flex items-center justify-center shadow-[0_4px_10px_rgba(124,82,170,0.35)]">
+<span class="material-symbols-outlined text-[15px]">atm</span>
+</div>
+</div>
+<!-- Themed Location Pin 4: Mechanic Tow -->
+<div class="absolute bottom-8 right-16 flex flex-col items-center group cursor-pointer">
+<div class="px-2 py-0.5 rounded-full bg-surface-container-lowest text-[10px] font-bold text-tertiary shadow-md flex items-center gap-0.5 mb-1">
+<span>🔧</span>
+<span>850m</span>
+</div>
+<div class="w-7 h-7 rounded-full bg-tertiary text-on-tertiary flex items-center justify-center shadow-[0_4px_10px_rgba(0,150,204,0.35)]">
+<span class="material-symbols-outlined text-[15px]">car_repair</span>
+</div>
+</div>
+<!-- Map Compass / Recenter Floating Button -->
+<div class="absolute right-3 bottom-3 flex flex-col gap-2">
+<button class="w-8 h-8 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-on-surface flex items-center justify-center shadow-md active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[17px]">near_me</span>
+</button>
+<button class="w-8 h-8 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-on-surface flex items-center justify-center shadow-md active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[17px]">layers</span>
+</button>
+</div>
+<!-- Map Status Badge Overlay -->
+<div class="absolute left-3 top-3 px-2.5 py-1 rounded-full bg-surface-container-lowest/95 backdrop-blur-md shadow-sm flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-ping"></span>
+<span class="text-[10px] font-bold text-on-surface tracking-tight">Active Radar: Downtown Metro</span>
+</div>
+</div>
+<!-- Quick Filter Pills -->
+<div class="w-full">
+<div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5">
+<button class="filter-chip flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-primary-fixed text-primary shadow-[0_2px_8px_rgba(224,64,160,0.15)] whitespace-nowrap active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm">alarm_on</span>
+<span>Open Now (24/7)</span>
+</button>
+<button class="filter-chip flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-surface-container-lowest text-on-surface-variant hover:text-on-surface shadow-sm whitespace-nowrap active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm text-secondary">star</span>
+<span>Top Rated 4.5+</span>
+</button>
+<button class="filter-chip flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-surface-container-lowest text-on-surface-variant hover:text-on-surface shadow-sm whitespace-nowrap active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm text-tertiary">near_me</span>
+<span>Within 2 km</span>
+</button>
+<button class="filter-chip flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-surface-container-lowest text-on-surface-variant hover:text-on-surface shadow-sm whitespace-nowrap active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm text-secondary">ev_station</span>
+<span>EV Charging</span>
+</button>
+</div>
+</div>
+<!-- Nearby Essentials Header & Counter -->
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-1.5">
+<span class="font-headline font-bold text-base text-on-surface tracking-tight">Nearby Essentials</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-secondary text-xs font-bold">29 spots</span>
+</div>
+<button class="text-xs font-bold text-primary hover:underline flex items-center">
+<span>View on list</span>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+<!-- Swipeable / Scrollable Service Cards Stack -->
+<div class="flex flex-col gap-3 pb-2">
+<!-- Card 1: Shell Helix Fuel Station -->
+<div class="w-full bg-surface-container-lowest p-3.5 rounded-2xl shadow-[0_4px_16px_rgba(224,64,160,0.08)] flex flex-col gap-3 hover:translate-y-[-2px] transition-transform">
+<div class="flex items-start gap-3">
+<div class="w-16 h-16 rounded-xl overflow-hidden shrink-0 relative bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A modern, high-tech Shell gasoline and EV charging station at sunset with clean neon signage, polished pavement, and blooming aesthetic planters under a warm pink and soft lavender sky." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3K0x6XMRIo9XW8qJzE3fVdFqESR8A6dusqQdh0a07JzLEeqxpuslDY4t1vVGF4rwPPQ04ZQ0mxlxYFH_hQPuoq-s3hz7Kk5Y--WIfgVYUwRNU1aEFMa7gSLCRyfbcV01rtSWHcpbkbDdS00512qqucCkNsskenv6WoJ8TkSh2z-pG9EFT88JkmEf3QMRKDW1oaXmHfExyMhGwiZ1n-qBH9P5VVyxZwkcd-z11j2d3Ry0uUySi0q6Q">
+<div class="absolute top-1 left-1 bg-surface-container-lowest/90 px-1 rounded text-[9px] font-bold text-primary">400m</div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-1">
+<h3 class="font-headline font-bold text-sm text-on-surface truncate">Shell Helix Fuel &amp; Service</h3>
+<div class="flex items-center gap-0.5 bg-primary-fixed px-1.5 py-0.5 rounded-full shrink-0">
+<span class="material-symbols-outlined text-[12px] text-primary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-[11px] font-bold text-primary">4.8</span>
+</div>
+</div>
+<p class="text-xs text-on-surface-variant font-medium mt-0.5 truncate">Petrol • Diesel • Quick EV Charger</p>
+<div class="flex items-center gap-2 mt-1.5 flex-wrap">
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed text-[10px] font-bold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[11px]">schedule</span> Open 24/7
+            </span>
+<span class="px-2 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[11px]">bolt</span> 60kW EV Plug
+            </span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2 pt-1">
+<button class="flex-1 py-2 px-3 rounded-full bg-primary text-on-primary font-bold text-xs flex items-center justify-center gap-1.5 shadow-[0_4px_14px_rgba(224,64,160,0.3)] active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm">directions</span>
+<span>Get Directions (3 min)</span>
+</button>
+<button aria-label="Call Station" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-primary hover:bg-primary-fixed active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[17px]">call</span>
+</button>
+<button aria-label="Save Place" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-secondary hover:bg-secondary-fixed active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[17px]">bookmark_border</span>
+</button>
+</div>
+</div>
+<!-- Card 2: Metro City General Hospital & Trauma Care -->
+<div class="w-full bg-surface-container-lowest p-3.5 rounded-2xl shadow-[0_4px_16px_rgba(229,62,62,0.1)] flex flex-col gap-3 hover:translate-y-[-2px] transition-transform">
+<div class="flex items-start gap-3">
+<div class="w-16 h-16 rounded-xl overflow-hidden shrink-0 relative bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A modern metropolitan general hospital exterior with glass windows, bright red cross and medical lighting, an ambulance bay, illuminated by gentle pastel dusk light with warm friendly tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBga3EFRcX4ZOwWNmm0HvX7Mycgx8T7A_zoQcunqeYa04-Dc2TcdmtGUigN_98pH4qwUuXBkPvtWZnZet2ycKSmOK7Pi7wpukIPRe8CT7Y_Ld_ZeSosUl_nVTYUxmfveJnM8GOjjV49KstqRS_pAFJtCEfPi8bexU36STI3LPPJcTUhgZuCgXAaiLSY55s8WPbU0HLpLs5z-AA3E6LSZ9NufR7YzRh0REcDdfa0fgnunRLEQqVE75P2">
+<div class="absolute top-1 left-1 bg-surface-container-lowest/90 px-1 rounded text-[9px] font-bold text-error">1.1 km</div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-1">
+<h3 class="font-headline font-bold text-sm text-on-surface truncate">Metro City Trauma &amp; ER</h3>
+<div class="flex items-center gap-0.5 bg-error-container px-1.5 py-0.5 rounded-full shrink-0">
+<span class="material-symbols-outlined text-[12px] text-error" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-[11px] font-bold text-error">4.9</span>
+</div>
+</div>
+<p class="text-xs text-on-surface-variant font-medium mt-0.5 truncate">Emergency Wing • Intensive Care Unit</p>
+<div class="flex items-center gap-2 mt-1.5 flex-wrap">
+<span class="px-2 py-0.5 rounded-full bg-error text-on-error text-[10px] font-bold flex items-center gap-0.5 animate-pulse">
+<span class="material-symbols-outlined text-[11px]">emergency</span> Emergency 24/7
+            </span>
+<span class="px-2 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[11px]">airport_shuttle</span> Ambulance Ready
+            </span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2 pt-1">
+<button class="flex-1 py-2 px-3 rounded-full bg-error text-on-error font-bold text-xs flex items-center justify-center gap-1.5 shadow-[0_4px_14px_rgba(229,62,62,0.35)] active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm">phone_in_talk</span>
+<span>Emergency SOS Call</span>
+</button>
+<button aria-label="Route to ER" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-error hover:bg-error-container active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[17px]">navigation</span>
+</button>
+</div>
+</div>
+<!-- Card 3: Chase Multi-Bank ATM Hub -->
+<div class="w-full bg-surface-container-lowest p-3.5 rounded-2xl shadow-[0_4px_16px_rgba(124,82,170,0.08)] flex flex-col gap-3 hover:translate-y-[-2px] transition-transform">
+<div class="flex items-start gap-3">
+<div class="w-16 h-16 rounded-xl overflow-hidden shrink-0 relative bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A clean, secure, brightly lit glass kiosk containing automated banking machines and multi-currency ATMs with glowing digital screens in an energetic city center shopping corridor." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGj0MTrWlJ9gnTzj3Wz7IqyfEzezR-6_RoZV3ciX-4OR9fZ7EyXSs8stZa8qfJ46MFVpqXtKVgXxnI5-CfQ6xsOU7MdTXkLwh5yh6U4t_PFIZF6GkxmDt-bCfvBTW8n1xe5IDyCOPKuWa8kFRv2s2IGQqQMj9thWCNUIhWjYyDLyROtFbkI9P4TWPsWgvx5tMuhxHqfNOFtSEdZTCUtt9UqJDzoAYtX4llfL222EZMdn-WKujekj3h">
+<div class="absolute top-1 left-1 bg-surface-container-lowest/90 px-1 rounded text-[9px] font-bold text-secondary">250m</div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-1">
+<h3 class="font-headline font-bold text-sm text-on-surface truncate">Chase Multi-Bank ATM Hub</h3>
+<div class="flex items-center gap-0.5 bg-secondary-fixed px-1.5 py-0.5 rounded-full shrink-0">
+<span class="material-symbols-outlined text-[12px] text-secondary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-[11px] font-bold text-secondary">4.7</span>
+</div>
+</div>
+<p class="text-xs text-on-surface-variant font-medium mt-0.5 truncate">Walk-in • Cash Deposit &amp; Withdrawal</p>
+<div class="flex items-center gap-2 mt-1.5 flex-wrap">
+<span class="px-2 py-0.5 rounded-full bg-surface-container-highest text-on-surface text-[10px] font-bold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[11px]">payments</span> No Surcharge
+            </span>
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed text-[10px] font-bold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[11px]">door_sliding</span> Instant Walk-in
+            </span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2 pt-1">
+<button class="flex-1 py-2 px-3 rounded-full bg-secondary text-on-secondary font-bold text-xs flex items-center justify-center gap-1.5 shadow-[0_4px_14px_rgba(124,82,170,0.3)] active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm">directions_walk</span>
+<span>Walk There (2 min)</span>
+</button>
+<button aria-label="Share Location" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-secondary hover:bg-secondary-fixed active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[17px]">share</span>
+</button>
+</div>
+</div>
+<!-- Card 4: QuickFix Express Auto Mechanic & Towing -->
+<div class="w-full bg-surface-container-lowest p-3.5 rounded-2xl shadow-[0_4px_16px_rgba(0,150,204,0.08)] flex flex-col gap-3 hover:translate-y-[-2px] transition-transform">
+<div class="flex items-start gap-3">
+<div class="w-16 h-16 rounded-xl overflow-hidden shrink-0 relative bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A friendly, organized automotive garage and service station with clean tools, yellow tow truck parked outside, and warm ambient string lighting in a modern urban district." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwtDWkTyO7VAwd7s9M3Ofxgmzu45GEZtfAaZCL86Lf9ZSfxffsOKsWeidcPcAipYYnjyQLHz6kMgGEsMEtkgB0PwJ-PpT8s6jlFMIOoYEr9bX_c-JJhJA6f4ImcgeJLc-gIS3rQhpiTGG_KnGTUTGSMtwC-LvYFDAxCrGv86ANdDyYg8zQlXGafRJixfsPGYmMy0PfYgTATdE7VSj4dHC5Tnpddh5LLLoOTgi6eQ7jHz8tJyVfIkUf">
+<div class="absolute top-1 left-1 bg-surface-container-lowest/90 px-1 rounded text-[9px] font-bold text-tertiary">850m</div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-1">
+<h3 class="font-headline font-bold text-sm text-on-surface truncate">QuickFix Mechanic &amp; Towing</h3>
+<div class="flex items-center gap-0.5 bg-tertiary-fixed px-1.5 py-0.5 rounded-full shrink-0">
+<span class="material-symbols-outlined text-[12px] text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-[11px] font-bold text-tertiary">4.6</span>
+</div>
+</div>
+<p class="text-xs text-on-surface-variant font-medium mt-0.5 truncate">Flat Tire • Battery Boost • Flatbed Tow</p>
+<div class="flex items-center gap-2 mt-1.5 flex-wrap">
+<span class="px-2 py-0.5 rounded-full bg-surface-container-highest text-on-surface text-[10px] font-bold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[11px]">schedule</span> Till 10:00 PM
+            </span>
+<span class="px-2 py-0.5 rounded-full bg-primary-fixed text-primary text-[10px] font-bold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[11px]">car_repair</span> Roadside Rescue
+            </span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2 pt-1">
+<button class="flex-1 py-2 px-3 rounded-full bg-tertiary text-on-tertiary font-bold text-xs flex items-center justify-center gap-1.5 shadow-[0_4px_14px_rgba(0,150,204,0.3)] active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm">support_agent</span>
+<span>Request Roadside Tow</span>
+</button>
+<button aria-label="Call Mechanic" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-tertiary hover:bg-tertiary-fixed active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[17px]">call</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Floating 'Radar Scan Again' Action Pill with Spinning Glow -->
+<div class="sticky bottom-2 z-20 flex justify-center w-full py-1 pointer-events-none">
+<button class="pointer-events-auto flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-surface-container-lowest/95 backdrop-blur-xl text-on-surface font-headline font-bold text-xs shadow-[0_8px_24px_rgba(224,64,160,0.28)] hover:scale-105 active:scale-95 transition-all" id="radarScanBtn">
+<div class="relative flex items-center justify-center w-5 h-5">
+<span class="material-symbols-outlined text-primary text-lg animate-spin" style="animation-duration: 3s;">radar</span>
+</div>
+<span class="tracking-tight text-on-surface">Radar Scan This Area</span>
+<span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+</button>
+</div>
+</div>
+<script>
+  // Dynamic Category Pill Filtering interaction
+  const categoryPills = document.querySelectorAll('.cat-pill');
+  categoryPills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      categoryPills.forEach(p => {
+        p.classList.remove('bg-primary', 'text-on-primary', 'shadow-[0_4px_14px_rgba(224,64,160,0.25)]');
+        p.classList.add('bg-surface-container-lowest', 'text-on-surface-variant');
+      });
+      pill.classList.remove('bg-surface-container-lowest', 'text-on-surface-variant');
+      pill.classList.add('bg-primary', 'text-on-primary', 'shadow-[0_4px_14px_rgba(224,64,160,0.25)]');
+      pill.style.transform = 'scale(0.95)';
+      setTimeout(() => { pill.style.transform = ''; }, 150);
+    });
+  });
+
+  // Filter Chips toggle effect
+  const filterChips = document.querySelectorAll('.filter-chip');
+  filterChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      const isSelected = chip.classList.contains('bg-primary-fixed');
+      if (isSelected) {
+        chip.classList.remove('bg-primary-fixed', 'text-primary', 'shadow-[0_2px_8px_rgba(224,64,160,0.15)]');
+        chip.classList.add('bg-surface-container-lowest', 'text-on-surface-variant');
+      } else {
+        chip.classList.add('bg-primary-fixed', 'text-primary', 'shadow-[0_2px_8px_rgba(224,64,160,0.15)]');
+        chip.classList.remove('bg-surface-container-lowest', 'text-on-surface-variant');
+      }
+    });
+  });
+
+  // Radar Scan microinteraction button
+  const radarBtn = document.getElementById('radarScanBtn');
+  if (radarBtn) {
+    radarBtn.addEventListener('click', () => {
+      radarBtn.classList.add('scale-95');
+      const textSpan = radarBtn.querySelector('span:nth-of-type(2)');
+      const originalText = textSpan.innerText;
+      textSpan.innerText = 'Scanning 3km radius...';
+      setTimeout(() => {
+        radarBtn.classList.remove('scale-95');
+        textSpan.innerText = '29 spots updated!';
+        setTimeout(() => {
+          textSpan.innerText = originalText;
+        }, 1500);
+      }, 900);
+    });
+  }
+
+  // Voice Mic button interaction
+  const micBtn = document.getElementById('micBtn');
+  if (micBtn) {
+    micBtn.addEventListener('click', () => {
+      micBtn.classList.toggle('bg-primary');
+      micBtn.classList.toggle('text-on-primary');
+      const input = document.getElementById('exploreSearchInput');
+      if (input) {
+        input.placeholder = 'Listening for "Nearest petrol station"...';
+        setTimeout(() => {
+          input.placeholder = 'Search ATMs, Petrol, ER, Mechanics...';
+        }, 3000);
+      }
+    });
+  }
+</script></main><nav class="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-4px_24px_rgba(224,64,160,0.08)]" data-active-classes="bg-primary-fixed text-primary font-bold shadow-[0_4px_16px_rgba(224,64,160,0.2)] scale-[1.03]"><div class="flex justify-around items-center h-20 px-3 max-w-md mx-auto"><a aria-current="page" class="flex flex-col items-center justify-center gap-1 py-1.5 px-3 rounded-full min-w-[56px] min-h-[44px] transition-all duration-200 bg-primary-fixed text-primary font-bold shadow-[0_4px_16px_rgba(224,64,160,0.2)] scale-[1.03]" data-path="explore" href="#"><span class="material-symbols-outlined text-[22px]">explore</span><span class="text-[11px] font-label font-medium tracking-tight">Explore</span></a><a class="flex flex-col items-center justify-center gap-1 py-1.5 px-3 rounded-full min-w-[56px] min-h-[44px] text-on-surface-variant hover:text-primary active:scale-95 transition-all duration-200" data-path="categories" href="#"><span class="material-symbols-outlined text-[22px]">grid_view</span><span class="text-[11px] font-label font-medium tracking-tight">Categories</span></a><a class="flex flex-col items-center justify-center gap-1 py-1.5 px-3 rounded-full min-w-[56px] min-h-[44px] text-on-surface-variant hover:text-primary active:scale-95 transition-all duration-200" data-path="saved-and-emergency" href="#"><span class="material-symbols-outlined text-[22px]">shield_with_heart</span><span class="text-[11px] font-label font-medium tracking-tight">Saved &amp; Help</span></a><a class="flex flex-col items-center justify-center gap-1 py-1.5 px-3 rounded-full min-w-[56px] min-h-[44px] text-on-surface-variant hover:text-primary active:scale-95 transition-all duration-200" data-path="profile" href="#"><span class="material-symbols-outlined text-[22px]">person</span><span class="text-[11px] font-label font-medium tracking-tight">Profile</span></a></div></nav></body></html>

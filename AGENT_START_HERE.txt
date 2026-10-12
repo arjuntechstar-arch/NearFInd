@@ -1,0 +1,8 @@
+SPOTNEAR BUILD START
+
+1. Read MASTER_BUILD_PROMPT.md completely.
+2. Read docs/01 through docs/13 in order.
+3. Inspect prototype_reference/design/DESIGN.md, contact-sheet.jpg, all screenshots and matching HTML.
+4. Produce a prototype-to-route traceability checklist before writing code.
+5. Implement Phase 0 only first. Run the PowerShell quality gates.
+6. Do not proceed to the next phase with failing tests or placeholder functionality.

@@ -1,0 +1,97 @@
+[
+  {
+    "screen": "add_report_service_community_contribution",
+    "image": "screens/add_report_service_community_contribution.png",
+    "html": "html/add_report_service_community_contribution.html"
+  },
+  {
+    "screen": "categories_directory_browser",
+    "image": "screens/categories_directory_browser.png",
+    "html": "html/categories_directory_browser.html"
+  },
+  {
+    "screen": "driver_alerts_notification_center",
+    "image": "screens/driver_alerts_notification_center.png",
+    "html": "html/driver_alerts_notification_center.html"
+  },
+  {
+    "screen": "emergency_sos_live_roadside_dispatch",
+    "image": "screens/emergency_sos_live_roadside_dispatch.png",
+    "html": "html/emergency_sos_live_roadside_dispatch.html"
+  },
+  {
+    "screen": "explore_home_nearby_services",
+    "image": "screens/explore_home_nearby_services.png",
+    "html": "html/explore_home_nearby_services.html"
+  },
+  {
+    "screen": "interactive_map_filter_overlay",
+    "image": "screens/interactive_map_filter_overlay.png",
+    "html": "html/interactive_map_filter_overlay.html"
+  },
+  {
+    "screen": "ratings_reviews_community_photo_gallery",
+    "image": "screens/ratings_reviews_community_photo_gallery.png",
+    "html": "html/ratings_reviews_community_photo_gallery.html"
+  },
+  {
+    "screen": "saved_emergency_hub",
+    "image": "screens/saved_emergency_hub.png",
+    "html": "html/saved_emergency_hub.html"
+  },
+  {
+    "screen": "service_detail_route_guide",
+    "image": "screens/service_detail_route_guide.png",
+    "html": "html/service_detail_route_guide.html"
+  },
+  {
+    "screen": "sign_in_welcome",
+    "image": "screens/sign_in_welcome.png",
+    "html": "html/sign_in_welcome.html"
+  },
+  {
+    "screen": "sign_up_preferences",
+    "image": "screens/sign_up_preferences.png",
+    "html": "html/sign_up_preferences.html"
+  },
+  {
+    "screen": "turn_by_turn_gps_navigation_live_hud",
+    "image": "screens/turn_by_turn_gps_navigation_live_hud.png",
+    "html": "html/turn_by_turn_gps_navigation_live_hud.html"
+  },
+  {
+    "screen": "user_profile_vehicle_settings",
+    "image": "screens/user_profile_vehicle_settings.png",
+    "html": "html/user_profile_vehicle_settings.html"
+  },
+  {
+    "screen": "fuel_price_comparison_smart_route_optimizer",
+    "image": "screens/fuel_price_comparison_smart_route_optimizer.png",
+    "html": "html/fuel_price_comparison_smart_route_optimizer.html"
+  },
+  {
+    "screen": "in_app_live_chat_dispatch_support",
+    "image": "screens/in_app_live_chat_dispatch_support.png",
+    "html": "html/in_app_live_chat_dispatch_support.html"
+  },
+  {
+    "screen": "property_detail_inspection",
+    "image": "screens/property_detail_inspection.png",
+    "html": "html/property_detail_inspection.html"
+  },
+  {
+    "screen": "real_estate_land_listings",
+    "image": "screens/real_estate_land_listings.png",
+    "html": "html/real_estate_land_listings.html"
+  },
+  {
+    "screen": "scout_rewards_community_leaderboard",
+    "image": "screens/scout_rewards_community_leaderboard.png",
+    "html": "html/scout_rewards_community_leaderboard.html"
+  },
+  {
+    "screen": "service_booking_bay_reservation",
+    "image": "screens/service_booking_bay_reservation.png",
+    "html": "html/service_booking_bay_reservation.html"
+  }
+]

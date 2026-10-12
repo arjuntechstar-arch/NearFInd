@@ -1,0 +1,407 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_stack" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "outline": "#907898", "on-primary-fixed": "#3d0028", "tertiary-fixed-dim": "#80d0f0", "on-surface-variant": "#604868", "inverse-on-surface": "#fef7ff", "tertiary-fixed": "#c8eaff", "secondary-fixed-dim": "#c8a8e8", "on-secondary-fixed": "#1a1030", "primary-fixed-dim": "#f0a0cc", "on-background": "#2e1a28", "on-error-container": "#9b1c1c", "surface-variant": "#f2e8f2", "secondary-container": "#eedcff", "surface-container-high": "#f2e8f2", "secondary-fixed": "#eedcff", "surface-container-highest": "#ece2ec", "on-tertiary-fixed": "#001a33", "on-error": "#ffffff", "tertiary-container": "#40c0ee", "inverse-primary": "#f0a0cc", "inverse-surface": "#2e1a28", "primary-container": "#f080c0", "surface-container": "#f8eef8", "on-secondary": "#ffffff", "surface-dim": "#e0d6e0", "error-container": "#ffe8e8", "on-primary-fixed-variant": "#a02070", "outline-variant": "#dcc8e0", "on-primary-container": "#2e1a28", "on-surface": "#2e1a28", "on-tertiary-container": "#00334d", "primary": "#e040a0", "on-primary": "#ffffff", "surface-container-lowest": "#ffffff", "error": "#e53e3e", "on-secondary-fixed-variant": "#4a3068", "surface-container-low": "#fbf2fb", "background": "#fef7ff", "secondary": "#7c52aa", "surface": "#fef7ff", "tertiary": "#0096cc", "on-tertiary": "#ffffff", "on-tertiary-fixed-variant": "#005580", "surface-bright": "#fef7ff", "on-secondary-container": "#2e2040", "surface-tint": "#e040a0", "primary-fixed": "#ffd6ee" }, "borderRadius": { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" }, "spacing": {}, "fontFamily": { "headline": ["DM Sans"], "display": ["DM Sans"], "body": ["DM Sans"], "label": ["DM Sans"] }, "fontSize": {} } } }</script><style>@layer base{html,body{width:100vw;margin:0;padding:0;background-color:#fef7ff;}body{overscroll-behavior:none;font-family:'DM Sans',sans-serif;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}body{min-height:max(884px,100dvh);}</style></head><body class="bg-surface text-on-surface font-body flex flex-col min-h-screen selection:bg-primary-fixed selection:text-on-primary-fixed"><header class="fixed top-0 inset-x-0 z-50 bg-surface/85 backdrop-blur-xl shadow-[0_4px_20px_rgba(224,64,160,0.06)] pt-safe"><div class="h-16 px-4 flex items-center justify-between gap-3"><div class="flex items-center gap-2 min-w-0"><button aria-label="Go back" class="w-11 h-11 rounded-full bg-surface-container flex items-center justify-center text-on-surface hover:text-primary active:scale-95 transition-all shadow-[0_2px_8px_rgba(124,82,170,0.12)]" onclick="history.back()"><span class="material-symbols-outlined text-[20px]">arrow_back</span></button><img alt="SpotNear Logo" class="h-7 w-auto object-contain hidden xs:inline-block" src="https://lh3.googleusercontent.com/aida/AEtjO1W-hO1CJoe_ZrGQVw7CaAn8Ojs1s3DFXV8CwRiYf23_e6HEX9NaCMQpe38mqTX5EOigk4JrsKYcQUDi5FGeWIYQZVNCu5iFBrRGvW0ytM63fxlU5tA8Nt0d-46DZVgvTcNo9cN0K7NynCTuWzv04vRrHVtvYB2fg43vK78p2tYZ5WG1ARv7-oZTfnFClv83mkSP-R7ixjsYFhMmhuNSdkFBHy6qe4USMD1pKjBSwLtVx7MCWjLTHhEGWWU"><h1 class="text-base font-headline font-bold text-on-surface truncate tracking-tight">Ratings, Reviews &amp; Community Photo Gallery</h1></div><div class="flex items-center gap-2 flex-shrink-0"><button aria-label="Share service" class="w-11 h-11 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-primary active:scale-95 transition-all shadow-[0_2px_8px_rgba(124,82,170,0.12)]"><span class="material-symbols-outlined text-[20px]">share</span></button><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-primary-fixed" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_m3_vx2rFwDSBsQ-d5afnfoqeed2v-2O5xpiwyRnQvmM4OPhJiWCO3p4iqN6j_Ni9eJNsG4HXha5Uc9aWMrR3h-TJP1kF4UT3fIKE8_mzeLt-Hiu_34Pk40YwKQGCf21GgAN84xitBM5gTUFrVKnd2wCoBtwkcoBkvFIwBdpMhG2e3Vc-g-it_BRMFohrWJMC9i2tcKHgwR6C2_3H7xOq1fMnDb1ai8bJoSgTLsFQ9gvWFrjXGyAG"></div></div></header><main class="flex flex-col relative w-full pt-16 pb-safe bg-surface min-h-screen"><div class="flex flex-col w-full pb-28">
+<!-- Station Scorecard & Joyful Header Summary -->
+<section class="px-4 pt-3 pb-4">
+<div class="bg-surface-container-lowest rounded-lg p-5 shadow-[0_8px_24px_rgba(224,64,160,0.08)] relative overflow-hidden">
+<!-- Playful Decorative Sparkles / Blobs in Background -->
+<div class="absolute -right-6 -top-6 w-28 h-28 rounded-full bg-primary-fixed/40 blur-xl pointer-events-none"></div>
+<div class="absolute -left-6 -bottom-6 w-24 h-24 rounded-full bg-secondary-fixed/40 blur-lg pointer-events-none"></div>
+<div class="relative z-10 flex flex-col gap-4">
+<div class="flex items-start justify-between gap-3">
+<div class="flex-1 min-w-0">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed text-xs font-semibold tracking-wide mb-1.5">
+<span class="material-symbols-outlined text-[15px]" style="font-variation-settings: 'FILL' 1;">local_gas_station</span>
+              SpotNear Verified Hub
+            </div>
+<h2 class="text-xl font-headline font-bold text-on-surface truncate">Apex Fuel Hub &amp; Auto Care</h2>
+<p class="text-xs font-medium text-on-surface-variant flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-tertiary text-[16px]">location_on</span>
+              1420 Metro Parkway • Open 24/7
+            </p>
+</div>
+<!-- Score Card Pill -->
+<div class="flex flex-col items-center justify-center bg-primary text-on-primary px-4 py-2.5 rounded-2xl shadow-[0_4px_16px_rgba(224,64,160,0.28)] flex-shrink-0 transform hover:scale-105 transition-transform duration-200">
+<span class="text-2xl font-black leading-none tracking-tight">4.8</span>
+<div class="flex items-center gap-0.5 mt-1 text-primary-fixed">
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">star_half</span>
+</div>
+<span class="text-[10px] font-bold text-primary-fixed uppercase tracking-wider mt-0.5">Superb</span>
+</div>
+</div>
+<div class="flex items-center justify-between text-xs font-medium text-on-surface-variant bg-surface-container-low px-3.5 py-2 rounded-full">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-secondary text-[16px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+            1,420 community reviews
+          </span>
+<span class="font-bold text-primary text-[11px] bg-primary-fixed/60 px-2.5 py-0.5 rounded-full">Top 2% in Region</span>
+</div>
+<!-- Granular Breakdown Bars -->
+<div class="space-y-2.5 pt-1">
+<!-- Cleanliness & Lighting -->
+<div>
+<div class="flex justify-between items-center text-xs font-semibold mb-1">
+<span class="text-on-surface flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-[15px]" style="font-variation-settings: 'FILL' 1;">wb_sunny</span>
+                Cleanliness &amp; Lighting
+              </span>
+<span class="text-on-surface font-bold text-xs">4.9<span class="text-on-surface-variant font-normal">/5.0</span></span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-primary-container rounded-full" style="width: 98%;"></div>
+</div>
+</div>
+<!-- Wait Times & Bay Speed -->
+<div>
+<div class="flex justify-between items-center text-xs font-semibold mb-1">
+<span class="text-on-surface flex items-center gap-1.5">
+<span class="material-symbols-outlined text-secondary text-[15px]" style="font-variation-settings: 'FILL' 1;">speed</span>
+                Wait Times &amp; Bay Speed
+              </span>
+<span class="text-on-surface font-bold text-xs">4.7<span class="text-on-surface-variant font-normal">/5.0</span></span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-secondary to-secondary-fixed-dim rounded-full" style="width: 94%;"></div>
+</div>
+</div>
+<!-- Fuel & ATM Price Accuracy -->
+<div>
+<div class="flex justify-between items-center text-xs font-semibold mb-1">
+<span class="text-on-surface flex items-center gap-1.5">
+<span class="material-symbols-outlined text-tertiary text-[15px]" style="font-variation-settings: 'FILL' 1;">price_check</span>
+                Fuel &amp; ATM Price Accuracy
+              </span>
+<span class="text-on-surface font-bold text-xs">5.0<span class="text-on-surface-variant font-normal">/5.0</span></span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-tertiary to-tertiary-fixed-dim rounded-full" style="width: 100%;"></div>
+</div>
+</div>
+<!-- Staff & Safety -->
+<div>
+<div class="flex justify-between items-center text-xs font-semibold mb-1">
+<span class="text-on-surface flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-[15px]" style="font-variation-settings: 'FILL' 1;">shield</span>
+                Staff &amp; Safety
+              </span>
+<span class="text-on-surface font-bold text-xs">4.8<span class="text-on-surface-variant font-normal">/5.0</span></span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-secondary rounded-full" style="width: 96%;"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Community Photo Gallery (Mosaic with Pill Badges) -->
+<section class="mt-2 px-4">
+<div class="flex items-center justify-between mb-2.5">
+<div>
+<h3 class="text-base font-headline font-bold text-on-surface">Community Gallery</h3>
+<p class="text-xs text-on-surface-variant font-medium">Real snaps uploaded by active Scouts</p>
+</div>
+<button class="text-xs font-bold text-primary hover:text-on-primary-fixed-variant transition-colors flex items-center gap-0.5">
+        View All
+        <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+<!-- Mosaic Gallery Layout -->
+<div class="grid grid-cols-2 gap-2.5">
+<!-- Photo 1: Gas Pumps at Night -->
+<div class="relative h-44 rounded-lg overflow-hidden bg-surface-container shadow-sm group">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Modern neon lit gas station pumps glowing vibrantly at night with clean polished concrete bay, bright hot pink and violet canopy LED illumination, crisp reflections, cinematic automotive photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJ_1JfM1YwvW9WOtxs16XclAfwr4B7Sfkwt6VAxOPq8qHi1HoZhgqgfEySOTphnJhiJaDjx_AENKf0jfrCg-BILUF_dErbnLqIXvrapqcnGbJOwyJ1lxaGkbjnVtKYnP4gOhcpvNILqvf5CRkK94say5fhk3s5OBXBzEj6uuXpPiX4-QKUmo8XLvZE07IfCHpXIqXYdv_SOi__DQOpgpTfGUltwRTgyT5TrV5P6ufNaJciIfwIGalg">
+<div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/80 via-transparent to-transparent"></div>
+<div class="absolute top-2 left-2 flex flex-wrap gap-1">
+<span class="px-2 py-0.5 rounded-full bg-surface/90 backdrop-blur-md text-on-surface text-[10px] font-bold flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-primary text-[12px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+            Receipt Verified
+          </span>
+</div>
+<div class="absolute bottom-2 left-2 right-2 flex items-center justify-between text-inverse-on-surface text-[11px] font-medium">
+<span class="truncate">Night Fuel Bays</span>
+<span class="flex items-center gap-0.5"><span class="material-symbols-outlined text-[12px]">schedule</span> 11:45 PM</span>
+</div>
+</div>
+<!-- Right Column: 2 smaller stacked photos -->
+<div class="flex flex-col gap-2.5">
+<!-- Photo 2: Clean Restroom -->
+<div class="relative h-[82px] rounded-lg overflow-hidden bg-surface-container shadow-sm group">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Pristine ultra clean modern commercial service station restroom with warm vanity lighting, pristine white marble surfaces, automated Dyson hand dryers, spotless and welcoming vibe." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTq4iv3Y75LwpOyWv1Eu5oYKUAy1UPWyaDu_VNJYIpkI9L9SdkRpy71PL0nCSvCDS7wZqFvaXe2iTLKvdXRdrm0UT0DsM4LIcUNhORlK7-ObJPQljxJqJNvWOqkHW8RfGbG2QyRjXBquzu80vHEzVLLF3CSbH4jinN3sk6ohTKe9knDC1qglevsOavxMMtXi1XNvfRX43uo1-ke8Cya3nXbYSwEfsTewJwVeBfIEEoIVY2dqOo5MI6">
+<div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/75 via-transparent to-transparent"></div>
+<span class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed text-[9px] font-bold">
+            Restroom Check
+          </span>
+<span class="absolute bottom-1.5 left-2 text-inverse-on-surface text-[11px] font-semibold">Sparkling clean</span>
+</div>
+<!-- Photo 3: Coffee Bar Inside Mart -->
+<div class="relative h-[82px] rounded-lg overflow-hidden bg-surface-container shadow-sm group">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Vibrant gourmet coffee counter bar inside convenience store with espresso machine, freshly baked pastries, colorful beverage display, warm modern timber accents, candy playful aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtEtdNfUDjDmxeEpZEueunddOv_A0KjGgquqzsAc8plwTQqZc3vBk2kY3GgHQ2DeOeJwSxTmrW2EK7s-xC-7Kt07I47tnAE1-rYa4ncJyReWjMLHwgTVFMSmZM7Ta2HtspCD5SrSgvzGCumbDXtC03r7ZFt3GyDYd88IKG9GWtVcKmNKagr7MuEDqEUANIfhObC3yUY6JIUsr9aeAJ4NM-lR6h-TD6-lI1JADJKD1VIkuuOjGT-j_q">
+<div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/75 via-transparent to-transparent"></div>
+<span class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed text-[9px] font-bold">
+            Fresh Brews
+          </span>
+<span class="absolute bottom-1.5 left-2 text-inverse-on-surface text-[11px] font-semibold">Artisan Coffee</span>
+</div>
+</div>
+<!-- Photo 4 & +18 Overlay: EV Chargers -->
+<div class="col-span-2 relative h-32 rounded-lg overflow-hidden bg-surface-container shadow-sm group">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Row of sleek 350kW ultra-fast electric vehicle chargers glowing bright cyan and magenta in modern covered bay, clean spotless charging station with digital screens showing green battery icons." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiuPNf4hQshJXqWtmwtWg5IdtFWmYgHP3E-KVuElDHWJ9w9hNO1KMHxQwvYXL7k2EBPQyoOQYNERpBpvbo8fEna--iLKbY-M1Z1ikwk8HtwJDNyitBpgWOux9fRoB-xKBTO5ZeI_fIAl_Pnb5dVH1ZcpzSjAtwZYwKAxRtl-3FgkT4U8cWVSXAD6nwBEYsJrcnikAxTo-wmeP-NHkkkpQhc5bamVZggjRat8LvK9cHqPvwoJotk9sp">
+<div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/85 via-inverse-surface/20 to-transparent"></div>
+<div class="absolute top-2.5 left-2.5 flex items-center gap-1.5">
+<span class="px-2.5 py-1 rounded-full bg-tertiary text-on-tertiary text-[10px] font-bold flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">bolt</span>
+            350kW HyperCharge
+          </span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-lowest/90 backdrop-blur-sm text-on-surface text-[10px] font-semibold">
+            Driver Uploaded
+          </span>
+</div>
+<div class="absolute bottom-2.5 inset-x-2.5 flex items-center justify-between">
+<span class="text-inverse-on-surface font-semibold text-xs drop-shadow-sm">Fast chargers fully open • Bay 1-6</span>
+<!-- Pill button +18 more photos -->
+<button class="px-3 py-1.5 rounded-full bg-primary text-on-primary font-bold text-xs flex items-center gap-1.5 shadow-[0_4px_14px_rgba(224,64,160,0.35)] hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[16px]">photo_library</span>
+            +18 more photos
+          </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Review Filters (Pills) -->
+<section class="mt-5 px-4">
+<div class="flex items-center justify-between mb-2.5">
+<h3 class="text-base font-headline font-bold text-on-surface">Community Buzz</h3>
+<span class="text-xs font-semibold text-secondary">Sort: Most Helpful</span>
+</div>
+<!-- Filter Carousel -->
+<div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+<button class="filter-chip active-filter px-4 py-2 rounded-full bg-primary text-on-primary text-xs font-bold whitespace-nowrap shadow-[0_4px_12px_rgba(224,64,160,0.25)] transition-all transform active:scale-95 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+        All Reviews
+      </button>
+<button class="filter-chip px-3.5 py-2 rounded-full bg-surface-container-lowest text-on-surface-variant hover:text-on-surface text-xs font-semibold whitespace-nowrap shadow-sm hover:shadow transition-all flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-[16px]">photo_camera</span>
+        With Photos <span class="bg-primary-fixed text-on-primary-fixed px-1.5 py-0.2 rounded-full text-[10px] font-bold">340</span>
+</button>
+<button class="filter-chip px-3.5 py-2 rounded-full bg-surface-container-lowest text-on-surface-variant hover:text-on-surface text-xs font-semibold whitespace-nowrap shadow-sm hover:shadow transition-all flex items-center gap-1.5">
+<span class="material-symbols-outlined text-tertiary text-[16px]" style="font-variation-settings: 'FILL' 1;">electric_car</span>
+        EV Drivers <span class="bg-tertiary-fixed text-on-tertiary-fixed px-1.5 py-0.2 rounded-full text-[10px] font-bold">180</span>
+</button>
+<button class="filter-chip px-3.5 py-2 rounded-full bg-surface-container-lowest text-on-surface-variant hover:text-on-surface text-xs font-semibold whitespace-nowrap shadow-sm hover:shadow transition-all flex items-center gap-1.5">
+<span class="material-symbols-outlined text-secondary text-[16px]">nights_stay</span>
+        Late Night <span class="bg-secondary-fixed text-on-secondary-fixed px-1.5 py-0.2 rounded-full text-[10px] font-bold">95</span>
+</button>
+</div>
+</section>
+<!-- Detailed Driver Review Cards -->
+<section class="mt-4 px-4 space-y-3.5">
+<!-- Review Card 1: Late Night Security & EV Air Compressor -->
+<article class="bg-surface-container-lowest rounded-lg p-4 shadow-[0_6px_20px_rgba(124,82,170,0.06)] hover:shadow-md transition-shadow">
+<!-- User Info Header -->
+<div class="flex items-start justify-between gap-3">
+<div class="flex items-center gap-2.5 min-w-0">
+<img class="w-10 h-10 rounded-full object-cover flex-shrink-0" data-alt="Friendly young woman driver with casual denim jacket and bright smile, outdoor natural daylight portrait, high quality headshot." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDq4Zw6wZIZemssPCqP7_WHWgP4-auOmuNsqJBjnA8IBPJtGWUQ5E4xTqDaPGBGfW_vRkUjFYIhAYOocjmbmecVlxgeR8IcyYIwiDRjlJI5n3uSXsGJGGuH-kZHRM4tiN9vwzp9fRfS2GtY4LaAMjokeO6_Eu1llFDqNJ_MQ01z8cQgsxwTjG-9D3wzFcQh_2MaxaebjyE9ZF69aCFVN2PvTZgJkryFV_AbIfYkg9pbXofHAETdCzIS">
+<div class="min-w-0">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="font-bold text-sm text-on-surface truncate">Elena Rostova</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary text-on-secondary text-[10px] font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[11px]" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+                Level 4 Gold Scout
+              </span>
+</div>
+<div class="flex items-center gap-2 text-[11px] text-on-surface-variant mt-0.5">
+<span>Yesterday, 11:30 PM</span>
+<span>•</span>
+<span class="inline-flex items-center gap-1 font-medium text-tertiary">
+<span class="material-symbols-outlined text-[13px]">directions_car</span>
+                Tesla Model Y
+              </span>
+</div>
+</div>
+</div>
+<!-- Rating Pill -->
+<div class="flex items-center gap-0.5 bg-primary-fixed px-2 py-1 rounded-full text-on-primary-fixed flex-shrink-0">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-black">5.0</span>
+</div>
+</div>
+<!-- Badges row -->
+<div class="flex flex-wrap gap-1.5 mt-3">
+<span class="px-2 py-0.5 rounded-full bg-surface-container-low text-on-surface-variant text-[11px] font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-primary text-[13px]" style="font-variation-settings: 'FILL' 1;">shield_with_heart</span>
+          Super Safe After Midnight
+        </span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-low text-on-surface-variant text-[11px] font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-tertiary text-[13px]" style="font-variation-settings: 'FILL' 1;">toys</span>
+          Free Air Compressor
+        </span>
+</div>
+<!-- Text Body -->
+<p class="mt-2.5 text-xs text-on-surface leading-relaxed font-normal">
+        Stopped by right around midnight to top up and calibrate tire pressure. The entire station is illuminated like broad daylight, with two security guards visibly patrolling the perimeter. The digital air calibration unit is free and actually accurate (verified with my own gauge)! Super clean restrooms with touchless sinks inside.
+      </p>
+<!-- Review Actions Footer -->
+<div class="mt-3.5 pt-3 flex items-center justify-between text-xs text-on-surface-variant">
+<button class="helpful-btn px-3 py-1.5 rounded-full bg-surface-container-low text-on-surface-variant hover:text-primary hover:bg-primary-fixed/30 font-bold transition-all flex items-center gap-1.5" onclick="toggleHelpful(this)">
+<span class="material-symbols-outlined text-[16px] thumbs-icon">thumb_up</span>
+<span class="count-label">Helpful (34)</span>
+</button>
+<div class="flex items-center gap-3">
+<button class="hover:text-primary transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">reply</span>
+            Reply
+          </button>
+<button class="hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[16px]">flag</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Review Card 2: Diesel Fuel Rate & Tire Bay Fix with Photo Thumbnail -->
+<article class="bg-surface-container-lowest rounded-lg p-4 shadow-[0_6px_20px_rgba(124,82,170,0.06)] hover:shadow-md transition-shadow">
+<!-- User Info Header -->
+<div class="flex items-start justify-between gap-3">
+<div class="flex items-center gap-2.5 min-w-0">
+<img class="w-10 h-10 rounded-full object-cover flex-shrink-0" data-alt="Confident middle aged man with salt and pepper beard wearing a red trucker jacket, warm approachable expression, high definition portrait." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAS79ITZ3JKCXoBetJKUR2rtxGHy55BsKr0oLUFIzTjINnuVKBqsznAVauW0uCwb4H5xnxmJAmYZRIR44wNbM43pjX4cF5TK6vCU2S5sj4cYG1474HKN2LPersLRIHe2D--z7eSi3uvb1N5v4uBBuFBoUSuoJ7JePCZWEZ5qb9xW2TQv03mRFYn51Alabx8OiJ36aqbZSBupRWkbLq0poZ-NHxJYPYCKGlbmdLngVzaYit57clEv6so">
+<div class="min-w-0">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="font-bold text-sm text-on-surface truncate">Marcus Vance</span>
+<span class="px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed text-[10px] font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[11px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                Verified Driver
+              </span>
+</div>
+<div class="flex items-center gap-2 text-[11px] text-on-surface-variant mt-0.5">
+<span>2 days ago</span>
+<span>•</span>
+<span class="inline-flex items-center gap-1 font-medium text-secondary">
+<span class="material-symbols-outlined text-[13px]">local_shipping</span>
+                Ford F-250 Super Duty
+              </span>
+</div>
+</div>
+</div>
+<!-- Rating Pill -->
+<div class="flex items-center gap-0.5 bg-primary-fixed px-2 py-1 rounded-full text-on-primary-fixed flex-shrink-0">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-black">5.0</span>
+</div>
+</div>
+<!-- Badges row -->
+<div class="flex flex-wrap gap-1.5 mt-3">
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed text-[11px] font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">local_gas_station</span>
+          Diesel $3.89/gal • Cheapest in 5mi
+        </span>
+</div>
+<!-- Text Body -->
+<p class="mt-2.5 text-xs text-on-surface leading-relaxed font-normal">
+        Picked up a slow leak on Interstate 80. Tech Dave at the express auto bay had my rear passenger tyre plugged and balanced in under 12 minutes flat for only $15. Diesel pumps have huge flow nozzles and credit card reader did not fail or require manual zip codes.
+      </p>
+<!-- Attached Photo Thumbnails -->
+<div class="mt-3 flex items-center gap-2 overflow-x-auto pb-1">
+<div class="relative w-24 h-16 rounded-xl overflow-hidden flex-shrink-0 shadow-sm group cursor-pointer">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform" data-alt="Close up photograph of a professional tire repair patch inside automotive maintenance garage, tools arranged neatly with high contrast workshop lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAO9cY3-gjPZ97jNbPGkHvSfewssMLmVgTAz1e603ny81u8doijRWivv_5niDYup63-le7knXadiDtjpV0aM6beI1q0RJUlAnrV87pehYJpfgnnxnE0Eto-jMd0p20IBue71872iOVsHqM0xV1R_dB7T7zOagTy1LW42xLrypiI6KWCFZMSUPpYIcQWvJqHhKAiqRDpwv-6tdzLrncn6TYsy_uM52DOpCuluQhOPxfsSZHkKT2Uw5io">
+<div class="absolute inset-0 bg-inverse-surface/10"></div>
+<span class="absolute bottom-1 right-1 bg-surface-container-lowest/90 px-1 py-0.2 rounded text-[9px] font-bold text-on-surface">Bay 3</span>
+</div>
+<div class="relative w-24 h-16 rounded-xl overflow-hidden flex-shrink-0 shadow-sm group cursor-pointer">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform" data-alt="Digital fuel pump display screen showing accurate diesel fuel rates and high speed nozzle dispensing cleanly, bright daytime automotive photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfxLI9Y6u9HuAS1hgVPKRZE2JdotE5R2S4XjysMdo4SsqVp3hiixTkpcdaef-8jbZfRN8PkG9iPUrPWoff2So4e4fjkZgj49kgkw6yKtjlmE36nb1IngKLfgo7N-a9lyvPXndD36kHVKwjn49F0TtXt_9yLD-lXw-zCJEppO1iSVn48YSCWVA2Q2k0jNcigTZ4aVFXQiDSepR1qKpn0UbOEAdAPkFPfFVPMk0TidGj0wwyRw7JwqmT">
+<div class="absolute inset-0 bg-inverse-surface/10"></div>
+<span class="absolute bottom-1 right-1 bg-surface-container-lowest/90 px-1 py-0.2 rounded text-[9px] font-bold text-on-surface">Fuel Receipt</span>
+</div>
+</div>
+<!-- Review Actions Footer -->
+<div class="mt-3.5 pt-3 flex items-center justify-between text-xs text-on-surface-variant">
+<button class="helpful-btn px-3 py-1.5 rounded-full bg-surface-container-low text-on-surface-variant hover:text-primary hover:bg-primary-fixed/30 font-bold transition-all flex items-center gap-1.5" onclick="toggleHelpful(this)">
+<span class="material-symbols-outlined text-[16px] thumbs-icon">thumb_up</span>
+<span class="count-label">Helpful (19)</span>
+</button>
+<div class="flex items-center gap-3">
+<button class="hover:text-primary transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">reply</span>
+            Reply
+          </button>
+<button class="hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[16px]">flag</span>
+</button>
+</div>
+</div>
+</article>
+</section>
+<!-- Sticky / Floating Action Floating Bottom Bar with XP Reward -->
+<div class="fixed bottom-3 inset-x-3 z-40 max-w-md mx-auto">
+<div class="bg-surface-container-lowest/95 backdrop-blur-xl p-2.5 rounded-full shadow-[0_10px_32px_rgba(224,64,160,0.22)] flex items-center justify-between gap-2.5">
+<div class="flex items-center gap-2 pl-2">
+<div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-primary flex-shrink-0 animate-pulse">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">stars</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-bold text-on-surface leading-tight">Rate this Spot</span>
+<span class="text-[10px] font-bold text-primary flex items-center gap-0.5">
+            Earn <span class="bg-primary/10 px-1.5 py-0.2 rounded-full font-black">+25 Scout XP</span>
+</span>
+</div>
+</div>
+<button class="px-5 py-2.5 rounded-full bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold text-xs shadow-[0_4px_16px_rgba(224,64,160,0.35)] hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5 flex-shrink-0" onclick="triggerReviewModal()">
+<span class="material-symbols-outlined text-[17px]">photo_camera</span>
+        Write a Review
+      </button>
+</div>
+</div>
+</div>
+<!-- Inline Interactive Microinteractions -->
+<script>
+  function toggleHelpful(button) {
+    const icon = button.querySelector('.thumbs-icon');
+    const label = button.querySelector('.count-label');
+    const isUpvoted = button.classList.contains('is-helpful');
+
+    if (!isUpvoted) {
+      button.classList.add('is-helpful', 'bg-primary-fixed', 'text-on-primary-fixed');
+      button.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
+      icon.style.fontVariationSettings = "'FILL' 1";
+      
+      // Extract count & increment
+      const match = label.textContent.match(/\d+/);
+      const current = match ? parseInt(match[0]) : 0;
+      label.textContent = `Helpful (${current + 1})`;
+
+      // Little bouncy scale
+      button.style.transform = 'scale(1.08)';
+      setTimeout(() => { button.style.transform = 'scale(1)'; }, 180);
+    } else {
+      button.classList.remove('is-helpful', 'bg-primary-fixed', 'text-on-primary-fixed');
+      button.classList.add('bg-surface-container-low', 'text-on-surface-variant');
+      icon.style.fontVariationSettings = "'FILL' 0";
+
+      const match = label.textContent.match(/\d+/);
+      const current = match ? parseInt(match[0]) : 1;
+      label.textContent = `Helpful (${Math.max(0, current - 1)})`;
+    }
+  }
+
+  function triggerReviewModal() {
+    // Delightful bounce and temporary toast feedback
+    const toast = document.createElement('div');
+    toast.className = 'fixed top-20 inset-x-6 z-50 p-3 bg-secondary text-on-secondary text-xs font-bold rounded-2xl shadow-xl flex items-center justify-between transition-all transform duration-300';
+    toast.innerHTML = `
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-secondary-fixed text-[18px]">verified</span>
+        <span>Review Composer launching... Snap a photo for +25 XP!</span>
+      </div>
+      <button onclick="this.parentElement.remove()" class="text-secondary-fixed hover:text-white font-black text-sm">&times;</button>
+    `;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(-10px)';
+      setTimeout(() => toast.remove(), 300);
+    }, 2400);
+  }
+</script></main></body></html>

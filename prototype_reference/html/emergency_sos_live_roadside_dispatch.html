@@ -1,0 +1,280 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_stack" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "outline": "#907898", "on-primary-fixed": "#3d0028", "tertiary-fixed-dim": "#80d0f0", "on-surface-variant": "#604868", "inverse-on-surface": "#fef7ff", "tertiary-fixed": "#c8eaff", "secondary-fixed-dim": "#c8a8e8", "on-secondary-fixed": "#1a1030", "primary-fixed-dim": "#f0a0cc", "on-background": "#2e1a28", "on-error-container": "#9b1c1c", "surface-variant": "#f2e8f2", "secondary-container": "#eedcff", "surface-container-high": "#f2e8f2", "secondary-fixed": "#eedcff", "surface-container-highest": "#ece2ec", "on-tertiary-fixed": "#001a33", "on-error": "#ffffff", "tertiary-container": "#40c0ee", "inverse-primary": "#f0a0cc", "inverse-surface": "#2e1a28", "primary-container": "#f080c0", "surface-container": "#f8eef8", "on-secondary": "#ffffff", "surface-dim": "#e0d6e0", "error-container": "#ffe8e8", "on-primary-fixed-variant": "#a02070", "outline-variant": "#dcc8e0", "on-primary-container": "#2e1a28", "on-surface": "#2e1a28", "on-tertiary-container": "#00334d", "primary": "#e040a0", "on-primary": "#ffffff", "surface-container-lowest": "#ffffff", "error": "#e53e3e", "on-secondary-fixed-variant": "#4a3068", "surface-container-low": "#fbf2fb", "background": "#fef7ff", "secondary": "#7c52aa", "surface": "#fef7ff", "tertiary": "#0096cc", "on-tertiary": "#ffffff", "on-tertiary-fixed-variant": "#005580", "surface-bright": "#fef7ff", "on-secondary-container": "#2e2040", "surface-tint": "#e040a0", "primary-fixed": "#ffd6ee" }, "borderRadius": { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" }, "spacing": {}, "fontFamily": { "headline": ["DM Sans"], "display": ["DM Sans"], "body": ["DM Sans"], "label": ["DM Sans"] }, "fontSize": {} } } }</script><style>@layer base{html,body{width:100vw;margin:0;padding:0;background-color:#fef7ff;}body{overscroll-behavior:none;font-family:'DM Sans',sans-serif;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}body{min-height:max(884px,100dvh);}</style></head><body class="bg-surface text-on-surface font-body flex flex-col min-h-screen selection:bg-primary-fixed selection:text-on-primary-fixed"><header class="fixed top-0 inset-x-0 z-50 bg-surface/85 backdrop-blur-xl shadow-[0_4px_20px_rgba(224,64,160,0.06)] pt-safe"><div class="h-16 px-4 flex items-center justify-between gap-3"><div class="flex items-center gap-2 min-w-0"><button aria-label="Go back" class="w-11 h-11 rounded-full bg-surface-container flex items-center justify-center text-on-surface hover:text-primary active:scale-95 transition-all shadow-[0_2px_8px_rgba(124,82,170,0.12)]" onclick="history.back()"><span class="material-symbols-outlined text-[20px]">arrow_back</span></button><img alt="SpotNear Logo" class="h-7 w-auto object-contain hidden xs:inline-block" src="https://lh3.googleusercontent.com/aida/AEtjO1W-hO1CJoe_ZrGQVw7CaAn8Ojs1s3DFXV8CwRiYf23_e6HEX9NaCMQpe38mqTX5EOigk4JrsKYcQUDi5FGeWIYQZVNCu5iFBrRGvW0ytM63fxlU5tA8Nt0d-46DZVgvTcNo9cN0K7NynCTuWzv04vRrHVtvYB2fg43vK78p2tYZ5WG1ARv7-oZTfnFClv83mkSP-R7ixjsYFhMmhuNSdkFBHy6qe4USMD1pKjBSwLtVx7MCWjLTHhEGWWU"><h1 class="text-base font-headline font-bold text-on-surface truncate tracking-tight">Emergency Sos &amp; Live Roadside Dispatch</h1></div><div class="flex items-center gap-2 flex-shrink-0"><button aria-label="Share service" class="w-11 h-11 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-primary active:scale-95 transition-all shadow-[0_2px_8px_rgba(124,82,170,0.12)]"><span class="material-symbols-outlined text-[20px]">share</span></button><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-primary-fixed" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_m3_vx2rFwDSBsQ-d5afnfoqeed2v-2O5xpiwyRnQvmM4OPhJiWCO3p4iqN6j_Ni9eJNsG4HXha5Uc9aWMrR3h-TJP1kF4UT3fIKE8_mzeLt-Hiu_34Pk40YwKQGCf21GgAN84xitBM5gTUFrVKnd2wCoBtwkcoBkvFIwBdpMhG2e3Vc-g-it_BRMFohrWJMC9i2tcKHgwR6C2_3H7xOq1fMnDb1ai8bJoSgTLsFQ9gvWFrjXGyAG"></div></div></header><main class="flex flex-col relative w-full pt-16 pb-safe bg-surface min-h-screen"><div class="flex flex-col w-full px-4 pb-12 space-y-4">
+<!-- Urgent Status Alert Banner -->
+<div class="relative overflow-hidden bg-primary text-on-primary rounded-lg p-5 shadow-[0_8px_24px_rgba(224,64,160,0.28)]">
+<div class="flex items-center justify-between gap-3 mb-3">
+<div class="flex items-center gap-2">
+<span class="relative flex h-3.5 w-3.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-white"></span>
+</span>
+<span class="text-xs uppercase font-headline tracking-widest font-extrabold text-white">DISPATCH ACTIVE • Units En Route</span>
+</div>
+<span class="px-2.5 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-bold text-white flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">bolt</span> Priority SOS
+      </span>
+</div>
+<div class="flex items-end justify-between">
+<div>
+<p class="text-xs uppercase font-semibold tracking-wider text-pink-100 opacity-90">Estimated Arrival</p>
+<div class="flex items-baseline gap-1 mt-0.5">
+<span class="text-4xl font-headline font-black tracking-tight" id="eta-display">8</span>
+<span class="text-lg font-bold font-headline">mins</span>
+<span class="text-sm font-medium text-pink-100 ml-1.5 opacity-90">away</span>
+</div>
+</div>
+<div class="text-right bg-white/15 px-3 py-1.5 rounded-full backdrop-blur-md">
+<span class="text-xs font-medium text-pink-100 block">Distance</span>
+<span class="text-sm font-black font-headline tracking-tight text-white">2.3 miles</span>
+</div>
+</div>
+<!-- Live Animated Progress Bar -->
+<div class="mt-4 w-full bg-black/15 h-2 rounded-full overflow-hidden">
+<div class="bg-white h-full rounded-full w-3/4 animate-pulse"></div>
+</div>
+</div>
+<!-- Live Rescue Tracking Map Snippet -->
+<div class="relative bg-surface-container-lowest rounded-lg p-3 shadow-[0_4px_20px_rgba(124,82,170,0.08)] overflow-hidden">
+<div class="flex items-center justify-between px-2 py-1 mb-2">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-tertiary animate-pulse"></span>
+<span class="text-xs font-headline font-bold uppercase tracking-wider text-on-surface">Live Telemetry Map</span>
+</div>
+<span class="text-[11px] font-semibold text-tertiary bg-tertiary-fixed px-2.5 py-0.5 rounded-full">GPS Live • 1s Sync</span>
+</div>
+<!-- Animated Vector Tracking Canvas Preview -->
+<div class="relative w-full h-48 bg-surface-container rounded-DEFAULT overflow-hidden flex items-center justify-center">
+<!-- Background Map Stylized Vector -->
+<svg class="absolute inset-0 w-full h-full" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<linearGradient id="map-grid" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#f8eef8"></stop>
+<stop offset="100%" stop-color="#ece2ec"></stop>
+</linearGradient>
+<linearGradient id="route-gradient" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#0096cc"></stop>
+<stop offset="100%" stop-color="#e040a0"></stop>
+</linearGradient>
+</defs>
+<!-- Soft Road Grid -->
+<rect fill="url(#map-grid)" height="100%" width="100%"></rect>
+<path d="M-20,40 Q80,70 180,45 T380,80" fill="none" stroke="#f2e8f2" stroke-width="12"></path>
+<path d="M30,190 Q120,110 210,130 T420,100" fill="none" stroke="#f2e8f2" stroke-width="18"></path>
+<path d="M50,-10 L160,200" fill="none" stroke="#f2e8f2" stroke-width="10"></path>
+<path d="M220,-10 L300,200" fill="none" stroke="#f2e8f2" stroke-width="14"></path>
+<!-- Live Route Path -->
+<path d="M 45 40 Q 110 130 190 90 T 320 135" fill="none" id="rescue-trail" stroke="url(#route-gradient)" stroke-dasharray="6 6" stroke-width="4"></path>
+</svg>
+<!-- Rescue Tow Truck Marker (En Route) -->
+<div class="absolute left-8 top-6 flex flex-col items-center animate-bounce" style="animation-duration: 2.4s;">
+<div class="w-10 h-10 rounded-full bg-tertiary text-on-tertiary flex items-center justify-center shadow-[0_4px_12px_rgba(0,150,204,0.35)]">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+</div>
+<div class="bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold px-2 py-0.5 rounded-full mt-1 shadow-sm whitespace-nowrap">
+          Tow Unit #42
+        </div>
+</div>
+<!-- Live Speed & Distance Badge Overlaid -->
+<div class="absolute top-3 right-3 bg-surface-container-lowest/90 backdrop-blur-md px-2.5 py-1 rounded-full shadow-sm flex items-center gap-1.5">
+<span class="material-symbols-outlined text-xs text-primary" style="font-variation-settings: 'FILL' 1;">navigation</span>
+<span class="text-[11px] font-bold text-on-surface">Approaching • 42 mph</span>
+</div>
+<!-- Stranded Vehicle Marker (User Pin) -->
+<div class="absolute right-12 bottom-6 flex flex-col items-center">
+<span class="relative flex h-8 w-8 items-center justify-center">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-40"></span>
+<span class="w-7 h-7 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-[0_4px_10px_rgba(224,64,160,0.4)]">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">car_crash</span>
+</span>
+</span>
+<div class="bg-primary-fixed text-on-primary-fixed text-[10px] font-bold px-2 py-0.5 rounded-full mt-1 shadow-sm whitespace-nowrap">
+          Your Vehicle
+        </div>
+</div>
+</div>
+</div>
+<!-- Assigned Responder Profile Card -->
+<div class="bg-surface-container-lowest rounded-lg p-5 shadow-[0_4px_20px_rgba(124,82,170,0.08)]">
+<div class="flex items-start justify-between gap-3">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img class="w-14 h-14 rounded-full object-cover shadow-[0_4px_12px_rgba(124,82,170,0.18)]" data-alt="Warm and professional roadside assistance technician wearing a bright safety vest smiling reassuringly, high key studio lighting, candy pop aesthetic background with soft magenta tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDterfjBHGR2nhi0oieaHkogemf8cK-ZCToiUKqlpC0vMoyWabdb-dWbKfq3lLgPRRvTGfO0lnCoHzyFUqMUpl8Z-gKjJuakBK8P6gesd093VljoA-xA5KfdAZLeap1LruVvOdP9iS9vpbYigyfCYV8n5yRae5_SR5xcuHZyz9cyVt6BWQOb_WQHvbIiBifsIXFAA2hISg4bgjNzwreTd6aBmBG5AgFfxSQgx3ADFOe2UthoAckmbZE">
+<span class="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-secondary text-white flex items-center justify-center text-[10px] shadow-sm">
+<span class="material-symbols-outlined text-[11px]">verified</span>
+</span>
+</div>
+<div>
+<span class="text-[11px] font-bold uppercase tracking-wider text-secondary">Unit #42 • Metro Tow &amp; Roadside</span>
+<h2 class="text-lg font-headline font-bold text-on-surface leading-tight">Officer Marcus Vance</h2>
+<div class="flex items-center gap-1.5 mt-0.5">
+<span class="material-symbols-outlined text-amber-500 text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold text-on-surface">4.9</span>
+<span class="text-xs text-on-surface-variant font-medium">(850+ rescues)</span>
+</div>
+</div>
+</div>
+<span class="bg-secondary-fixed text-on-secondary-fixed text-[11px] font-bold px-2.5 py-1 rounded-full whitespace-nowrap">
+        Heavy Winch
+      </span>
+</div>
+<!-- Vehicle Specs Tag Line -->
+<div class="mt-3.5 bg-surface-container-low rounded-DEFAULT p-2.5 flex items-center justify-between text-xs">
+<div class="flex items-center gap-2 text-on-surface-variant font-medium">
+<span class="material-symbols-outlined text-base text-secondary">rv_hookup</span>
+<span>Ford F-550 Super Duty Flatbed</span>
+</div>
+<span class="font-bold font-headline text-on-surface">Plate: 7K-9840</span>
+</div>
+<!-- Direct Responder Communication CTAs -->
+<div class="grid grid-cols-2 gap-2.5 mt-4">
+<a class="flex items-center justify-center gap-2 py-3 px-4 rounded-full bg-primary text-on-primary font-headline font-bold text-sm shadow-[0_4px_16px_rgba(224,64,160,0.24)] active:scale-95 transition-all text-center" href="tel:5550192834">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">phone_in_talk</span>
+<span>Call Driver</span>
+</a>
+<button class="flex items-center justify-center gap-2 py-3 px-4 rounded-full bg-secondary text-on-secondary font-headline font-bold text-sm shadow-[0_4px_16px_rgba(124,82,170,0.22)] active:scale-95 transition-all" onclick="triggerVoiceNoteModal()">
+<span class="material-symbols-outlined text-[18px]">mic</span>
+<span>Voice Note / Chat</span>
+</button>
+</div>
+</div>
+<!-- Emergency Telemetry & Location Sharing Card -->
+<div class="bg-surface-container-lowest rounded-lg p-5 shadow-[0_4px_20px_rgba(124,82,170,0.08)] space-y-3.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-tertiary-fixed text-tertiary flex items-center justify-center">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">pin_drop</span>
+</div>
+<div>
+<h3 class="text-xs uppercase tracking-wider font-extrabold text-on-surface-variant">Live Location Pin</h3>
+<p class="text-sm font-headline font-bold text-on-surface">I-45 Northbound, Mile Marker 104</p>
+</div>
+</div>
+<button class="w-8 h-8 rounded-full bg-surface-container text-on-surface flex items-center justify-center active:scale-90 transition-transform" onclick="copyCoordinates()">
+<span class="material-symbols-outlined text-sm">content_copy</span>
+</button>
+</div>
+<!-- Coordinates Snippet -->
+<div class="flex items-center justify-between bg-surface-container-low px-3 py-2 rounded-DEFAULT text-xs">
+<span class="text-on-surface-variant font-medium">GPS Raw Coordinates</span>
+<span class="font-mono font-bold text-tertiary">30.3129° N, 95.4561° W</span>
+</div>
+<!-- Automated ICE Notification Pill -->
+<div class="p-3 rounded-DEFAULT bg-secondary-fixed/50 flex items-start gap-2.5">
+<span class="material-symbols-outlined text-secondary text-base mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<div class="text-xs">
+<p class="font-bold text-on-secondary-fixed">Spouse David Jenkins notified</p>
+<p class="text-on-secondary-fixed-variant mt-0.5">Automated SMS &amp; Live Tracking Pin synced successfully at 14:32</p>
+</div>
+</div>
+</div>
+<!-- Safety Checklist & Emergency Controls -->
+<div class="bg-surface-container-lowest rounded-lg p-5 shadow-[0_4px_20px_rgba(124,82,170,0.08)] space-y-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">shield</span>
+<h3 class="text-sm font-headline font-bold uppercase tracking-wider text-on-surface">Action &amp; Safety Checklist</h3>
+</div>
+<!-- Hazard Lights Card -->
+<div class="flex items-center gap-3 p-3 rounded-DEFAULT bg-primary-fixed/40">
+<div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center shrink-0 shadow-[0_2px_8px_rgba(224,64,160,0.2)]">
+<span class="material-symbols-outlined text-xl">warning</span>
+</div>
+<div class="text-xs leading-snug">
+<p class="font-bold text-on-primary-fixed">Turn On Hazard Lights &amp; Stay Inside</p>
+<p class="text-on-primary-fixed-variant mt-0.5">Keep seatbelt buckled on high-speed shoulders until Unit #42 parks behind you.</p>
+</div>
+</div>
+<!-- Screen Strobe Beacon Interactive Switch -->
+<div class="flex items-center justify-between p-3.5 rounded-DEFAULT bg-surface-container-low">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center transition-all duration-300" id="strobe-indicator">
+<span class="material-symbols-outlined text-xl">flashlight_on</span>
+</div>
+<div>
+<p class="text-xs font-headline font-bold text-on-surface">Screen Strobe Beacon</p>
+<p class="text-[11px] text-on-surface-variant">Flashes high-visibility neon to flag down responders</p>
+</div>
+</div>
+<button aria-checked="false" class="relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full bg-outline-variant p-0.5 transition-colors duration-200 ease-in-out focus:outline-none" id="toggle-strobe-btn" onclick="toggleStrobeBeacon()" role="switch">
+<span class="pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md transition duration-200 ease-in-out translate-x-0" id="strobe-knob"></span>
+</button>
+</div>
+<!-- Cancel Request Section -->
+<div class="pt-2">
+<button class="w-full py-3 px-4 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-headline font-bold text-xs uppercase tracking-wider active:scale-95 transition-all flex items-center justify-center gap-1.5" onclick="confirmCancellation()">
+<span class="material-symbols-outlined text-sm">cancel</span>
+<span>Cancel Emergency Request</span>
+</button>
+<p class="text-[10px] text-center text-on-surface-variant mt-2">
+        Cancelling within 2 mins is free. Units en route may incur a local municipality fee thereafter.
+      </p>
+</div>
+</div>
+</div>
+<!-- Fullscreen Strobe Overlay (Hidden by Default) -->
+<div class="fixed inset-0 z-50 hidden flex-col items-center justify-center p-6 text-center select-none cursor-pointer" id="strobe-overlay" onclick="toggleStrobeBeacon()">
+<div class="bg-black/80 backdrop-blur-md px-6 py-4 rounded-lg text-white max-w-xs shadow-2xl">
+<span class="material-symbols-outlined text-4xl mb-2 animate-bounce text-pink-400">warning</span>
+<h2 class="text-lg font-headline font-black uppercase tracking-wider mb-1">SOS Strobe Active</h2>
+<p class="text-xs text-pink-100 font-medium">Place phone against your rear windshield facing traffic. Tap anywhere to exit.</p>
+</div>
+</div>
+<!-- Client-side Micro-interactions -->
+<script>
+  let strobeActive = false;
+  let strobeInterval = null;
+
+  function toggleStrobeBeacon() {
+    strobeActive = !strobeActive;
+    const overlay = document.getElementById('strobe-overlay');
+    const toggleBtn = document.getElementById('toggle-strobe-btn');
+    const knob = document.getElementById('strobe-knob');
+    const indicator = document.getElementById('strobe-indicator');
+
+    if (strobeActive) {
+      overlay.classList.remove('hidden');
+      overlay.classList.add('flex');
+      toggleBtn.classList.remove('bg-outline-variant');
+      toggleBtn.classList.add('bg-primary');
+      knob.classList.add('translate-x-5');
+      indicator.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
+      indicator.classList.add('bg-primary', 'text-on-primary', 'animate-pulse');
+
+      let isPink = false;
+      strobeInterval = setInterval(() => {
+        isPink = !isPink;
+        overlay.style.backgroundColor = isPink ? '#e040a0' : '#ffffff';
+      }, 100);
+    } else {
+      overlay.classList.add('hidden');
+      overlay.classList.remove('flex');
+      toggleBtn.classList.add('bg-outline-variant');
+      toggleBtn.classList.remove('bg-primary');
+      knob.classList.remove('translate-x-5');
+      indicator.classList.add('bg-surface-container-high', 'text-on-surface-variant');
+      indicator.classList.remove('bg-primary', 'text-on-primary', 'animate-pulse');
+
+      if (strobeInterval) {
+        clearInterval(strobeInterval);
+        strobeInterval = null;
+      }
+    }
+  }
+
+  function copyCoordinates() {
+    navigator.clipboard.writeText('30.3129, -95.4561').then(() => {
+      alert('Coordinates copied to clipboard: 30.3129° N, 95.4561° W');
+    }).catch(() => {
+      alert('Location copied: 30.3129° N, 95.4561° W');
+    });
+  }
+
+  function triggerVoiceNoteModal() {
+    alert('Voice Note Recorder initialized. Speak clearly to send an audio message directly to Officer Vance.');
+  }
+
+  function confirmCancellation() {
+    if (confirm('Are you sure you want to cancel dispatch? Unit #42 is only 8 minutes away.')) {
+      alert('SOS dispatch cancelled. Notification sent to local highway patrol.');
+    }
+  }
+</script></main></body></html>
