@@ -1,68 +1,34 @@
-# SpotNear — Production Web + Mobile Build Pack
+# NearFind
 
-This package converts the supplied Stitch prototype into an implementation-ready, production-grade blueprint for a **responsive web app + iOS/Android mobile app + backend platform**.
+NearFind is a web + mobile nearby-services platform for discovery, routing, community updates, bookings, roadside assistance, rewards and property discovery.
 
-## What was inferred from the prototype
+This repository uses a pnpm/Turborepo monorepo with:
 
-The product is a location-aware driver/nearby-services platform branded **SpotNear**. The supplied screens cover:
+- `apps/api` — NestJS + Fastify + PostgreSQL/PostGIS API
+- `apps/web` — Next.js web client
+- `apps/mobile` — Expo React Native client
+- `packages/design-tokens` — shared design tokens
+- `docs` — architecture, security, API and implementation guidance
 
-- nearby service discovery and map browsing
-- categories and smart filters
-- service/provider details and routing
-- turn-by-turn route HUD concepts
-- saved places and emergency hub
-- roadside SOS/dispatch and live support chat
-- community reporting, live fuel/ATM status and crowdsourced data
-- ratings, reviews and community photos
-- fuel-price comparison and route optimization
-- service-bay booking and payment authorization
-- rewards/XP/leaderboards
-- vehicle/profile/privacy settings
-- driver alerts/notifications
-- real-estate/land listings and inspection booking
+## Local development
 
-The design system is **Candy — “Joyful Pop”**: DM Sans, hot-pink primary, purple secondary, sky-blue tertiary, warm near-white background, pill-shaped controls, large rounded cards, tinted shadows, and playful motion.
+1. Copy `.env.example` to `.env` and configure local values.
+2. Start dependencies with `docker compose up -d`.
+3. Install dependencies with `pnpm install --frozen-lockfile`.
+4. Run migrations with `pnpm --filter @nearfind/api migration:run`.
+5. Seed deterministic demo discovery data with `pnpm --filter @nearfind/api db:seed`.
+6. Run `pnpm dev`.
 
-> Note: the supplied `sign_in_welcome` and `sign_up_preferences` HTML bodies are empty. This pack therefore specifies production auth/onboarding screens that extend the visual system consistently.
+## Quality gates
 
-## Recommended implementation stack
+Run the same quick gate used by CI:
 
-- **Monorepo:** pnpm workspaces + Turborepo
-- **Web:** Next.js 15+, React, TypeScript, Tailwind CSS, TanStack Query, React Hook Form + Zod
-- **Mobile:** React Native + Expo development builds, TypeScript, Expo Router, TanStack Query, NativeWind/tokens
-- **API:** NestJS + Fastify adapter, TypeScript, REST/OpenAPI, WebSocket gateway
-- **Database:** PostgreSQL + PostGIS, TypeORM migrations
-- **Cache/queues:** Redis + BullMQ
-- **Object media:** S3-compatible storage + signed URLs + CDN
-- **Maps/routing:** provider abstraction; Mapbox implementation first
-- **Auth:** OIDC/OAuth 2.1 with PKCE through a managed or self-hosted IdP; short-lived access tokens and rotated refresh tokens
-- **Observability:** OpenTelemetry, structured logs, Sentry-compatible error reporting, Prometheus metrics
-- **Deployment:** Docker; AWS example using ECS/Fargate, RDS Postgres/PostGIS, ElastiCache, S3/CloudFront, WAF, Secrets Manager
+```powershell
+./scripts/testing/Test-All.ps1 -Profile Quick -AllowMissingSecurityTools
+```
 
-## How to use this pack with a coding agent
+The release branch also runs PostGIS-backed integration tests, Gitleaks, Semgrep, Trivy and CodeQL.
 
-1. Give the entire ZIP to the coding agent.
-2. Tell it to read `MASTER_BUILD_PROMPT.md` **first**, then every file under `docs/` and `prototype_reference/design/`.
-3. Require it to implement phases in order and to pass the supplied PowerShell quality gates before moving to the next phase.
-4. Do **not** let the agent replace functional requirements with placeholders, mocked production flows, or “TODO” stubs.
+## Implementation status
 
-## Important files
-
-- `MASTER_BUILD_PROMPT.md` — master build instruction
-- `docs/01-PROTOTYPE-ANALYSIS.md` — screen inventory and responsive interpretation
-- `docs/02-ARCHITECTURE.md` — architecture and runtime boundaries
-- `docs/03-FUNCTIONAL-REQUIREMENTS.md` — user stories and acceptance criteria
-- `docs/04-DATA-AND-API.md` — core data model and API design
-- `docs/05-SECURITY-PRIVACY.md` — security, privacy and emergency-safety requirements
-- `docs/06-CODING-STANDARDS.md` — code organization and engineering rules
-- `docs/07-TEST-STRATEGY.md` — required test pyramid and release gates
-- `docs/08-IMPLEMENTATION-PHASES.md` — phased delivery plan
-- `docs/09-UI-RESPONSIVE-SPEC.md` — web/mobile design interpretation
-- `docs/10-DEVOPS-OPERATIONS.md` — CI/CD, environments, observability and rollback
-- `scripts/testing/*.ps1` — local/CI PowerShell test runners
-- `.github/workflows/*.yml` — CI examples
-- `prototype_reference/` — normalized screenshots, HTML and design reference
-
-## Core release rule
-
-A phase is not complete until the feature works end-to-end, negative cases are tested, relevant security checks pass, accessibility regressions are addressed, and `scripts/testing/Test-All.ps1 -Profile Full` passes.
+The active consolidated pull request implements the complete Phase 0–8 roadmap from `docs/08-IMPLEMENTATION-PHASES.md`. Earlier stacked identity/client-auth pull requests are superseded by that single PR and must not be merged independently.
