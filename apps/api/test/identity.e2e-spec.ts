@@ -94,12 +94,12 @@ void describe('Identity and favorites API (e2e)', () => {
     assert.ok(place?.id);
 
     for (let attempt = 0; attempt < 2; attempt += 1) {
-      const add = await app.getHttpAdapter().getInstance().inject({
+      const addResponse = (await app.getHttpAdapter().getInstance().inject({
         method: 'POST',
         url: `/v1/favorites/${place.id}`,
         headers: { authorization: 'Bearer user-a' },
-      });
-      assert.equal(add.statusCode, 201);
+      })) as { statusCode: number };
+      assert.equal(addResponse.statusCode, 201);
     }
 
     const favoritesA = await app.getHttpAdapter().getInstance().inject({
