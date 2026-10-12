@@ -13,7 +13,8 @@
     "test:coverage": "node --import tsx --experimental-test-coverage --test src/**/*.spec.ts",
     "test:integration": "jest --config test/jest-e2e.json --runInBand",
     "migration:run": "typeorm-ts-node-esm migration:run -d src/database/data-source.ts",
-    "migration:revert": "typeorm-ts-node-esm migration:revert -d src/database/data-source.ts"
+    "migration:revert": "typeorm-ts-node-esm migration:revert -d src/database/data-source.ts",
+    "db:seed": "tsx src/database/seed.ts"
   },
   "dependencies": {
     "@fastify/helmet": "^13.0.2",
