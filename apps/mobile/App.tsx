@@ -80,6 +80,18 @@ export default function App() {
   const [favorites, setFavorites] = useState<Favorite[]>([]);
   const [authBusy, setAuthBusy] = useState(true);
   const [viewMode, setViewMode] = useState<ViewMode>('explore');
+  const [discovery, setDiscovery] = useState<AuthSession.DiscoveryDocument | null>(null);
+
+  const [authRequest, , promptAuth] = AuthSession.useAuthRequest(
+    {
+      clientId: oidcClientId ?? 'unconfigured',
+      redirectUri,
+      responseType: AuthSession.ResponseType.Code,
+      scopes: ['openid', 'profile', 'email'],
+      usePKCE: true,
+    },
+    oidcClientId ? discovery : null,
+  );
 
   const favoriteIds = useMemo(() => new Set(favorites.map((favorite) => favorite.placeId)), [favorites]);
   const visibleServices = useMemo(() => {
@@ -92,6 +104,31 @@ export default function App() {
 
   useEffect(() => {
     void restoreSession();
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    if (!oidcIssuer) {
+      setDiscovery(null);
+      return () => {
+        active = false;
+      };
+    }
+
+    void AuthSession.fetchDiscoveryAsync(oidcIssuer)
+      .then((document) => {
+        if (active) setDiscovery(document);
+      })
+      .catch(() => {
+        if (active) {
+          setDiscovery(null);
+          setStatus('Unable to load the identity provider configuration.');
+        }
+      });
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   async function restoreSession(): Promise<void> {
@@ -116,8 +153,8 @@ export default function App() {
   async function ensureFreshSession(current: StoredAuthSession): Promise<StoredAuthSession | null> {
     if (isSessionFresh(current)) return current;
     if (!oidcIssuer || !oidcClientId || !current.refreshToken) return null;
-    const discovery = await AuthSession.fetchDiscoveryAsync(oidcIssuer);
-    return refreshAuthSession(current, oidcClientId, discovery);
+    const currentDiscovery = discovery ?? (await AuthSession.fetchDiscoveryAsync(oidcIssuer));
+    return refreshAuthSession(current, oidcClientId, currentDiscovery);
   }
 
   async function authenticatedFetch(
@@ -158,36 +195,32 @@ export default function App() {
       setStatus('Sign-in is not configured. Set the mobile OIDC issuer and client ID.');
       return;
     }
+    if (!discovery || !authRequest) {
+      setStatus('Secure sign-in is still initializing. Please try again.');
+      return;
+    }
+    if (!discovery.tokenEndpoint) {
+      setStatus('Identity provider discovery is missing a token endpoint.');
+      return;
+    }
 
     setAuthBusy(true);
     setStatus('Opening secure sign-in…');
     try {
-      const discovery = await AuthSession.fetchDiscoveryAsync(oidcIssuer);
-      if (!discovery.authorizationEndpoint || !discovery.tokenEndpoint) {
-        throw new Error('Identity provider discovery is incomplete');
-      }
-
-      const request = new AuthSession.AuthRequest({
-        clientId: oidcClientId,
-        redirectUri,
-        responseType: AuthSession.ResponseType.Code,
-        scopes: ['openid', 'profile', 'email'],
-        usePKCE: true,
-      });
-      const result = await request.promptAsync(discovery);
+      const result = await promptAuth();
       if (result.type !== 'success') {
         setStatus(result.type === 'dismiss' || result.type === 'cancel' ? 'Sign-in cancelled.' : 'Sign-in was not completed.');
         return;
       }
 
       const code = result.params.code;
-      if (!code || !request.codeVerifier) throw new Error('Authorization response was incomplete');
+      if (!code || !authRequest.codeVerifier) throw new Error('Authorization response was incomplete');
       const token = await AuthSession.exchangeCodeAsync(
         {
           clientId: oidcClientId,
           code,
           redirectUri,
-          extraParams: { code_verifier: request.codeVerifier },
+          extraParams: { code_verifier: authRequest.codeVerifier },
         },
         discovery,
       );
