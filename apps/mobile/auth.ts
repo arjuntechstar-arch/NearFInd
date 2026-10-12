@@ -98,7 +98,7 @@ export async function refreshAuthSession(
   return saveAuthSession({
     accessToken: token.accessToken,
     refreshToken: token.refreshToken ?? session.refreshToken,
-    expiresIn: token.expiresIn,
+    ...(typeof token.expiresIn === 'number' ? { expiresIn: token.expiresIn } : {}),
     issuedAt: token.issuedAt,
   });
 }
