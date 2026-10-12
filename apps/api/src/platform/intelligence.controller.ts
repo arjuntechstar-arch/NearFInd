@@ -54,8 +54,11 @@ export class IntelligenceController {
   @UseGuards(AuthGuard)
   addFuel(@Req() request: AuthenticatedRequest, @Body() body: FuelObservationDto) {
     return this.intelligence.addFuelObservation(requireCurrentUser(request), {
-      ...body,
-      observedAt: body.observedAt ? new Date(body.observedAt) : undefined,
+      serviceLocationId: body.serviceLocationId,
+      fuelType: body.fuelType,
+      price: body.price,
+      currency: body.currency,
+      ...(body.observedAt ? { observedAt: new Date(body.observedAt) } : {}),
     });
   }
 
@@ -86,8 +89,8 @@ export class IntelligenceController {
       start: { lat: body.startLat, lng: body.startLng },
       end: { lat: body.endLat, lng: body.endLng },
       corridorMeters: body.corridorMeters,
-      categoryId: body.categoryId,
-      fuelType: body.fuelType,
+      ...(body.categoryId !== undefined ? { categoryId: body.categoryId } : {}),
+      ...(body.fuelType !== undefined ? { fuelType: body.fuelType } : {}),
     });
   }
 
