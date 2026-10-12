@@ -6,7 +6,7 @@ import { HealthController } from './health.controller.js';
 
 void describe('HealthController', () => {
   void it('returns a liveness response', () => {
-    const dataSource = { query: async () => [{ '?column?': 1 }] } as unknown as DataSource;
+    const dataSource = { query: () => Promise.resolve([{ '?column?': 1 }]) } as unknown as DataSource;
     const controller = new HealthController(dataSource);
     const response = controller.live();
     assert.equal(response.status, 'ok');
@@ -15,7 +15,7 @@ void describe('HealthController', () => {
   });
 
   void it('returns ready when database responds', async () => {
-    const dataSource = { query: async () => [{ '?column?': 1 }] } as unknown as DataSource;
+    const dataSource = { query: () => Promise.resolve([{ '?column?': 1 }]) } as unknown as DataSource;
     const controller = new HealthController(dataSource);
     const response = await controller.ready();
     assert.equal(response.status, 'ok');
@@ -24,9 +24,7 @@ void describe('HealthController', () => {
 
   void it('returns unavailable when database query fails', async () => {
     const dataSource = {
-      query: async () => {
-        throw new Error('offline');
-      },
+      query: () => Promise.reject(new Error('offline')),
     } as unknown as DataSource;
     const controller = new HealthController(dataSource);
     await assert.rejects(() => controller.ready(), ServiceUnavailableException);
