@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import type { Repository } from 'typeorm';
 import type { NearbyQueryDto } from './dto/nearby-query.dto.js';
@@ -18,6 +18,8 @@ export interface NearbyServiceResult {
   coordinates: { lat: number; lng: number };
   distanceMeters: number;
 }
+
+export type PlaceDetailResult = Omit<NearbyServiceResult, 'distanceMeters'>;
 
 @Injectable()
 export class DiscoveryService {
@@ -97,5 +99,61 @@ export class DiscoveryService {
       coordinates: { lat: Number(row.lat), lng: Number(row.lng) },
       distanceMeters: Math.round(Number(row.distanceMeters)),
     }));
+  }
+
+  async getPlace(id: string): Promise<PlaceDetailResult> {
+    const row = await this.locations
+      .createQueryBuilder('location')
+      .innerJoin('location.category', 'category')
+      .select([
+        'location.id AS id',
+        'location.name AS name',
+        'location.address AS address',
+        'location.city AS city',
+        'location.state AS state',
+        'location.countryCode AS "countryCode"',
+        'location.rating AS rating',
+        'location.reviewCount AS "reviewCount"',
+        'category.slug AS "categorySlug"',
+        'category.name AS "categoryName"',
+        'category.icon AS "categoryIcon"',
+        'ST_Y(location.location::geometry) AS lat',
+        'ST_X(location.location::geometry) AS lng',
+      ])
+      .where('location.id = :id', { id })
+      .andWhere('location.isActive = true')
+      .andWhere('category.isActive = true')
+      .getRawOne<{
+        id: string;
+        name: string;
+        address: string;
+        city: string;
+        state: string;
+        countryCode: string;
+        rating: string;
+        reviewCount: number;
+        categorySlug: string;
+        categoryName: string;
+        categoryIcon: string;
+        lat: string;
+        lng: string;
+      }>();
+
+    if (!row) {
+      throw new NotFoundException('Service location not found');
+    }
+
+    return {
+      id: row.id,
+      name: row.name,
+      address: row.address,
+      city: row.city,
+      state: row.state,
+      countryCode: row.countryCode,
+      rating: Number(row.rating),
+      reviewCount: Number(row.reviewCount),
+      category: { slug: row.categorySlug, name: row.categoryName, icon: row.categoryIcon },
+      coordinates: { lat: Number(row.lat), lng: Number(row.lng) },
+    };
   }
 }
