@@ -18,3 +18,13 @@ trustPolicyExclude:
   # Legacy transitive dependency pulled by Jest/Babel. Exact-version exception;
   # do not widen this without reviewing provenance and the dependency path.
   - semver@6.3.1
+
+# pnpm 12 blocks dependency lifecycle scripts unless explicitly governed.
+# Native watcher/resolver packages need their install scripts to select/build
+# platform binaries. Scarf is telemetry-only and is intentionally prevented
+# from executing during install.
+onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - unrs-resolver
+ignoredBuiltDependencies:
+  - '@scarf/scarf'
