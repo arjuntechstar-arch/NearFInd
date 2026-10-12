@@ -11,13 +11,13 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
-  async headers() {
-    return [
+  headers() {
+    return Promise.resolve([
       {
         source: '/(.*)',
         headers: securityHeaders,
       },
-    ];
+    ]);
   },
 };
 
