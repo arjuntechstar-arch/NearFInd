@@ -25,7 +25,7 @@ export class ServiceLocation {
   @Column({ type: 'varchar', length: 120 })
   state!: string;
 
-  @Column({ type: 'varchar', length: 2, default: 'IN' })
+  @Column({ type: 'varchar', length: 2, name: 'country_code', default: 'IN' })
   countryCode!: string;
 
   @Index({ spatial: true })
@@ -35,9 +35,9 @@ export class ServiceLocation {
   @Column({ type: 'numeric', precision: 3, scale: 2, default: 0 })
   rating!: string;
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'int', name: 'review_count', default: 0 })
   reviewCount!: number;
 
-  @Column({ type: 'boolean', default: true })
+  @Column({ type: 'boolean', name: 'is_active', default: true })
   isActive!: boolean;
 }
