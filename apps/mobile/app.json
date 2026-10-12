@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "name": "NearFind",
+    "slug": "nearfind",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "scheme": "nearfind",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.nearfind.app",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "NearFind uses your location only when you ask to discover or route to nearby services."
+      }
+    },
+    "android": {
+      "package": "com.nearfind.app",
+      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"]
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
