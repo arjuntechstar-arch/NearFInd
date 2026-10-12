@@ -5,6 +5,12 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { colors, radii, spacing } from '@nearfind/design-tokens';
 
+declare const process: {
+  env: {
+    EXPO_PUBLIC_API_BASE_URL?: string;
+  };
+};
+
 interface Category {
   id: string;
   slug: string;
@@ -70,7 +76,7 @@ export default function App() {
     try {
       await loadCategories();
       const permission = await Location.requestForegroundPermissionsAsync();
-      if (permission.status !== 'granted') {
+      if (permission.status !== Location.PermissionStatus.GRANTED) {
         setStatus('Location permission was not granted. You can enable it later in device settings.');
         return;
       }
