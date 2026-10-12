@@ -4,6 +4,19 @@ import { createRemoteJWKSet, jwtVerify, type JWTPayload } from 'jose';
 
 export const AUTH_TOKEN_VERIFIER = Symbol('AUTH_TOKEN_VERIFIER');
 
+const asymmetricAlgorithms = new Set([
+  'RS256',
+  'RS384',
+  'RS512',
+  'PS256',
+  'PS384',
+  'PS512',
+  'ES256',
+  'ES384',
+  'ES512',
+  'EdDSA',
+]);
+
 export interface VerifiedIdentity {
   issuer: string;
   subject: string;
@@ -30,17 +43,20 @@ export class OidcTokenVerifier implements TokenVerifier {
       throw new UnauthorizedException('OIDC authentication is not configured');
     }
 
-    this.jwks ??= createRemoteJWKSet(new URL(jwksUrl), {
-      timeoutDuration: 5000,
-      cooldownDuration: 30_000,
-      cacheMaxAge: 10 * 60_000,
-    });
-
     const algorithms = this.config
       .get<string>('OIDC_ALLOWED_ALGORITHMS', 'RS256')
       .split(',')
       .map((value) => value.trim())
       .filter(Boolean);
+    if (algorithms.length === 0 || algorithms.some((algorithm) => !asymmetricAlgorithms.has(algorithm))) {
+      throw new UnauthorizedException('OIDC signature algorithm configuration is invalid');
+    }
+
+    this.jwks ??= createRemoteJWKSet(new URL(jwksUrl), {
+      timeoutDuration: 5000,
+      cooldownDuration: 30_000,
+      cacheMaxAge: 10 * 60_000,
+    });
 
     try {
       const { payload } = await jwtVerify(token, this.jwks, {
