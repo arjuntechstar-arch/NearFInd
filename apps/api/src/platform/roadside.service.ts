@@ -1,12 +1,13 @@
 import {
   ConflictException,
   ForbiddenException,
+  HttpException,
+  HttpStatus,
   Injectable,
   NotFoundException,
-  TooManyRequestsException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, MoreThanOrEqual, Repository } from 'typeorm';
+import { DataSource, type EntityManager, MoreThanOrEqual, Repository } from 'typeorm';
 import { User, UserRole } from '../identity/entities/user.entity.js';
 import { AccessService } from './access.service.js';
 import {
@@ -67,7 +68,7 @@ export class RoadsideService {
     if (existing) return this.toDispatchView(user, existing);
     const since = new Date(Date.now() - 60 * 60 * 1000);
     if (await this.requests.count({ where: { userId: user.id, createdAt: MoreThanOrEqual(since) } }) >= 5) {
-      throw new TooManyRequestsException('Roadside request limit reached');
+      throw new HttpException('Roadside request limit reached', HttpStatus.TOO_MANY_REQUESTS);
     }
     if (input.vehicleId && !(await this.vehicles.findOneBy({ id: input.vehicleId, userId: user.id }))) {
       throw new NotFoundException('Vehicle not found');
@@ -276,7 +277,7 @@ export class RoadsideService {
   }
 
   private async addEvent(
-    manager: DataSource['manager'],
+    manager: EntityManager,
     dispatchRequestId: string,
     actorUserId: string | null,
     type: string,
