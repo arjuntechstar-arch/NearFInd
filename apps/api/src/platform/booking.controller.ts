@@ -53,9 +53,13 @@ export class BookingController {
   @Roles(UserRole.PROVIDER, UserRole.ADMIN)
   createSlot(@Req() request: AuthenticatedRequest, @Body() body: SlotCreateDto) {
     return this.booking.createSlot(requireCurrentUser(request), {
-      ...body,
+      providerId: body.providerId,
+      serviceLocationId: body.serviceLocationId,
       startsAt: new Date(body.startsAt),
       endsAt: new Date(body.endsAt),
+      capacity: body.capacity,
+      priceMinor: body.priceMinor,
+      currency: body.currency,
     });
   }
 
@@ -68,8 +72,8 @@ export class BookingController {
     @Body() body: SlotUpdateDto,
   ) {
     return this.booking.updateSlot(requireCurrentUser(request), id, body.version, {
-      capacity: body.capacity,
-      priceMinor: body.priceMinor,
+      ...(body.capacity !== undefined ? { capacity: body.capacity } : {}),
+      ...(body.priceMinor !== undefined ? { priceMinor: body.priceMinor } : {}),
     });
   }
 
