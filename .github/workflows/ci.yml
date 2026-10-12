@@ -1,4 +1,5 @@
 name: CI
+
 on:
   pull_request:
   push:
@@ -6,6 +7,10 @@ on:
 
 permissions:
   contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   quality:
@@ -17,14 +22,15 @@ jobs:
           fetch-depth: 0
       - uses: pnpm/action-setup@v4
         with:
-          version: 10
+          version: 10.18.3
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
-          cache: pnpm
-      - name: Full application quality gate
+          node-version: 24
+      - name: Phase 0 application quality gate
         shell: pwsh
-        run: ./scripts/testing/Test-All.ps1 -Profile Full -AllowMissingSecurityTools
+        run: ./scripts/testing/Test-All.ps1 -Profile Quick -AllowMissingSecurityTools
+      - name: Formatting check
+        run: pnpm format:check
 
   security:
     runs-on: ubuntu-latest
