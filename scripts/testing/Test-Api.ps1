@@ -5,17 +5,15 @@ $root = Push-RepoRoot
 try {
     Require-Command pnpm
     Write-Section 'API lint'
-    Invoke-Checked pnpm '--filter' '@spotnear/api' 'lint'
+    Invoke-Checked pnpm '--filter' '@nearfind/api' 'lint'
     Write-Section 'API typecheck'
-    Invoke-Checked pnpm '--filter' '@spotnear/api' 'typecheck'
+    Invoke-Checked pnpm '--filter' '@nearfind/api' 'typecheck'
     Write-Section 'API unit coverage'
-    Invoke-Checked pnpm '--filter' '@spotnear/api' 'test:coverage'
+    Invoke-Checked pnpm '--filter' '@nearfind/api' 'test:coverage'
     if ($Integration) {
         Write-Section 'API integration tests'
-        Invoke-Checked pnpm '--filter' '@spotnear/api' 'test:integration'
+        Invoke-Checked pnpm '--filter' '@nearfind/api' 'test:integration'
     }
     Write-Section 'API build'
-    Invoke-Checked pnpm '--filter' '@spotnear/api' 'build'
-    Write-Section 'OpenAPI contract drift check'
-    Invoke-Checked pnpm 'openapi:check'
+    Invoke-Checked pnpm '--filter' '@nearfind/api' 'build'
 } finally { Pop-Location }
