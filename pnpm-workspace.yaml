@@ -1,3 +1,9 @@
 packages:
   - apps/*
   - packages/*
+
+# Supply-chain controls. Direct dependencies are reviewed in PRs; transitive
+# dependencies may only resolve from trusted registry sources.
+blockExoticSubdeps: true
+minimumReleaseAge: 10080
+trustPolicy: no-downgrade
