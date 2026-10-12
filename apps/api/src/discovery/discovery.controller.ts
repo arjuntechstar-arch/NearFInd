@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { DiscoveryService } from './discovery.service.js';
 import { NearbyQueryDto } from './dto/nearby-query.dto.js';
@@ -18,5 +18,11 @@ export class DiscoveryController {
   @ApiOperation({ summary: 'Find active services within a geospatial radius' })
   findNearby(@Query() query: NearbyQueryDto) {
     return this.discovery.findNearby(query);
+  }
+
+  @Get('places/:id')
+  @ApiOperation({ summary: 'Get one active service location by id' })
+  getPlace(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    return this.discovery.getPlace(id);
   }
 }
