@@ -1,0 +1,30 @@
+{
+  "name": "@nearfind/mobile",
+  "version": "0.1.0",
+  "private": true,
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "dev": "expo start",
+    "start": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "lint": "eslint \"**/*.{ts,tsx}\"",
+    "typecheck": "tsc --noEmit",
+    "test": "jest --runInBand",
+    "test:coverage": "jest --coverage --runInBand",
+    "build": "expo export --platform all"
+  },
+  "dependencies": {
+    "@nearfind/design-tokens": "workspace:*",
+    "expo": "^57.0.21",
+    "expo-status-bar": "^57.0.0",
+    "react": "19.2.0",
+    "react-native": "0.86.3"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.2",
+    "eslint": "^9.37.0",
+    "jest": "^30.2.0",
+    "typescript": "^5.9.3"
+  }
+}
