@@ -58,7 +58,12 @@ export async function setLoginCookies(response: NextResponse, state: string, ver
 
 export async function readLoginCookies(): Promise<{ state?: string; verifier?: string }> {
   const store = await cookies();
-  return { state: store.get(STATE_COOKIE)?.value, verifier: store.get(VERIFIER_COOKIE)?.value };
+  const state = store.get(STATE_COOKIE)?.value;
+  const verifier = store.get(VERIFIER_COOKIE)?.value;
+  return {
+    ...(state ? { state } : {}),
+    ...(verifier ? { verifier } : {}),
+  };
 }
 
 export function clearLoginCookies(response: NextResponse): void {
