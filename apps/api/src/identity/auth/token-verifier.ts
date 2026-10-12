@@ -18,33 +18,35 @@ export interface TokenVerifier {
 
 @Injectable()
 export class OidcTokenVerifier implements TokenVerifier {
-  private readonly issuer: string;
-  private readonly audience: string;
-  private readonly jwksUrl: URL;
-  private readonly algorithms: string[];
-  private readonly jwks: ReturnType<typeof createRemoteJWKSet>;
+  private jwks: ReturnType<typeof createRemoteJWKSet> | null = null;
 
-  constructor(@Inject(ConfigService) config: ConfigService) {
-    this.issuer = config.getOrThrow<string>('OIDC_ISSUER_URL');
-    this.audience = config.getOrThrow<string>('OIDC_AUDIENCE');
-    this.jwksUrl = new URL(config.getOrThrow<string>('OIDC_JWKS_URL'));
-    this.algorithms = config.get<string>('OIDC_ALLOWED_ALGORITHMS', 'RS256')
-      .split(',')
-      .map((value) => value.trim())
-      .filter(Boolean);
-    this.jwks = createRemoteJWKSet(this.jwksUrl, {
+  constructor(@Inject(ConfigService) private readonly config: ConfigService) {}
+
+  async verify(token: string): Promise<VerifiedIdentity> {
+    const issuer = this.config.get<string>('OIDC_ISSUER_URL');
+    const audience = this.config.get<string>('OIDC_AUDIENCE');
+    const jwksUrl = this.config.get<string>('OIDC_JWKS_URL');
+    if (!issuer || !audience || !jwksUrl) {
+      throw new UnauthorizedException('OIDC authentication is not configured');
+    }
+
+    this.jwks ??= createRemoteJWKSet(new URL(jwksUrl), {
       timeoutDuration: 5000,
       cooldownDuration: 30_000,
       cacheMaxAge: 10 * 60_000,
     });
-  }
 
-  async verify(token: string): Promise<VerifiedIdentity> {
+    const algorithms = this.config
+      .get<string>('OIDC_ALLOWED_ALGORITHMS', 'RS256')
+      .split(',')
+      .map((value) => value.trim())
+      .filter(Boolean);
+
     try {
       const { payload } = await jwtVerify(token, this.jwks, {
-        issuer: this.issuer,
-        audience: this.audience,
-        algorithms: this.algorithms,
+        issuer,
+        audience,
+        algorithms,
         clockTolerance: 5,
       });
       return this.toIdentity(payload);
