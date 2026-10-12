@@ -1,7 +1,7 @@
 import { ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { randomUUID } from 'node:crypto';
-import { DataSource, LessThan, Repository } from 'typeorm';
+import { DataSource, type EntityManager, In, LessThan, Repository } from 'typeorm';
 import { ServiceLocation } from '../discovery/entities/service-location.entity.js';
 import { User } from '../identity/entities/user.entity.js';
 import { AccessService } from './access.service.js';
@@ -226,19 +226,19 @@ export class BookingService {
     };
   }
 
-  private async releaseExpiredReservations(manager: DataSource['manager'], slot: ProviderSlot): Promise<void> {
+  private async releaseExpiredReservations(manager: EntityManager, slot: ProviderSlot): Promise<void> {
     const expired = await manager.getRepository(Booking).find({
       where: { slotId: slot.id, status: BookingStatus.RESERVED, holdExpiresAt: LessThan(new Date()) },
     });
     if (expired.length === 0) return;
     await manager.getRepository(Booking).update(
-      expired.map((booking) => booking.id),
+      { id: In(expired.map((booking) => booking.id)) },
       { status: BookingStatus.CANCELLED },
     );
     slot.bookedCount = Math.max(0, slot.bookedCount - expired.length);
   }
 
-  private async cancelLockedBooking(manager: DataSource['manager'], booking: Booking): Promise<Booking> {
+  private async cancelLockedBooking(manager: EntityManager, booking: Booking): Promise<Booking> {
     const slotRepo = manager.getRepository(ProviderSlot);
     const slot = await slotRepo.findOne({ where: { id: booking.slotId }, lock: { mode: 'pessimistic_write' } });
     if (slot) {
