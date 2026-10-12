@@ -7,9 +7,9 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "lint": "node -e \"process.exit(0)\"",
+    "lint": "eslint \"src/**/*.ts\"",
     "typecheck": "tsc --noEmit",
-    "test": "node -e \"process.exit(0)\"",
+    "test": "tsc --noEmit",
     "build": "tsc --noEmit"
   },
   "devDependencies": {
