@@ -6,6 +6,13 @@ packages:
 # dependencies may only resolve from trusted registry sources.
 blockExoticSubdeps: true
 minimumReleaseAge: 10080
+minimumReleaseAgeExclude:
+  # These exact release lines were intentionally selected for Phase 0 after
+  # review; they are newer than the default 7-day quarantine window.
+  - next@16.4.0
+  - '@next/*@16.4.0'
+  - expo@57.0.21
+  - 'expo-*@57.0.21'
 trustPolicy: no-downgrade
 trustPolicyExclude:
   # Legacy transitive dependency pulled by Jest/Babel. Exact-version exception;
