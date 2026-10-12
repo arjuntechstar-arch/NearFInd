@@ -1,0 +1,22 @@
+import { Controller, Get, Query } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { DiscoveryService } from './discovery.service.js';
+import { NearbyQueryDto } from './dto/nearby-query.dto.js';
+
+@ApiTags('discovery')
+@Controller('discovery')
+export class DiscoveryController {
+  constructor(private readonly discovery: DiscoveryService) {}
+
+  @Get('categories')
+  @ApiOperation({ summary: 'List active nearby-service categories' })
+  listCategories() {
+    return this.discovery.listCategories();
+  }
+
+  @Get('nearby')
+  @ApiOperation({ summary: 'Find active services within a geospatial radius' })
+  findNearby(@Query() query: NearbyQueryDto) {
+    return this.discovery.findNearby(query);
+  }
+}
