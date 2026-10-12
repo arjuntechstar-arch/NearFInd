@@ -27,9 +27,47 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 24
-      - name: Phase 0 application quality gate
+      - name: Application quality gate
         shell: pwsh
         run: ./scripts/testing/Test-All.ps1 -Profile Quick -AllowMissingSecurityTools
+
+  integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgis/postgis:17-3.5
+        env:
+          POSTGRES_DB: nearfind
+          POSTGRES_USER: nearfind
+          POSTGRES_PASSWORD: nearfind_local
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U nearfind -d nearfind"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    env:
+      NODE_ENV: test
+      DATABASE_URL: postgresql://nearfind:nearfind_local@localhost:5432/nearfind
+      CORS_ORIGINS: http://localhost:3000
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          version: 12.11.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Run migrations
+        run: pnpm --filter @nearfind/api migration:run
+      - name: Seed discovery fixtures
+        run: pnpm --filter @nearfind/api db:seed
+      - name: Run API integration tests
+        run: pnpm --filter @nearfind/api test:integration
 
   security:
     runs-on: ubuntu-latest
