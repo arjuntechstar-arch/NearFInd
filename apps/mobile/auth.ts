@@ -18,28 +18,45 @@ interface TokenResponseLike {
   issuedAt?: number | null;
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function parseStoredSession(value: string): StoredAuthSession | null {
+  const parsed: unknown = JSON.parse(value);
+  if (!isRecord(parsed)) return null;
+
+  const accessToken = parsed.accessToken;
+  const issuedAt = parsed.issuedAt;
+  const refreshToken = parsed.refreshToken;
+  const expiresIn = parsed.expiresIn;
+
+  if (typeof accessToken !== 'string' || accessToken.length === 0) return null;
+  if (typeof issuedAt !== 'number' || !Number.isFinite(issuedAt)) return null;
+  if (refreshToken !== undefined && (typeof refreshToken !== 'string' || refreshToken.length === 0)) return null;
+  if (expiresIn !== undefined && (typeof expiresIn !== 'number' || !Number.isFinite(expiresIn) || expiresIn <= 0)) return null;
+
+  return {
+    accessToken,
+    ...(typeof refreshToken === 'string' ? { refreshToken } : {}),
+    ...(typeof expiresIn === 'number' ? { expiresIn } : {}),
+    issuedAt,
+  };
+}
+
 export async function loadAuthSession(): Promise<StoredAuthSession | null> {
   const value = await SecureStore.getItemAsync(SESSION_KEY);
   if (!value) return null;
 
   try {
-    const parsed = JSON.parse(value) as Partial<StoredAuthSession>;
-    if (typeof parsed.accessToken !== 'string' || parsed.accessToken.length === 0) return null;
-    if (typeof parsed.issuedAt !== 'number' || !Number.isFinite(parsed.issuedAt)) return null;
-    return {
-      accessToken: parsed.accessToken,
-      ...(typeof parsed.refreshToken === 'string' && parsed.refreshToken.length > 0
-        ? { refreshToken: parsed.refreshToken }
-        : {}),
-      ...(typeof parsed.expiresIn === 'number' && Number.isFinite(parsed.expiresIn)
-        ? { expiresIn: parsed.expiresIn }
-        : {}),
-      issuedAt: parsed.issuedAt,
-    };
+    const session = parseStoredSession(value);
+    if (session) return session;
   } catch {
-    await clearAuthSession();
-    return null;
+    // Fall through and remove malformed/corrupted persisted state.
   }
+
+  await clearAuthSession();
+  return null;
 }
 
 export async function saveAuthSession(token: TokenResponseLike): Promise<StoredAuthSession> {
@@ -65,7 +82,7 @@ export function isSessionFresh(session: StoredAuthSession): boolean {
 export async function refreshAuthSession(
   session: StoredAuthSession,
   clientId: string,
-  discovery: Pick<AuthSession.DiscoveryDocument, 'tokenEndpoint'>,
+  discovery: AuthSession.DiscoveryDocument,
 ): Promise<StoredAuthSession | null> {
   if (isSessionFresh(session)) return session;
   if (!session.refreshToken || !discovery.tokenEndpoint) return null;
