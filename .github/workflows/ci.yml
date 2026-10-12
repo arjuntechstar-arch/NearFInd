@@ -30,6 +30,14 @@ jobs:
       - name: Phase 0 application quality gate
         shell: pwsh
         run: ./scripts/testing/Test-All.ps1 -Profile Quick -AllowMissingSecurityTools
+      - name: Publish generated lockfile
+        if: ${{ always() && hashFiles('pnpm-lock.yaml') != '' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: pnpm-lock-bootstrap
+          path: pnpm-lock.yaml
+          if-no-files-found: error
+          retention-days: 1
 
   security:
     runs-on: ubuntu-latest
