@@ -22,13 +22,22 @@ async function seed(): Promise<void> {
             location, rating, review_count, is_active
           )
           SELECT
-            c.id, $2, $3, 'Chennai', 'Tamil Nadu', 'IN',
-            ST_SetSRID(ST_MakePoint($5, $4), 4326)::geography,
-            $6, $7, true
+            c.id,
+            $2::varchar(180),
+            $3::varchar(255),
+            'Chennai',
+            'Tamil Nadu',
+            'IN',
+            ST_SetSRID(ST_MakePoint($5::double precision, $4::double precision), 4326)::geography,
+            $6::numeric(3,2),
+            $7::integer,
+            true
           FROM service_categories c
-          WHERE c.slug = $1
+          WHERE c.slug = $1::varchar(80)
             AND NOT EXISTS (
-              SELECT 1 FROM service_locations existing WHERE existing.name = $2
+              SELECT 1
+              FROM service_locations existing
+              WHERE existing.name = $2::varchar(180)
             )
           `,
           [slug, name, address, lat, lng, rating, reviewCount],
