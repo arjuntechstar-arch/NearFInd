@@ -15,16 +15,28 @@ export class IdentityService {
   ) {}
 
   async resolveUser(identity: VerifiedIdentity): Promise<User> {
-    await this.users.upsert(
-      {
+    await this.users
+      .createQueryBuilder()
+      .insert()
+      .into(User)
+      .values({
         issuer: identity.issuer,
         subject: identity.subject,
         displayName: identity.displayName,
         email: identity.email,
         avatarUrl: identity.avatarUrl,
         role: UserRole.USER,
+      })
+      .orIgnore()
+      .execute();
+
+    await this.users.update(
+      { issuer: identity.issuer, subject: identity.subject },
+      {
+        displayName: identity.displayName,
+        email: identity.email,
+        avatarUrl: identity.avatarUrl,
       },
-      { conflictPaths: ['issuer', 'subject'], skipUpdateIfNoValuesChanged: true },
     );
 
     return this.users.findOneByOrFail({ issuer: identity.issuer, subject: identity.subject });
