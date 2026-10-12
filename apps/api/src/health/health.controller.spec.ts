@@ -1,3 +1,5 @@
+import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
 import { HealthController } from './health.controller.js';
 
 describe('HealthController', () => {
@@ -5,14 +7,14 @@ describe('HealthController', () => {
 
   it('returns a liveness response', () => {
     const response = controller.live();
-    expect(response.status).toBe('ok');
-    expect(response.service).toBe('nearfind-api');
-    expect(Number.isNaN(Date.parse(response.timestamp))).toBe(false);
+    assert.equal(response.status, 'ok');
+    assert.equal(response.service, 'nearfind-api');
+    assert.equal(Number.isNaN(Date.parse(response.timestamp)), false);
   });
 
   it('returns a readiness response after bootstrap', () => {
     const response = controller.ready();
-    expect(response.status).toBe('ok');
-    expect(response.service).toBe('nearfind-api');
+    assert.equal(response.status, 'ok');
+    assert.equal(response.service, 'nearfind-api');
   });
 });
