@@ -6,9 +6,11 @@
     "dev": "nest start --watch",
     "build": "nest build",
     "start": "node dist/main.js",
-    "lint": "eslint \"src/**/*.ts\"",
+    "lint": "eslint \"src/**/*.ts\" \"test/**/*.ts\"",
     "typecheck": "tsc --noEmit",
-    "test": "jest --runInBand"
+    "test": "jest --runInBand",
+    "test:coverage": "jest --coverage --runInBand",
+    "test:integration": "jest --config test/jest-e2e.json --runInBand"
   },
   "dependencies": {
     "@fastify/helmet": "^13.0.2",
@@ -33,5 +35,15 @@
     "jest": "^30.2.0",
     "ts-jest": "^29.4.5",
     "typescript": "^5.9.3"
+  },
+  "jest": {
+    "moduleFileExtensions": ["js", "json", "ts"],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": { "^.+\\.(t|j)s$": "ts-jest" },
+    "moduleNameMapper": { "^(\\.{1,2}/.*)\\.js$": "$1" },
+    "collectCoverageFrom": ["**/*.(t|j)s"],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
   }
 }
