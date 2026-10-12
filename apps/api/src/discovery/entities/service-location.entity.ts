@@ -13,8 +13,14 @@ export class ServiceLocation {
   @JoinColumn({ name: 'category_id' })
   category!: ServiceCategory;
 
+  @Column({ type: 'uuid', name: 'provider_id', nullable: true })
+  providerId!: string | null;
+
   @Column({ type: 'varchar', length: 180 })
   name!: string;
+
+  @Column({ type: 'text', nullable: true })
+  description!: string | null;
 
   @Column({ type: 'varchar', length: 255 })
   address!: string;
@@ -28,6 +34,12 @@ export class ServiceLocation {
   @Column({ type: 'varchar', length: 2, name: 'country_code', default: 'IN' })
   countryCode!: string;
 
+  @Column({ type: 'varchar', length: 40, nullable: true })
+  phone!: string | null;
+
+  @Column({ type: 'varchar', length: 2048, name: 'website_url', nullable: true })
+  websiteUrl!: string | null;
+
   @Index({ spatial: true })
   @Column({ type: 'geography', spatialFeatureType: 'Point', srid: 4326 })
   location!: { type: 'Point'; coordinates: [number, number] };
@@ -40,4 +52,7 @@ export class ServiceLocation {
 
   @Column({ type: 'boolean', name: 'is_active', default: true })
   isActive!: boolean;
+
+  @Column({ type: 'int', default: 1 })
+  version!: number;
 }

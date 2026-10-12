@@ -40,6 +40,17 @@ services:
     volumes:
       - nearfind-minio:/data
 
+  minio-init:
+    image: minio/mc:RELEASE.2025-08-13T08-35-41Z
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      until mc alias set local http://minio:9000 nearfind nearfind-local-change-me; do sleep 2; done;
+      mc mb --ignore-existing local/nearfind-media;
+      mc anonymous set none local/nearfind-media;
+      exit 0;"
+
 volumes:
   nearfind-postgres:
   nearfind-redis:
