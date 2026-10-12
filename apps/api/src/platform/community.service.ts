@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException, TooManyRequestsException } from '@nestjs/common';
+import { ConflictException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, MoreThanOrEqual, Repository } from 'typeorm';
 import { ServiceLocation } from '../discovery/entities/service-location.entity.js';
@@ -49,7 +49,7 @@ export class CommunityService {
   ) {
     const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
     if (await this.contributions.count({ where: { userId: user.id, createdAt: MoreThanOrEqual(since) } }) >= 20) {
-      throw new TooManyRequestsException('Daily contribution limit reached');
+      throw new HttpException('Daily contribution limit reached', HttpStatus.TOO_MANY_REQUESTS);
     }
     if (input.serviceLocationId) {
       const location = await this.locations.findOneBy({ id: input.serviceLocationId, isActive: true });
