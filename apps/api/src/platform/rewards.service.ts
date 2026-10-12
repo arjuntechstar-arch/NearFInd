@@ -13,7 +13,6 @@ import {
   Review,
   ReviewStatus,
   RewardLedgerEntry,
-  UserPreference,
 } from './entities.js';
 
 interface BalanceRow {
@@ -35,7 +34,6 @@ export class RewardsService {
     @InjectRepository(PerkRedemption) private readonly redemptions: Repository<PerkRedemption>,
     @InjectRepository(Contribution) private readonly contributions: Repository<Contribution>,
     @InjectRepository(Review) private readonly reviews: Repository<Review>,
-    @InjectRepository(UserPreference) private readonly preferences: Repository<UserPreference>,
     private readonly dataSource: DataSource,
     private readonly access: AccessService,
   ) {}
