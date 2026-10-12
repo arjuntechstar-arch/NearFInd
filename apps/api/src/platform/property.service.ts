@@ -13,6 +13,25 @@ import {
 } from './entities.js';
 import { StorageService } from './storage.service.js';
 
+interface ProviderInspectionRow {
+  id: string;
+  property_listing_id: string;
+  user_id: string;
+  scheduled_at: Date;
+  status: InspectionStatus;
+  idempotency_key: string;
+  created_at: Date;
+}
+
+interface NearbyServiceRow {
+  id: string;
+  name: string;
+  address: string;
+  city: string;
+  category: string;
+  distance_meters: number;
+}
+
 @Injectable()
 export class PropertyService {
   constructor(
@@ -25,7 +44,7 @@ export class PropertyService {
     private readonly storage: StorageService,
   ) {}
 
-  async listPublic(input: { city?: string; propertyType?: string; minPriceMinor?: number; maxPriceMinor?: number; limit: number }) {
+  async listPublic(input: { city?: string; propertyType?: string; minPriceMinor?: number; maxPriceMinor?: number; limit: number }): Promise<PropertyListing[]> {
     await this.requireEnabled();
     const query = this.listings
       .createQueryBuilder('listing')
@@ -39,14 +58,12 @@ export class PropertyService {
     return query.getMany();
   }
 
-  async getPublic(id: string) {
+  async getPublic(id: string): Promise<PropertyListing & { media: PropertyMedia[]; nearbyServices: NearbyServiceRow[] }> {
     await this.requireEnabled();
     const listing = await this.listings.findOneBy({ id, status: PropertyStatus.PUBLISHED });
     if (!listing) throw new NotFoundException('Property listing not found');
-    const [media, nearbyServices] = await Promise.all([
-      this.media.find({ where: { propertyListingId: id }, order: { createdAt: 'ASC' } }),
-      this.nearbyServices(listing),
-    ]);
+    const media = await this.media.find({ where: { propertyListingId: id }, order: { createdAt: 'ASC' } });
+    const nearbyServices = await this.nearbyServices(listing);
     return { ...listing, media, nearbyServices };
   }
 
@@ -100,9 +117,7 @@ export class PropertyService {
     input: Partial<Pick<PropertyListing, 'title' | 'description' | 'address' | 'city' | 'priceMinor' | 'propertyType'>>,
   ): Promise<PropertyListing> {
     const listing = await this.requireManagementAccess(user, id);
-    if (listing.status === PropertyStatus.PUBLISHED && user.role !== UserRole.ADMIN) {
-      listing.status = PropertyStatus.DRAFT;
-    }
+    if (listing.status === PropertyStatus.PUBLISHED && user.role !== UserRole.ADMIN) listing.status = PropertyStatus.DRAFT;
     const result = await this.listings.update(
       { id, version },
       {
@@ -145,13 +160,7 @@ export class PropertyService {
     if (!listing) throw new NotFoundException('Property listing not found');
     if (scheduledAt <= new Date()) throw new ConflictException('Inspection must be scheduled in the future');
     return this.inspections.save(
-      this.inspections.create({
-        propertyListingId: id,
-        userId: user.id,
-        scheduledAt,
-        status: InspectionStatus.REQUESTED,
-        idempotencyKey,
-      }),
+      this.inspections.create({ propertyListingId: id, userId: user.id, scheduledAt, status: InspectionStatus.REQUESTED, idempotencyKey }),
     );
   }
 
@@ -164,9 +173,9 @@ export class PropertyService {
     return this.listings.find({ where: { providerId }, order: { createdAt: 'DESC' }, take: 200 });
   }
 
-  async listProviderInspections(user: User, providerId: string) {
+  async listProviderInspections(user: User, providerId: string): Promise<ProviderInspectionRow[]> {
     await this.access.requireProvider(user, providerId, false);
-    return this.dataSource.query(
+    return this.dataSource.query<ProviderInspectionRow[]>(
       `SELECT i.* FROM inspection_bookings i
        JOIN property_listings p ON p.id = i.property_listing_id
        WHERE p.provider_id = $1
@@ -191,8 +200,8 @@ export class PropertyService {
     return listing;
   }
 
-  private async nearbyServices(listing: PropertyListing) {
-    return this.dataSource.query(
+  private nearbyServices(listing: PropertyListing): Promise<NearbyServiceRow[]> {
+    return this.dataSource.query<NearbyServiceRow[]>(
       `SELECT sl.id, sl.name, sl.address, sl.city, sc.name AS category,
          ROUND(ST_Distance(sl.location, ST_SetSRID(ST_MakePoint($1, $2), 4326)::geography))::int AS distance_meters
        FROM service_locations sl
