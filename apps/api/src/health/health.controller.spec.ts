@@ -1,20 +1,32 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
+import { ServiceUnavailableException } from '@nestjs/common';
+import type { DataSource } from 'typeorm';
 import { HealthController } from './health.controller.js';
 
 void describe('HealthController', () => {
-  const controller = new HealthController();
-
   void it('returns a liveness response', () => {
+    const dataSource = { query: () => Promise.resolve([{ '?column?': 1 }]) } as unknown as DataSource;
+    const controller = new HealthController(dataSource);
     const response = controller.live();
     assert.equal(response.status, 'ok');
     assert.equal(response.service, 'nearfind-api');
     assert.equal(Number.isNaN(Date.parse(response.timestamp)), false);
   });
 
-  void it('returns a readiness response after bootstrap', () => {
-    const response = controller.ready();
+  void it('returns ready when database responds', async () => {
+    const dataSource = { query: () => Promise.resolve([{ '?column?': 1 }]) } as unknown as DataSource;
+    const controller = new HealthController(dataSource);
+    const response = await controller.ready();
     assert.equal(response.status, 'ok');
     assert.equal(response.service, 'nearfind-api');
+  });
+
+  void it('returns unavailable when database query fails', async () => {
+    const dataSource = {
+      query: () => Promise.reject(new Error('offline')),
+    } as unknown as DataSource;
+    const controller = new HealthController(dataSource);
+    await assert.rejects(() => controller.ready(), ServiceUnavailableException);
   });
 });
