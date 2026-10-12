@@ -16,6 +16,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { Type } from 'class-transformer';
 import {
+  IsEnum,
   IsInt,
   IsLatitude,
   IsLongitude,
@@ -49,7 +50,7 @@ class AssignDto {
 }
 
 class StatusDto {
-  @IsString() status!: DispatchStatus;
+  @IsEnum(DispatchStatus) status!: DispatchStatus;
 }
 
 class LocationGrantDto {
