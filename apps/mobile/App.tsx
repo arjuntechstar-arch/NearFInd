@@ -1,3 +1,4 @@
+import '@expo/metro-runtime';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { colors, radii, spacing } from '@nearfind/design-tokens';
