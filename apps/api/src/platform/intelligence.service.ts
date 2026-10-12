@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException, TooManyRequestsException } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, MoreThanOrEqual, Repository } from 'typeorm';
 import { ServiceLocation } from '../discovery/entities/service-location.entity.js';
@@ -42,7 +42,7 @@ export class IntelligenceService {
     if (!location) throw new NotFoundException('Place not found');
     const since = new Date(Date.now() - 60 * 60 * 1000);
     if (await this.observations.count({ where: { observedByUserId: user.id, createdAt: MoreThanOrEqual(since) } }) >= 30) {
-      throw new TooManyRequestsException('Fuel observation rate limit reached');
+      throw new HttpException('Fuel observation rate limit reached', HttpStatus.TOO_MANY_REQUESTS);
     }
     const confidence = user.role === UserRole.ADMIN ? 0.95 : user.role === UserRole.PROVIDER ? 0.8 : 0.6;
     const observation = await this.observations.save(
