@@ -1,5 +1,5 @@
 import { Column, Entity, Index, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { ServiceLocation } from './service-location.entity.js';
+import type { ServiceLocation } from './service-location.entity.js';
 
 @Entity({ name: 'service_categories' })
 export class ServiceCategory {
@@ -22,6 +22,6 @@ export class ServiceCategory {
   @Column({ type: 'boolean', default: true })
   isActive!: boolean;
 
-  @OneToMany(() => ServiceLocation, (location) => location.category)
+  @OneToMany('ServiceLocation', 'category')
   locations!: ServiceLocation[];
 }
