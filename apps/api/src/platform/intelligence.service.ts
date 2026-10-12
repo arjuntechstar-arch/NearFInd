@@ -78,10 +78,7 @@ export class IntelligenceService {
     const location = await this.locations.findOneBy({ id: input.serviceLocationId });
     if (!location || !location.providerId) throw new NotFoundException('Provider-backed place not found');
     await this.access.requireProvider(user, location.providerId);
-    let connector = await this.connectors.findOneBy({
-      serviceLocationId: input.serviceLocationId,
-      connectorType: input.connectorType.toUpperCase(),
-    });
+    let connector = await this.connectors.findOneBy({ serviceLocationId: input.serviceLocationId, connectorType: input.connectorType.toUpperCase() });
     connector ??= this.connectors.create({ serviceLocationId: input.serviceLocationId });
     connector.connectorType = input.connectorType.toUpperCase();
     connector.powerKw = input.powerKw.toFixed(2);
@@ -97,16 +94,10 @@ export class IntelligenceService {
 
   async optimizeRoute(
     user: User,
-    input: {
-      start: RoutePoint;
-      end: RoutePoint;
-      corridorMeters: number;
-      categoryId?: string | null;
-      fuelType?: string | null;
-    },
+    input: { start: RoutePoint; end: RoutePoint; corridorMeters: number; categoryId?: string | null; fuelType?: string | null },
   ) {
     const preview = this.routeProvider.preview(input.start, input.end);
-    const rows = (await this.dataSource.query(
+    const rows = await this.dataSource.query<CorridorRow[]>(
       `WITH route AS (
          SELECT ST_MakeLine(
            ST_SetSRID(ST_MakePoint($1, $2), 4326),
@@ -138,7 +129,7 @@ export class IntelligenceService {
        ORDER BY detour_proxy_m ASC
        LIMIT 20`,
       [input.start.lng, input.start.lat, input.end.lng, input.end.lat, input.corridorMeters, input.categoryId ?? null, input.fuelType ?? null],
-    )) as CorridorRow[];
+    );
 
     const candidates = rows.map((row) => {
       const detourMeters = Number(row.detour_proxy_m);
