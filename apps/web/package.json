@@ -8,11 +8,11 @@
     "start": "next start",
     "lint": "eslint app next.config.ts",
     "typecheck": "tsc --noEmit",
-    "test": "node -e \"process.exit(0)\"",
-    "test:coverage": "node -e \"process.exit(0)\"",
-    "test:e2e": "node -e \"process.exit(0)\"",
-    "test:a11y": "node -e \"process.exit(0)\"",
-    "test:visual": "node -e \"process.exit(0)\""
+    "test": "node --test test/*.test.cjs",
+    "test:coverage": "node --experimental-test-coverage --test test/*.test.cjs",
+    "test:e2e": "node -e \"console.error('Playwright E2E is enabled in Phase 1 with database-backed discovery'); process.exit(1)\"",
+    "test:a11y": "node -e \"console.error('Accessibility browser tests are enabled with Playwright in Phase 1'); process.exit(1)\"",
+    "test:visual": "node -e \"console.error('Visual regression baselines are enabled in Phase 1'); process.exit(1)\""
   },
   "dependencies": {
     "next": "^16.4.0",
