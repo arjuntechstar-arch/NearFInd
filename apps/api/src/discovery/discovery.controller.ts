@@ -1,4 +1,4 @@
-import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
+import { Controller, Get, Inject, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { DiscoveryService } from './discovery.service.js';
 import { NearbyQueryDto } from './dto/nearby-query.dto.js';
@@ -6,7 +6,7 @@ import { NearbyQueryDto } from './dto/nearby-query.dto.js';
 @ApiTags('discovery')
 @Controller('discovery')
 export class DiscoveryController {
-  constructor(private readonly discovery: DiscoveryService) {}
+  constructor(@Inject(DiscoveryService) private readonly discovery: DiscoveryService) {}
 
   @Get('categories')
   @ApiOperation({ summary: 'List active nearby-service categories' })
