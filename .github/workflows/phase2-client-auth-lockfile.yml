@@ -24,6 +24,7 @@ jobs:
         with:
           node-version: 24
       # This write-capable workflow is temporary and is deleted after a successful refresh.
+      # Retry after reviewing AuthSession's exact SDK 57 Expo dependency chain.
       - name: Refresh lockfile
         run: pnpm install --lockfile-only --no-frozen-lockfile
       - name: Commit lockfile
