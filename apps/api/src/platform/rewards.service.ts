@@ -16,6 +16,15 @@ import {
   UserPreference,
 } from './entities.js';
 
+interface BalanceRow {
+  balance: number | string;
+}
+
+interface LeaderboardRow {
+  display_name: string;
+  points: number | string;
+}
+
 @Injectable()
 export class RewardsService {
   constructor(
@@ -32,10 +41,10 @@ export class RewardsService {
   ) {}
 
   async wallet(userId: string) {
-    const row = (await this.dataSource.query(
+    const row = await this.dataSource.query<BalanceRow[]>(
       'SELECT COALESCE(SUM(points), 0)::int AS balance FROM reward_ledger_entries WHERE user_id = $1',
       [userId],
-    )) as Array<{ balance: number | string }>;
+    );
     const entries = await this.ledger.find({ where: { userId }, order: { createdAt: 'DESC' }, take: 100 });
     return { balance: Number(row[0]?.balance ?? 0), entries };
   }
@@ -106,10 +115,10 @@ export class RewardsService {
       const perk = await perkRepo.findOne({ where: { id: perkId }, lock: { mode: 'pessimistic_write' } });
       if (!perk || !perk.isActive) throw new NotFoundException('Perk not found');
       if (perk.stock <= 0) throw new ConflictException('Perk is out of stock');
-      const row = (await manager.query(
+      const row = await manager.query<BalanceRow[]>(
         'SELECT COALESCE(SUM(points), 0)::int AS balance FROM reward_ledger_entries WHERE user_id = $1',
         [user.id],
-      )) as Array<{ balance: number | string }>;
+      );
       const balance = Number(row[0]?.balance ?? 0);
       if (balance < perk.costPoints) throw new ConflictException('Insufficient reward points');
       perk.stock -= 1;
@@ -137,7 +146,7 @@ export class RewardsService {
   }
 
   async leaderboard() {
-    const rows = (await this.dataSource.query(
+    const rows = await this.dataSource.query<LeaderboardRow[]>(
       `SELECT COALESCE(u.display_name, 'NearFind user') AS display_name, COALESCE(SUM(l.points), 0)::int AS points
        FROM users u
        JOIN user_preferences p ON p.user_id = u.id AND p.leaderboard_opt_in = true
@@ -146,7 +155,7 @@ export class RewardsService {
        HAVING SUM(l.points) > 0
        ORDER BY points DESC
        LIMIT 100`,
-    )) as Array<{ display_name: string; points: number | string }>;
+    );
     return rows.map((row, index) => ({ rank: index + 1, displayName: row.display_name, points: Number(row.points) }));
   }
 
