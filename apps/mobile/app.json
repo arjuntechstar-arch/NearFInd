@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "scheme": "nearfind",
+    "plugins": ["expo-secure-store"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.nearfind.app",
