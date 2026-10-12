@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { DiscoveryModule } from './discovery/discovery.module.js';
 import { HealthController } from './health/health.controller.js';
 import { IdentityModule } from './identity/identity.module.js';
+import { PlatformModule } from './platform/platform.module.js';
 
 const localDatabaseUrl = 'postgresql://nearfind:nearfind_local@localhost:5432/nearfind';
 
@@ -19,16 +20,27 @@ const envSchema = z
     OIDC_AUDIENCE: z.string().min(1).optional(),
     OIDC_JWKS_URL: z.string().url().optional(),
     OIDC_ALLOWED_ALGORITHMS: z.string().default('RS256'),
+    FIELD_ENCRYPTION_KEY: z.string().min(1).optional(),
+    S3_ENDPOINT: z.string().url().optional(),
+    S3_REGION: z.string().min(1).optional(),
+    S3_BUCKET: z.string().min(1).optional(),
+    S3_ACCESS_KEY_ID: z.string().min(1).optional(),
+    S3_SECRET_ACCESS_KEY: z.string().min(1).optional(),
+    EMERGENCY_REGION: z.string().min(2).max(20).default('IN'),
+    EMERGENCY_NUMBER: z.string().min(2).max(20).default('112'),
   })
   .superRefine((env, context) => {
     const deployed = env.NODE_ENV === 'staging' || env.NODE_ENV === 'production';
     if (deployed && !env.DATABASE_URL) {
       context.addIssue({ code: 'custom', path: ['DATABASE_URL'], message: 'DATABASE_URL is required in staging and production' });
     }
-    for (const key of ['OIDC_ISSUER_URL', 'OIDC_AUDIENCE', 'OIDC_JWKS_URL'] as const) {
+    for (const key of ['OIDC_ISSUER_URL', 'OIDC_AUDIENCE', 'OIDC_JWKS_URL', 'FIELD_ENCRYPTION_KEY', 'S3_ENDPOINT', 'S3_REGION', 'S3_BUCKET', 'S3_ACCESS_KEY_ID', 'S3_SECRET_ACCESS_KEY'] as const) {
       if (deployed && !env[key]) {
         context.addIssue({ code: 'custom', path: [key], message: `${key} is required in staging and production` });
       }
+    }
+    if (env.NODE_ENV === 'production' && env.S3_ENDPOINT && !env.S3_ENDPOINT.startsWith('https://')) {
+      context.addIssue({ code: 'custom', path: ['S3_ENDPOINT'], message: 'S3_ENDPOINT must use HTTPS in production' });
     }
   });
 
@@ -54,6 +66,7 @@ const envSchema = z
     }),
     DiscoveryModule,
     IdentityModule,
+    PlatformModule,
   ],
   controllers: [HealthController],
 })
