@@ -1,5 +1,5 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { ServiceCategory } from './service-category.entity.js';
+import type { ServiceCategory } from './service-category.entity.js';
 
 @Entity({ name: 'service_locations' })
 export class ServiceLocation {
@@ -9,7 +9,7 @@ export class ServiceLocation {
   @Column({ type: 'uuid', name: 'category_id' })
   categoryId!: string;
 
-  @ManyToOne(() => ServiceCategory, (category) => category.locations, { onDelete: 'RESTRICT' })
+  @ManyToOne('ServiceCategory', 'locations', { onDelete: 'RESTRICT' })
   @JoinColumn({ name: 'category_id' })
   category!: ServiceCategory;
 
