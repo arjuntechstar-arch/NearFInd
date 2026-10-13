@@ -1,4 +1,4 @@
-import { ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { User, UserRole } from '../identity/entities/user.entity.js';
@@ -39,9 +39,9 @@ export class PropertyService {
     @InjectRepository(PropertyMedia) private readonly media: Repository<PropertyMedia>,
     @InjectRepository(InspectionBooking) private readonly inspections: Repository<InspectionBooking>,
     @InjectRepository(FeatureFlag) private readonly flags: Repository<FeatureFlag>,
-    private readonly dataSource: DataSource,
-    private readonly access: AccessService,
-    private readonly storage: StorageService,
+    @Inject(DataSource) private readonly dataSource: DataSource,
+    @Inject(AccessService) private readonly access: AccessService,
+    @Inject(StorageService) private readonly storage: StorageService,
   ) {}
 
   async listPublic(input: { city?: string; propertyType?: string; minPriceMinor?: number; maxPriceMinor?: number; limit: number }): Promise<PropertyListing[]> {
