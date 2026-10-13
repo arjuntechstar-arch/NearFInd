@@ -30,6 +30,16 @@ test('location updates load every nearby page before applying client-side filter
   assert.doesNotMatch(nearby, /category\s*:\s*String\(|params\.set\(['"]category['"]/);
 });
 
+test('externally discovered OpenStreetMap places carry visible attribution', () => {
+  const page = fs.readFileSync(path.join(appRoot, 'app', 'page.tsx'), 'utf8');
+  const nearby = fs.readFileSync(path.join(appRoot, 'lib', 'nearby-client.ts'), 'utf8');
+  assert.match(nearby, /sourceProvider/);
+  assert.match(nearby, /sourceAttribution/);
+  assert.match(page, /OpenStreetMap contributors/);
+  assert.match(page, /openstreetmap\.org\/copyright/);
+  assert.match(page, /ODbL/);
+});
+
 test('global styles retain visible keyboard focus and reduced motion support', () => {
   const css = fs.readFileSync(path.join(appRoot, 'app', 'globals.css'), 'utf8');
   assert.match(css, /:focus-visible/);
