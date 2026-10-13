@@ -18,6 +18,15 @@ trustPolicyExclude:
   # Legacy transitive dependency pulled by Jest/Babel. Exact-version exception;
   # do not widen this without reviewing provenance and the dependency path.
   - semver@6.3.1
+  # Exact Expo SDK 57 authentication dependency chain reviewed against the
+  # official Expo npm packages and github.com/expo/expo after pnpm alerts.
+  - expo-auth-session@57.0.14
+  - expo-application@57.0.3
+  - expo-constants@57.0.21
+  - expo-crypto@57.0.3
+  - expo-linking@57.0.12
+  - expo-secure-store@57.0.4
+  - expo-web-browser@57.0.3
 
 # pnpm 11+ build-script policy. Keep this explicit: native watcher/resolver
 # packages and esbuild are required by our toolchain, while Scarf is
