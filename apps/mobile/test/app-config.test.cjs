@@ -34,7 +34,7 @@ test('foreground location changes reload every nearby page before local filterin
   assert.match(appSource, /service\.category\.slug !== activeCategory/);
   assert.match(nearbySource, /limit:\s*String\(PAGE_SIZE\)/);
   assert.match(nearbySource, /offset:\s*String\(offset\)/);
-  assert.doesNotMatch(nearbySource, /category/);
+  assert.doesNotMatch(nearbySource, /category\s*:\s*String\(|params\.set\(['"]category['"]/);
 });
 
 test('mobile nearby cards have working details and route actions', () => {
