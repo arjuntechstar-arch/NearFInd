@@ -43,6 +43,14 @@ test('mobile nearby cards have working details and route actions', () => {
   assert.match(appSource, /google\.com\/maps\/dir/);
 });
 
+test('externally discovered OpenStreetMap places carry visible attribution', () => {
+  assert.match(nearbySource, /sourceProvider/);
+  assert.match(nearbySource, /sourceAttribution/);
+  assert.match(appSource, /OpenStreetMap contributors/);
+  assert.match(appSource, /openstreetmap\.org\/copyright/);
+  assert.match(appSource, /ODbL/);
+});
+
 test('mobile OIDC uses the registered NearFind redirect scheme and PKCE', () => {
   assert.equal(config.expo.scheme, 'nearfind');
   assert.match(appSource, /scheme:\s*['"]nearfind['"]/);
