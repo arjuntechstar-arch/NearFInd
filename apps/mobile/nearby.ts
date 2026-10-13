@@ -8,6 +8,8 @@ export interface NearbyService {
   distanceMeters: number;
   category: { slug: string; name: string; icon: string };
   coordinates: { lat: number; lng: number };
+  sourceProvider: string;
+  sourceAttribution: string | null;
 }
 
 const PAGE_SIZE = 100;
