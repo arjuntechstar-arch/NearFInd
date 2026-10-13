@@ -13,7 +13,7 @@ import {
 } from './entities.js';
 import { StorageService } from './storage.service.js';
 
-interface ProviderInspectionRow {
+export interface ProviderInspectionRow {
   id: string;
   property_listing_id: string;
   user_id: string;
@@ -23,7 +23,7 @@ interface ProviderInspectionRow {
   created_at: Date;
 }
 
-interface NearbyServiceRow {
+export interface NearbyServiceRow {
   id: string;
   name: string;
   address: string;
