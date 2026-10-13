@@ -7,6 +7,7 @@ export interface NearbyService {
   reviewCount: number;
   distanceMeters: number;
   category: { slug: string; name: string; icon: string };
+  coordinates: { lat: number; lng: number };
 }
 
 const PAGE_SIZE = 100;
