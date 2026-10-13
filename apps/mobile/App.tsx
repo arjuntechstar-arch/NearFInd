@@ -14,6 +14,7 @@ import {
   saveAuthSession,
   type StoredAuthSession,
 } from './auth';
+import { PlatformHub } from './PlatformHub';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -60,7 +61,7 @@ interface Favorite {
   createdAt: string;
 }
 
-type ViewMode = 'explore' | 'saved';
+type ViewMode = 'explore' | 'saved' | 'hub';
 
 const apiBaseUrl = (process.env.EXPO_PUBLIC_API_BASE_URL ?? 'http://localhost:4000/v1').replace(/\/$/, '');
 const oidcIssuer = process.env.EXPO_PUBLIC_OIDC_ISSUER_URL?.replace(/\/$/, '');
@@ -324,6 +325,8 @@ export default function App() {
     }
   }
 
+  const pageTitle = viewMode === 'saved' ? 'Your saved places.' : viewMode === 'hub' ? 'Your journey hub.' : 'Find what you need nearby.';
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar style="dark" />
@@ -331,7 +334,7 @@ export default function App() {
         <View style={styles.header}>
           <View style={styles.headerCopy}>
             <Text style={styles.eyebrow}>Driver companion</Text>
-            <Text style={styles.title}>{viewMode === 'saved' ? 'Your saved places.' : 'Find what you need nearby.'}</Text>
+            <Text style={styles.title}>{pageTitle}</Text>
           </View>
           <TouchableOpacity
             accessibilityRole="button"
@@ -361,6 +364,14 @@ export default function App() {
             onPress={() => setViewMode('saved')}
           >
             <Text style={[styles.tabText, viewMode === 'saved' && styles.tabTextActive]}>Saved ({favorites.length})</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            accessibilityRole="tab"
+            accessibilityState={{ selected: viewMode === 'hub' }}
+            style={[styles.tab, viewMode === 'hub' && styles.tabActive]}
+            onPress={() => setViewMode('hub')}
+          >
+            <Text style={[styles.tabText, viewMode === 'hub' && styles.tabTextActive]}>Journey</Text>
           </TouchableOpacity>
         </View>
 
@@ -409,8 +420,10 @@ export default function App() {
               ))}
             </View>
           </>
-        ) : (
+        ) : viewMode === 'saved' ? (
           <SavedView favorites={favorites} signedIn={Boolean(session)} onSignIn={() => void signIn()} onRemove={(placeId) => void toggleFavorite(placeId)} />
+        ) : (
+          <PlatformHub signedIn={Boolean(session)} request={authenticatedFetch} onSignIn={() => void signIn()} />
         )}
 
         <Text accessibilityLiveRegion="polite" style={styles.locationStatus}>{status}</Text>
@@ -496,7 +509,7 @@ const styles = StyleSheet.create({
   tabRow: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.lg },
   tab: { flex: 1, minHeight: 44, borderRadius: radii.control, borderWidth: 1, borderColor: '#EAD8E7', alignItems: 'center', justifyContent: 'center', backgroundColor: colors.surface.card },
   tabActive: { backgroundColor: colors.brand.secondary, borderColor: colors.brand.secondary },
-  tabText: { color: colors.text.muted, fontWeight: '700' },
+  tabText: { color: colors.text.muted, fontWeight: '700', fontSize: 12 },
   tabTextActive: { color: colors.text.inverse },
   search: { marginTop: spacing.md, minHeight: 50, borderRadius: radii.control, borderWidth: 1, borderColor: '#EAD8E7', backgroundColor: colors.surface.card, paddingHorizontal: spacing.md, color: colors.text.primary, fontSize: 16 },
   locationButton: { minHeight: 48, marginTop: spacing.sm, borderRadius: radii.control, backgroundColor: colors.brand.primary, alignItems: 'center', justifyContent: 'center' },
