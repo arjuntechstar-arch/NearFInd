@@ -65,15 +65,15 @@ export function buildOverpassQuery(search: ExternalPlacesSearch): string {
   const radius = Math.max(100, Math.min(Math.round(search.radiusMeters), 20_000));
   const around = `around:${radius},${search.lat},${search.lng}`;
   return `[out:json][timeout:12][maxsize:67108864];\n(\n` +
-    `nwr(${around})[\"amenity\"=\"fuel\"];\n` +
-    `nwr(${around})[\"amenity\"=\"charging_station\"];\n` +
-    `nwr(${around})[\"amenity\"=\"atm\"];\n` +
-    `nwr(${around})[\"amenity\"=\"hospital\"];\n` +
-    `nwr(${around})[\"amenity\"=\"clinic\"];\n` +
-    `nwr(${around})[\"amenity\"=\"bank\"];\n` +
-    `nwr(${around})[\"amenity\"=\"pharmacy\"];\n` +
-    `nwr(${around})[\"shop\"=\"car_repair\"];\n` +
-    `nwr(${around})[\"craft\"=\"car_repair\"];\n` +
+    `nwr(${around})["amenity"="fuel"];\n` +
+    `nwr(${around})["amenity"="charging_station"];\n` +
+    `nwr(${around})["amenity"="atm"];\n` +
+    `nwr(${around})["amenity"="hospital"];\n` +
+    `nwr(${around})["amenity"="clinic"];\n` +
+    `nwr(${around})["amenity"="bank"];\n` +
+    `nwr(${around})["amenity"="pharmacy"];\n` +
+    `nwr(${around})["shop"="car_repair"];\n` +
+    `nwr(${around})["craft"="car_repair"];\n` +
     `);\nout center tags;`;
 }
 
