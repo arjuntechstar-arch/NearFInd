@@ -21,6 +21,7 @@ export const colors = {
     danger: '#B42318',
     info: '#006C91',
   },
+  border: '#EAD8E7',
 } as const;
 
 export const radii = {
