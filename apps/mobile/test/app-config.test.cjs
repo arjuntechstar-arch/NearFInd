@@ -7,6 +7,7 @@ const config = require('../app.json');
 const appSource = fs.readFileSync(path.join(__dirname, '..', 'App.tsx'), 'utf8');
 const authSource = fs.readFileSync(path.join(__dirname, '..', 'auth.ts'), 'utf8');
 const hubSource = fs.readFileSync(path.join(__dirname, '..', 'PlatformHub.tsx'), 'utf8');
+const nearbySource = fs.readFileSync(path.join(__dirname, '..', 'nearby.ts'), 'utf8');
 
 test('mobile bundle identifiers are production-safe and explicit', () => {
   assert.equal(config.expo.ios.bundleIdentifier, 'com.nearfind.app');
@@ -24,6 +25,22 @@ test('mobile app requests only foreground location at foundation stage', () => {
     'ACCESS_COARSE_LOCATION',
     'ACCESS_FINE_LOCATION',
   ]);
+});
+
+test('foreground location changes reload every nearby page before local filtering', () => {
+  assert.match(appSource, /Location\.watchPositionAsync/);
+  assert.match(appSource, /distanceInterval:\s*LOCATION_REFRESH_DISTANCE_METERS/);
+  assert.match(appSource, /fetchAllNearbyServices/);
+  assert.match(appSource, /service\.category\.slug !== activeCategory/);
+  assert.match(nearbySource, /limit:\s*String\(PAGE_SIZE\)/);
+  assert.match(nearbySource, /offset:\s*String\(offset\)/);
+  assert.doesNotMatch(nearbySource, /category/);
+});
+
+test('mobile nearby cards have working details and route actions', () => {
+  assert.match(appSource, /setExpanded/);
+  assert.match(appSource, /Linking\.openURL/);
+  assert.match(appSource, /google\.com\/maps\/dir/);
 });
 
 test('mobile OIDC uses the registered NearFind redirect scheme and PKCE', () => {
