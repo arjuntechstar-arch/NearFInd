@@ -71,7 +71,7 @@ class ChatMessageDto {
 export class RoadsideController {
   constructor(
     @Inject(RoadsideService) private readonly roadside: RoadsideService,
-    private readonly config: ConfigService,
+    @Inject(ConfigService) private readonly config: ConfigService,
   ) {}
 
   @Get('emergency/config')
