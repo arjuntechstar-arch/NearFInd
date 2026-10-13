@@ -51,6 +51,13 @@ test('externally discovered OpenStreetMap places carry visible attribution', () 
   assert.match(appSource, /ODbL/);
 });
 
+test('mobile local development sign in uses the API-issued token and SecureStore', () => {
+  assert.match(appSource, /EXPO_PUBLIC_DEV_AUTH_ENABLED/);
+  assert.match(appSource, /\/dev-auth\/login/);
+  assert.match(appSource, /signInForDevelopment/);
+  assert.match(appSource, /saveAuthSession/);
+});
+
 test('mobile OIDC uses the registered NearFind redirect scheme and PKCE', () => {
   assert.equal(config.expo.scheme, 'nearfind');
   assert.match(appSource, /scheme:\s*['"]nearfind['"]/);
