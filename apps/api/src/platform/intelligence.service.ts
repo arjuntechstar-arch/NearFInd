@@ -29,8 +29,8 @@ export class IntelligenceService {
     @InjectRepository(EvConnector) private readonly connectors: Repository<EvConnector>,
     @InjectRepository(RouteSession) private readonly sessions: Repository<RouteSession>,
     @InjectRepository(ServiceLocation) private readonly locations: Repository<ServiceLocation>,
-    private readonly dataSource: DataSource,
-    private readonly access: AccessService,
+    @Inject(DataSource) private readonly dataSource: DataSource,
+    @Inject(AccessService) private readonly access: AccessService,
     @Inject(ROUTE_PROVIDER) private readonly routeProvider: { preview(start: RoutePoint, end: RoutePoint): RoutePreview },
   ) {}
 
