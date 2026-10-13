@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { User } from '../identity/entities/user.entity.js';
@@ -34,8 +34,8 @@ export class RewardsService {
     @InjectRepository(PerkRedemption) private readonly redemptions: Repository<PerkRedemption>,
     @InjectRepository(Contribution) private readonly contributions: Repository<Contribution>,
     @InjectRepository(Review) private readonly reviews: Repository<Review>,
-    private readonly dataSource: DataSource,
-    private readonly access: AccessService,
+    @Inject(DataSource) private readonly dataSource: DataSource,
+    @Inject(AccessService) private readonly access: AccessService,
   ) {}
 
   async wallet(userId: string) {
