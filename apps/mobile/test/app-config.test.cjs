@@ -6,6 +6,7 @@ const config = require('../app.json');
 
 const appSource = fs.readFileSync(path.join(__dirname, '..', 'App.tsx'), 'utf8');
 const authSource = fs.readFileSync(path.join(__dirname, '..', 'auth.ts'), 'utf8');
+const hubSource = fs.readFileSync(path.join(__dirname, '..', 'PlatformHub.tsx'), 'utf8');
 
 test('mobile bundle identifiers are production-safe and explicit', () => {
   assert.equal(config.expo.ios.bundleIdentifier, 'com.nearfind.app');
@@ -38,6 +39,30 @@ test('mobile tokens use SecureStore without embedded client secrets or plaintext
   assert.match(authSource, /expo-secure-store/);
   assert.match(authSource, /SecureStore\.setItemAsync/);
   assert.match(authSource, /SecureStore\.getItemAsync/);
-  assert.doesNotMatch(`${appSource}\n${authSource}`, /clientSecret|client_secret/);
-  assert.doesNotMatch(`${appSource}\n${authSource}`, /AsyncStorage|localStorage|sessionStorage/);
+  assert.doesNotMatch(`${appSource}\n${authSource}\n${hubSource}`, /clientSecret|client_secret/);
+  assert.doesNotMatch(`${appSource}\n${authSource}\n${hubSource}`, /AsyncStorage|localStorage|sessionStorage/);
+});
+
+test('mobile journey hub covers authenticated Phase 2-7 user workflows', () => {
+  assert.match(appSource, /PlatformHub/);
+  for (const endpoint of [
+    '/contributions',
+    '/notifications',
+    '/route-optimizations',
+    '/bookings',
+    '/dispatch-requests',
+    '/rewards/wallet',
+    '/rewards/challenges',
+    '/rewards/perks',
+    '/feature-flags/property_module',
+    '/properties',
+  ]) {
+    assert.ok(hubSource.includes(endpoint), `Expected journey hub endpoint ${endpoint}`);
+  }
+});
+
+test('mobile roadside messaging keeps public emergency services explicitly separate', () => {
+  assert.match(hubSource, /private roadside assistance/i);
+  assert.match(hubSource, /does not contact or replace public emergency services/i);
+  assert.match(appSource, /separate from private roadside assistance/i);
 });
