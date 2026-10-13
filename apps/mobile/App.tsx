@@ -22,6 +22,7 @@ WebBrowser.maybeCompleteAuthSession();
 declare const process: {
   env: {
     EXPO_PUBLIC_API_BASE_URL?: string;
+    EXPO_PUBLIC_DEV_AUTH_ENABLED?: string;
     EXPO_PUBLIC_OIDC_ISSUER_URL?: string;
     EXPO_PUBLIC_OIDC_CLIENT_ID?: string;
   };
@@ -51,9 +52,15 @@ interface Favorite {
   createdAt: string;
 }
 
+interface DevelopmentLoginResponse {
+  accessToken: string;
+  expiresIn: number;
+}
+
 type ViewMode = 'explore' | 'saved' | 'hub';
 
 const apiBaseUrl = (process.env.EXPO_PUBLIC_API_BASE_URL ?? 'http://localhost:4000/v1').replace(/\/$/, '');
+const devAuthEnabled = process.env.EXPO_PUBLIC_DEV_AUTH_ENABLED === 'true';
 const oidcIssuer = process.env.EXPO_PUBLIC_OIDC_ISSUER_URL?.replace(/\/$/, '');
 const oidcClientId = process.env.EXPO_PUBLIC_OIDC_CLIENT_ID;
 const redirectUri = AuthSession.makeRedirectUri({ scheme: 'nearfind', path: 'auth/callback' });
@@ -85,7 +92,7 @@ export default function App() {
       scopes: ['openid', 'profile', 'email'],
       usePKCE: true,
     },
-    oidcClientId ? discovery : null,
+    !devAuthEnabled && oidcClientId ? discovery : null,
   );
 
   const favoriteIds = useMemo(() => new Set(favorites.map((favorite) => favorite.placeId)), [favorites]);
@@ -112,7 +119,7 @@ export default function App() {
 
   useEffect(() => {
     let active = true;
-    if (!oidcIssuer) {
+    if (devAuthEnabled || !oidcIssuer) {
       setDiscovery(null);
       return () => {
         active = false;
@@ -195,6 +202,10 @@ export default function App() {
   }
 
   async function signIn(): Promise<void> {
+    if (devAuthEnabled) {
+      await signInForDevelopment();
+      return;
+    }
     if (!oidcIssuer || !oidcClientId) {
       setStatus('Sign-in is not configured. Set the mobile OIDC issuer and client ID.');
       return;
@@ -235,6 +246,29 @@ export default function App() {
     } catch (error) {
       await clearLocalSession();
       setStatus(error instanceof Error ? error.message : 'Unable to sign in.');
+    } finally {
+      setAuthBusy(false);
+    }
+  }
+
+  async function signInForDevelopment(): Promise<void> {
+    setAuthBusy(true);
+    setStatus('Starting local development session…');
+    try {
+      const response = await fetch(`${apiBaseUrl}/dev-auth/login`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ role: 'USER' }),
+      });
+      if (!response.ok) throw new Error('Local development sign-in is unavailable');
+      const token = (await response.json()) as DevelopmentLoginResponse;
+      const nextSession = await saveAuthSession({ accessToken: token.accessToken, expiresIn: token.expiresIn });
+      setSession(nextSession);
+      await bootstrapIdentity(nextSession);
+      setStatus('Signed in with the local development account.');
+    } catch (error) {
+      await clearLocalSession();
+      setStatus(error instanceof Error ? error.message : 'Unable to start local development sign-in.');
     } finally {
       setAuthBusy(false);
     }
