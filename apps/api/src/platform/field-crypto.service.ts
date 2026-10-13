@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'node:crypto';
 
@@ -9,7 +9,7 @@ const GCM_TAG_BYTES = 16;
 export class FieldCryptoService {
   private readonly key: Buffer;
 
-  constructor(config: ConfigService) {
+  constructor(@Inject(ConfigService) config: ConfigService) {
     const configured = config.get<string>('FIELD_ENCRYPTION_KEY');
     if (configured) {
       const decoded = Buffer.from(configured, 'base64');
@@ -39,8 +39,10 @@ export class FieldCryptoService {
     const iv = Buffer.from(ivPart, 'base64url');
     const tag = Buffer.from(tagPart, 'base64url');
     if (iv.length !== GCM_IV_BYTES || tag.length !== GCM_TAG_BYTES) throw new Error('Encrypted field has invalid authentication metadata');
+    const encrypted = Buffer.from(dataPart, 'base64url');
+    if (encrypted.length === 0) throw new Error('Encrypted field has no ciphertext');
     const decipher = createDecipheriv('aes-256-gcm', this.key, iv, { authTagLength: GCM_TAG_BYTES });
     decipher.setAuthTag(tag);
-    return Buffer.concat([decipher.update(Buffer.from(dataPart, 'base64url')), decipher.final()]).toString('utf8');
+    return Buffer.concat([decipher.update(encrypted), decipher.final()]).toString('utf8');
   }
 }
