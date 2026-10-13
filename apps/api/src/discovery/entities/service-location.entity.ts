@@ -55,4 +55,19 @@ export class ServiceLocation {
 
   @Column({ type: 'int', default: 1 })
   version!: number;
+
+  @Column({ type: 'varchar', length: 40, name: 'source_provider', default: 'nearfind' })
+  sourceProvider!: string;
+
+  @Column({ type: 'varchar', length: 180, name: 'source_external_id', nullable: true })
+  sourceExternalId!: string | null;
+
+  @Column({ type: 'varchar', length: 180, name: 'source_attribution', nullable: true })
+  sourceAttribution!: string | null;
+
+  @Column({ type: 'timestamptz', name: 'source_last_seen_at', nullable: true })
+  sourceLastSeenAt!: Date | null;
+
+  @Column({ type: 'timestamptz', name: 'source_expires_at', nullable: true })
+  sourceExpiresAt!: Date | null;
 }
