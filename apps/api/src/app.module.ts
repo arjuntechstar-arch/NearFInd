@@ -28,7 +28,7 @@ const envSchema = z
     S3_SECRET_ACCESS_KEY: z.string().min(1).optional(),
     EMERGENCY_REGION: z.string().min(2).max(20).default('IN'),
     EMERGENCY_NUMBER: z.string().min(2).max(20).default('112'),
-    EXTERNAL_PLACES_PROVIDER: z.enum(['none', 'overpass']).default('none'),
+    EXTERNAL_PLACES_PROVIDER: z.enum(['none', 'overpass']).default('overpass'),
     OVERPASS_API_URL: z.string().url().optional(),
     EXTERNAL_PLACES_USER_AGENT: z.string().min(8).max(240).optional(),
     EXTERNAL_PLACES_DEFAULT_COUNTRY: z.string().regex(/^[A-Za-z]{2}$/).default('IN'),
@@ -57,7 +57,11 @@ const envSchema = z
       context.addIssue({ code: 'custom', path: ['EXTERNAL_PLACES_USER_AGENT'], message: 'Identify NearFind to the Overpass operator with a contactable User-Agent' });
     }
     if (env.NODE_ENV === 'production' && env.OVERPASS_API_URL) {
-      const host = new URL(env.OVERPASS_API_URL).hostname.toLowerCase();
+      const overpassUrl = new URL(env.OVERPASS_API_URL);
+      if (overpassUrl.protocol !== 'https:') {
+        context.addIssue({ code: 'custom', path: ['OVERPASS_API_URL'], message: 'OVERPASS_API_URL must use HTTPS in production' });
+      }
+      const host = overpassUrl.hostname.toLowerCase();
       if (host === 'overpass-api.de' || host.endsWith('.overpass-api.de')) {
         context.addIssue({
           code: 'custom',
