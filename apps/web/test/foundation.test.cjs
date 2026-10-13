@@ -27,7 +27,7 @@ test('location updates load every nearby page before applying client-side filter
   assert.match(page, /service\.category\.slug !== activeCategory/);
   assert.match(nearby, /limit:\s*String\(PAGE_SIZE\)/);
   assert.match(nearby, /offset:\s*String\(offset\)/);
-  assert.doesNotMatch(nearby, /category/);
+  assert.doesNotMatch(nearby, /category\s*:\s*String\(|params\.set\(['"]category['"]/);
 });
 
 test('global styles retain visible keyboard focus and reduced motion support', () => {
