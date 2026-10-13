@@ -1,8 +1,33 @@
 import { NextResponse } from 'next/server';
-import { createPkceChallenge, generateOpaqueValue, getDiscovery, getWebAuthConfig, setLoginCookies } from '../../../lib/server-auth';
+import {
+  createPkceChallenge,
+  generateOpaqueValue,
+  getDiscovery,
+  getWebAuthConfig,
+  getWebBaseUrl,
+  isDevelopmentAuthEnabled,
+  requestDevelopmentAccessToken,
+  setAccessTokenCookie,
+  setLoginCookies,
+  type DevelopmentRole,
+} from '../../../lib/server-auth';
 
-export async function GET(): Promise<NextResponse> {
+const developmentRoles = new Set<DevelopmentRole>(['USER', 'PROVIDER', 'ADMIN']);
+
+export async function GET(request: Request): Promise<NextResponse> {
   try {
+    const requestUrl = new URL(request.url);
+    const requestedRole = requestUrl.searchParams.get('role')?.toUpperCase() as DevelopmentRole | undefined;
+    const role = requestedRole && developmentRoles.has(requestedRole) ? requestedRole : 'USER';
+    const next = safeNextPath(requestUrl.searchParams.get('next'));
+
+    if (isDevelopmentAuthEnabled()) {
+      const session = await requestDevelopmentAccessToken(role);
+      const response = NextResponse.redirect(new URL(next, getWebBaseUrl()));
+      setAccessTokenCookie(response, session.accessToken, session.expiresIn);
+      return response;
+    }
+
     const config = getWebAuthConfig();
     const discovery = await getDiscovery();
     const state = generateOpaqueValue();
@@ -22,4 +47,9 @@ export async function GET(): Promise<NextResponse> {
   } catch {
     return NextResponse.json({ error: 'Web sign-in is not configured.' }, { status: 503 });
   }
+}
+
+function safeNextPath(value: string | null): string {
+  if (!value || !value.startsWith('/') || value.startsWith('//')) return '/';
+  return value;
 }
