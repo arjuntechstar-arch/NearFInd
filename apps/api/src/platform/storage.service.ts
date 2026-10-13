@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createHash, createHmac, randomUUID } from 'node:crypto';
 
@@ -24,7 +24,7 @@ function encodePath(value: string): string {
 
 @Injectable()
 export class StorageService {
-  constructor(private readonly config: ConfigService) {}
+  constructor(@Inject(ConfigService) private readonly config: ConfigService) {}
 
   createUploadIntent(userId: string, purpose: string, mimeType: string, sizeBytes: number) {
     const rule = ALLOWED_MIME_TYPES.get(mimeType);
