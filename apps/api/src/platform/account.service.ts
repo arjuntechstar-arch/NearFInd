@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ServiceCategory } from '../discovery/entities/service-category.entity.js';
@@ -42,8 +42,8 @@ export class AccountService {
     @InjectRepository(ServiceLocation) private readonly locations: Repository<ServiceLocation>,
     @InjectRepository(ServiceCategory) private readonly categories: Repository<ServiceCategory>,
     @InjectRepository(User) private readonly users: Repository<User>,
-    private readonly crypto: FieldCryptoService,
-    private readonly access: AccessService,
+    @Inject(FieldCryptoService) private readonly crypto: FieldCryptoService,
+    @Inject(AccessService) private readonly access: AccessService,
   ) {}
 
   async getPreferences(userId: string): Promise<UserPreference> {
