@@ -97,6 +97,10 @@ export default function App() {
       return `${service.name} ${service.category.name} ${service.address} ${service.city}`.toLowerCase().includes(normalized);
     });
   }, [activeCategory, query, services]);
+  const hasOpenStreetMapData = useMemo(
+    () => services.some((service) => service.sourceProvider === 'openstreetmap'),
+    [services],
+  );
 
   useEffect(() => {
     void restoreSession();
@@ -368,86 +372,47 @@ export default function App() {
         {profile ? <Text style={styles.accountText}>Signed in as {profile.displayName ?? profile.email ?? 'NearFind user'} · {profile.role}</Text> : null}
 
         <View style={styles.tabRow}>
-          <TouchableOpacity
-            accessibilityRole="tab"
-            accessibilityState={{ selected: viewMode === 'explore' }}
-            style={[styles.tab, viewMode === 'explore' && styles.tabActive]}
-            onPress={() => setViewMode('explore')}
-          >
+          <TouchableOpacity accessibilityRole="tab" accessibilityState={{ selected: viewMode === 'explore' }} style={[styles.tab, viewMode === 'explore' && styles.tabActive]} onPress={() => setViewMode('explore')}>
             <Text style={[styles.tabText, viewMode === 'explore' && styles.tabTextActive]}>Explore</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            accessibilityRole="tab"
-            accessibilityState={{ selected: viewMode === 'saved' }}
-            style={[styles.tab, viewMode === 'saved' && styles.tabActive]}
-            onPress={() => setViewMode('saved')}
-          >
+          <TouchableOpacity accessibilityRole="tab" accessibilityState={{ selected: viewMode === 'saved' }} style={[styles.tab, viewMode === 'saved' && styles.tabActive]} onPress={() => setViewMode('saved')}>
             <Text style={[styles.tabText, viewMode === 'saved' && styles.tabTextActive]}>Saved ({favorites.length})</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            accessibilityRole="tab"
-            accessibilityState={{ selected: viewMode === 'hub' }}
-            style={[styles.tab, viewMode === 'hub' && styles.tabActive]}
-            onPress={() => setViewMode('hub')}
-          >
+          <TouchableOpacity accessibilityRole="tab" accessibilityState={{ selected: viewMode === 'hub' }} style={[styles.tab, viewMode === 'hub' && styles.tabActive]} onPress={() => setViewMode('hub')}>
             <Text style={[styles.tabText, viewMode === 'hub' && styles.tabTextActive]}>Journey</Text>
           </TouchableOpacity>
         </View>
 
         {viewMode === 'explore' ? (
           <>
-            <TextInput
-              accessibilityLabel="Search nearby services"
-              placeholder="Search fuel, ATM, hospital…"
-              placeholderTextColor={colors.text.muted}
-              style={styles.search}
-              returnKeyType="search"
-              value={query}
-              onChangeText={setQuery}
-            />
+            <TextInput accessibilityLabel="Search nearby services" placeholder="Search fuel, ATM, hospital…" placeholderTextColor={colors.text.muted} style={styles.search} returnKeyType="search" value={query} onChangeText={setQuery} />
             <TouchableOpacity accessibilityRole="button" style={styles.locationButton} onPress={() => void useMyLocation()} disabled={loading}>
               <Text style={styles.locationButtonText}>{loading ? 'Loading nearby…' : coords ? 'Refresh my location' : 'Use my location'}</Text>
             </TouchableOpacity>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoryRow}>
               {categories.length > 0 ? (
-                <TouchableOpacity
-                  accessibilityRole="button"
-                  accessibilityState={{ selected: activeCategory === '' }}
-                  onPress={() => setActiveCategory('')}
-                  style={[styles.chip, activeCategory === '' && styles.chipActive]}
-                >
+                <TouchableOpacity accessibilityRole="button" accessibilityState={{ selected: activeCategory === '' }} onPress={() => setActiveCategory('')} style={[styles.chip, activeCategory === '' && styles.chipActive]}>
                   <Text style={[styles.chipText, activeCategory === '' && styles.chipTextActive]}>All</Text>
                 </TouchableOpacity>
               ) : null}
               {categories.map((category) => (
-                <TouchableOpacity
-                  accessibilityRole="button"
-                  accessibilityState={{ selected: activeCategory === category.slug }}
-                  key={category.id}
-                  onPress={() => selectCategory(category.slug)}
-                  style={[styles.chip, activeCategory === category.slug && styles.chipActive]}
-                >
+                <TouchableOpacity accessibilityRole="button" accessibilityState={{ selected: activeCategory === category.slug }} key={category.id} onPress={() => selectCategory(category.slug)} style={[styles.chip, activeCategory === category.slug && styles.chipActive]}>
                   <Text style={[styles.chipText, activeCategory === category.slug && styles.chipTextActive]}>{category.name}</Text>
                 </TouchableOpacity>
               ))}
             </ScrollView>
             <View style={styles.sectionHeader}>
-              <View>
-                <Text style={styles.eyebrow}>Near your current area</Text>
-                <Text style={styles.sectionTitle}>Nearby services</Text>
-              </View>
+              <View><Text style={styles.eyebrow}>Near your current area</Text><Text style={styles.sectionTitle}>Nearby services</Text></View>
               <Text style={styles.filterText}>{visibleServices.length} shown · {services.length} loaded</Text>
             </View>
             <View style={styles.cards}>
               {visibleServices.map((service) => (
-                <ServiceCard
-                  key={service.id}
-                  service={service}
-                  saved={favoriteIds.has(service.id)}
-                  onToggleFavorite={() => void toggleFavorite(service.id)}
-                />
+                <ServiceCard key={service.id} service={service} saved={favoriteIds.has(service.id)} onToggleFavorite={() => void toggleFavorite(service.id)} />
               ))}
             </View>
+            {hasOpenStreetMapData ? (
+              <Text style={styles.attribution}>Place data © <Text accessibilityRole="link" style={styles.attributionLink} onPress={() => void Linking.openURL('https://www.openstreetmap.org/copyright')}>OpenStreetMap contributors</Text> · ODbL.</Text>
+            ) : null}
           </>
         ) : viewMode === 'saved' ? (
           <SavedView favorites={favorites} signedIn={Boolean(session)} onSignIn={() => void signIn()} onRemove={(placeId) => void toggleFavorite(placeId)} />
@@ -468,23 +433,21 @@ export default function App() {
 function ServiceCard({ service, saved, onToggleFavorite }: { service: NearbyService; saved: boolean; onToggleFavorite: () => void }) {
   const [expanded, setExpanded] = useState(false);
   const destination = encodeURIComponent(`${service.coordinates.lat},${service.coordinates.lng}`);
+  const ratingSummary = service.rating > 0 ? `★ ${service.rating.toFixed(1)} (${service.reviewCount})` : 'Live place';
 
   return (
     <View style={styles.card}>
       <View style={styles.iconBubble}><Text style={styles.iconText}>{service.category.name.charAt(0)}</Text></View>
       <View style={styles.cardBody}>
         <View style={styles.cardHeading}>
-          <View style={styles.cardHeadingCopy}>
-            <Text style={styles.categoryLabel}>{service.category.name}</Text>
-            <Text style={styles.cardTitle}>{service.name}</Text>
-          </View>
+          <View style={styles.cardHeadingCopy}><Text style={styles.categoryLabel}>{service.category.name}</Text><Text style={styles.cardTitle}>{service.name}</Text></View>
           <TouchableOpacity accessibilityRole="button" accessibilityLabel={saved ? `Remove ${service.name} from saved places` : `Save ${service.name}`} onPress={onToggleFavorite} style={styles.saveButton}>
             <Text style={styles.saveButtonText}>{saved ? 'Saved' : 'Save'}</Text>
           </TouchableOpacity>
         </View>
-        <Text style={styles.meta}>{formatDistance(service.distanceMeters)} • ★ {service.rating.toFixed(1)} ({service.reviewCount})</Text>
-        <Text style={styles.meta}>{service.address}, {service.city}</Text>
-        {expanded ? <Text style={styles.meta}>Coordinates: {service.coordinates.lat.toFixed(5)}, {service.coordinates.lng.toFixed(5)}</Text> : null}
+        <Text style={styles.meta}>{formatDistance(service.distanceMeters)} • {ratingSummary}</Text>
+        <Text style={styles.meta}>{service.address}{service.city ? `, ${service.city}` : ''}</Text>
+        {expanded ? <Text style={styles.meta}>Coordinates: {service.coordinates.lat.toFixed(5)}, {service.coordinates.lng.toFixed(5)}{service.sourceAttribution ? ` · ${service.sourceAttribution}` : ''}</Text> : null}
         <View style={styles.actions}>
           <TouchableOpacity accessibilityRole="button" style={styles.secondaryButton} onPress={() => setExpanded((value) => !value)}><Text style={styles.secondaryButtonText}>{expanded ? 'Hide details' : 'Details'}</Text></TouchableOpacity>
           <TouchableOpacity accessibilityRole="link" style={styles.primaryButton} onPress={() => void Linking.openURL(`https://www.google.com/maps/dir/?api=1&destination=${destination}`)}><Text style={styles.primaryButtonText}>Route</Text></TouchableOpacity>
@@ -513,8 +476,8 @@ function SavedView({ favorites, signedIn, onSignIn, onRemove }: { favorites: Fav
           <View style={styles.cardBody}>
             <Text style={styles.categoryLabel}>{favorite.category?.name ?? 'Service'}</Text>
             <Text style={styles.cardTitle}>{favorite.name}</Text>
-            <Text style={styles.meta}>★ {favorite.rating.toFixed(1)} ({favorite.reviewCount})</Text>
-            <Text style={styles.meta}>{favorite.address}, {favorite.city}</Text>
+            {favorite.rating > 0 ? <Text style={styles.meta}>★ {favorite.rating.toFixed(1)} ({favorite.reviewCount})</Text> : <Text style={styles.meta}>Rating not yet available</Text>}
+            <Text style={styles.meta}>{favorite.address}{favorite.city ? `, ${favorite.city}` : ''}</Text>
             <TouchableOpacity accessibilityRole="button" accessibilityLabel={`Remove ${favorite.name} from saved places`} style={styles.secondaryButton} onPress={() => onRemove(favorite.placeId)}>
               <Text style={styles.secondaryButtonText}>Remove</Text>
             </TouchableOpacity>
@@ -566,6 +529,8 @@ const styles = StyleSheet.create({
   categoryLabel: { color: colors.brand.secondary, fontSize: 12, fontWeight: '700' },
   cardTitle: { color: colors.text.primary, fontSize: 17, fontWeight: '700', marginTop: 2 },
   meta: { color: colors.text.muted, fontSize: 14, lineHeight: 20, marginTop: 4 },
+  attribution: { color: colors.text.muted, fontSize: 12, lineHeight: 18, marginTop: spacing.md },
+  attributionLink: { color: colors.brand.primaryStrong, textDecorationLine: 'underline' },
   saveButton: { minHeight: 38, paddingHorizontal: spacing.sm, borderRadius: radii.control, backgroundColor: '#F9DFF0', alignItems: 'center', justifyContent: 'center' },
   saveButtonText: { color: colors.brand.primaryStrong, fontWeight: '700' },
   actions: { flexDirection: 'row', justifyContent: 'flex-end', gap: spacing.sm, marginTop: 12 },
