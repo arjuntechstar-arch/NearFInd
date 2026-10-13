@@ -1,4 +1,4 @@
-import { ConflictException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, HttpException, HttpStatus, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, MoreThanOrEqual, Repository } from 'typeorm';
 import { ServiceLocation } from '../discovery/entities/service-location.entity.js';
@@ -37,10 +37,10 @@ export class CommunityService {
     @InjectRepository(ServiceLocation) private readonly locations: Repository<ServiceLocation>,
     @InjectRepository(Favorite) private readonly favorites: Repository<Favorite>,
     @InjectRepository(EmergencyContact) private readonly contacts: Repository<EmergencyContact>,
-    private readonly dataSource: DataSource,
-    private readonly storage: StorageService,
-    private readonly crypto: FieldCryptoService,
-    private readonly access: AccessService,
+    @Inject(DataSource) private readonly dataSource: DataSource,
+    @Inject(StorageService) private readonly storage: StorageService,
+    @Inject(FieldCryptoService) private readonly crypto: FieldCryptoService,
+    @Inject(AccessService) private readonly access: AccessService,
   ) {}
 
   async createContribution(
