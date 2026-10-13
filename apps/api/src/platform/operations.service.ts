@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../identity/entities/user.entity.js';
@@ -11,8 +11,8 @@ export class OperationsService {
   constructor(
     @InjectRepository(FeatureFlag) private readonly flags: Repository<FeatureFlag>,
     @InjectRepository(AuditEvent) private readonly audits: Repository<AuditEvent>,
-    private readonly storage: StorageService,
-    private readonly access: AccessService,
+    @Inject(StorageService) private readonly storage: StorageService,
+    @Inject(AccessService) private readonly access: AccessService,
   ) {}
 
   createUploadIntent(user: User, purpose: string, mimeType: string, sizeBytes: number) {
