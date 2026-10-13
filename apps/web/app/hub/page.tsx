@@ -1,6 +1,7 @@
 'use client';
 
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import type { FormEvent } from 'react';
 
 interface Profile { id: string; displayName: string | null; email: string | null; role: 'USER' | 'PROVIDER' | 'ADMIN'; }
 interface SessionResponse { authenticated: boolean; profile?: Profile; }
@@ -29,6 +30,15 @@ interface RouteResult { routeSessionId: string; preview: { distanceMeters: numbe
 
 type Tab = 'overview' | 'account' | 'community' | 'travel' | 'roadside' | 'rewards' | 'provider' | 'admin' | 'properties';
 
+function formText(form: FormData, name: string, fallback = ''): string {
+  const value = form.get(name);
+  return typeof value === 'string' ? value : fallback;
+}
+
+function formNumber(form: FormData, name: string): number {
+  return Number(formText(form, name));
+}
+
 async function api<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`/api/platform/${path}`, {
     cache: 'no-store',
@@ -45,7 +55,7 @@ async function api<T>(path: string, init?: RequestInit): Promise<T> {
       const problem = (await response.json()) as { title?: string; message?: string; error?: string };
       message = problem.title ?? problem.message ?? problem.error ?? message;
     } catch {
-      // Keep the status-based fallback for non-JSON upstream failures.
+      // Keep the status fallback for a non-JSON upstream error.
     }
     throw new Error(message);
   }
@@ -80,9 +90,7 @@ export default function HubPage() {
   const unreadNotifications = useMemo(() => notifications.filter((item) => !item.readAt).length, [notifications]);
   const activeDispatch = dispatches.find((item) => !['COMPLETED', 'CANCELLED'].includes(item.status)) ?? null;
 
-  useEffect(() => {
-    void bootstrap();
-  }, []);
+  useEffect(() => { void bootstrap(); }, []);
 
   async function bootstrap(): Promise<void> {
     try {
@@ -127,15 +135,14 @@ export default function HubPage() {
     setPerks(perkRows);
     setProviders(providerRows);
     setPropertyFlag(flag);
-    if (flag?.enabled) setProperties(await api<PropertyListing[]>('properties?limit=20'));
-    else setProperties([]);
+    setProperties(flag?.enabled ? await api<PropertyListing[]>('properties?limit=20') : []);
     if (currentProfile.role === 'ADMIN') {
-      const [providerQueue, contributionsQueue] = await Promise.all([
+      const [providerQueue, contributionQueue] = await Promise.all([
         api<Provider[]>('admin/providers'),
         api<Contribution[]>('admin/moderation/contributions'),
       ]);
       setAdminProviders(providerQueue);
-      setModerationQueue(contributionsQueue);
+      setModerationQueue(contributionQueue);
     }
   }
 
@@ -159,9 +166,9 @@ export default function HubPage() {
       await api<Preferences>('account/preferences', {
         method: 'PATCH',
         body: JSON.stringify({
-          manualLocationLabel: String(form.get('label') ?? ''),
-          manualLat: Number(form.get('lat')),
-          manualLng: Number(form.get('lng')),
+          manualLocationLabel: formText(form, 'label'),
+          manualLat: formNumber(form, 'lat'),
+          manualLng: formNumber(form, 'lng'),
           notificationPush: form.get('push') === 'on',
           notificationEmail: form.get('email') === 'on',
           leaderboardOptIn: form.get('leaderboard') === 'on',
@@ -172,31 +179,33 @@ export default function HubPage() {
 
   async function addVehicle(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
-    const form = new FormData(event.currentTarget);
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
     await runAction(async () => {
       await api<Vehicle>('account/vehicles', {
         method: 'POST',
         body: JSON.stringify({
-          label: String(form.get('label') ?? ''),
-          vehicleType: String(form.get('type') ?? 'CAR'),
-          fuelType: String(form.get('fuel') ?? 'PETROL'),
-          registrationLast4: String(form.get('last4') ?? ''),
+          label: formText(form, 'label'),
+          vehicleType: formText(form, 'type', 'CAR'),
+          fuelType: formText(form, 'fuel', 'PETROL'),
+          registrationLast4: formText(form, 'last4'),
           isDefault: form.get('default') === 'on',
         }),
       });
-      event.currentTarget.reset();
+      formElement.reset();
     }, 'Vehicle added.');
   }
 
   async function addContribution(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
-    const form = new FormData(event.currentTarget);
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
     await runAction(async () => {
       await api<Contribution>('contributions', {
         method: 'POST',
-        body: JSON.stringify({ kind: String(form.get('kind') ?? 'PLACE_UPDATE'), details: { note: String(form.get('note') ?? '') } }),
+        body: JSON.stringify({ kind: formText(form, 'kind', 'PLACE_UPDATE'), details: { note: formText(form, 'note') } }),
       });
-      event.currentTarget.reset();
+      formElement.reset();
     }, 'Contribution submitted for moderation.');
   }
 
@@ -205,15 +214,16 @@ export default function HubPage() {
     const form = new FormData(event.currentTarget);
     setBusy(true);
     try {
+      const fuelType = formText(form, 'fuelType').trim();
       const result = await api<RouteResult>('route-optimizations', {
         method: 'POST',
         body: JSON.stringify({
-          startLat: Number(form.get('startLat')),
-          startLng: Number(form.get('startLng')),
-          endLat: Number(form.get('endLat')),
-          endLng: Number(form.get('endLng')),
-          corridorMeters: Number(form.get('corridor')),
-          fuelType: String(form.get('fuelType') ?? '').trim() || undefined,
+          startLat: formNumber(form, 'startLat'),
+          startLng: formNumber(form, 'startLng'),
+          endLat: formNumber(form, 'endLat'),
+          endLng: formNumber(form, 'endLng'),
+          corridorMeters: formNumber(form, 'corridor'),
+          ...(fuelType ? { fuelType } : {}),
         }),
       });
       setRouteResult(result);
@@ -228,16 +238,17 @@ export default function HubPage() {
   async function createDispatch(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
+    const vehicleId = formText(form, 'vehicleId');
     await runAction(async () => {
       await api<DispatchRequest>('dispatch-requests', {
         method: 'POST',
         body: JSON.stringify({
-          serviceType: String(form.get('serviceType') ?? 'TOW'),
-          lat: Number(form.get('lat')),
-          lng: Number(form.get('lng')),
-          notes: String(form.get('notes') ?? ''),
+          serviceType: formText(form, 'serviceType', 'TOW'),
+          lat: formNumber(form, 'lat'),
+          lng: formNumber(form, 'lng'),
+          notes: formText(form, 'notes'),
           idempotencyKey: crypto.randomUUID(),
-          ...(String(form.get('vehicleId') ?? '') ? { vehicleId: String(form.get('vehicleId')) } : {}),
+          ...(vehicleId ? { vehicleId } : {}),
         }),
       });
     }, 'Private roadside request created. Direct public emergency calling remains separate.');
@@ -245,10 +256,11 @@ export default function HubPage() {
 
   async function applyProvider(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
-    const form = new FormData(event.currentTarget);
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
     await runAction(async () => {
-      await api<Provider>('providers', { method: 'POST', body: JSON.stringify({ name: String(form.get('name') ?? '') }) });
-      event.currentTarget.reset();
+      await api<Provider>('providers', { method: 'POST', body: JSON.stringify({ name: formText(form, 'name') }) });
+      formElement.reset();
     }, 'Provider application submitted for admin approval.');
   }
 
@@ -258,7 +270,7 @@ export default function HubPage() {
     await runAction(async () => {
       await api<Booking>('bookings', {
         method: 'POST',
-        body: JSON.stringify({ slotId: String(form.get('slotId') ?? ''), idempotencyKey: crypto.randomUUID() }),
+        body: JSON.stringify({ slotId: formText(form, 'slotId'), idempotencyKey: crypto.randomUUID() }),
       });
     }, 'Booking slot reserved for 15 minutes.');
   }
@@ -303,10 +315,11 @@ export default function HubPage() {
   async function bookInspection(event: FormEvent<HTMLFormElement>, propertyId: string): Promise<void> {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
+    const scheduledAt = formText(form, 'scheduledAt');
     await runAction(async () => {
       await api(`properties/${propertyId}/inspection-bookings`, {
         method: 'POST',
-        body: JSON.stringify({ scheduledAt: new Date(String(form.get('scheduledAt'))).toISOString(), idempotencyKey: crypto.randomUUID() }),
+        body: JSON.stringify({ scheduledAt: new Date(scheduledAt).toISOString(), idempotencyKey: crypto.randomUUID() }),
       });
     }, 'Inspection requested.');
   }
@@ -340,11 +353,11 @@ export default function HubPage() {
       <p className="hubStatus" aria-live="polite">{status}</p>
 
       {tab === 'overview' && <section className="hubGrid">
-        <Metric title="Saved journeys" value={String(bookings.length)} note="Bookings on your account" />
+        <Metric title="Bookings" value={String(bookings.length)} note="Bookings on your account" />
         <Metric title="Roadside" value={activeDispatch?.status ?? 'Ready'} note="Private roadside support" />
         <Metric title="Rewards" value={String(wallet?.balance ?? 0)} note="Available points" />
-        <Metric title="Community" value={String(contributions.length)} note="Updates you submitted" />
-        <article className="hubPanel hubSpan"><h2>Safety boundary</h2><p className="smallText">NearFind roadside assistance is a private service. For public emergencies, use your verified local emergency number directly; NearFind does not claim to dispatch government emergency services.</p></article>
+        <Metric title="Community" value={String(contributions.length)} note="Updates submitted" />
+        <article className="hubPanel hubSpan"><h2>Safety boundary</h2><p className="smallText">NearFind roadside assistance is private. Public emergencies should use the verified regional emergency number directly; NearFind does not claim to dispatch government emergency services.</p></article>
       </section>}
 
       {tab === 'account' && <section className="hubGrid">
@@ -380,20 +393,20 @@ export default function HubPage() {
       </section>}
 
       {tab === 'rewards' && <section className="hubGrid">
-        <Metric title="Wallet" value={String(wallet?.balance ?? 0)} note="Points are derived from an immutable ledger" />
+        <Metric title="Wallet" value={String(wallet?.balance ?? 0)} note="Points derived from an immutable ledger" />
         <article className="hubPanel"><h2>Challenges</h2><div className="hubList">{challenges.map((challenge) => <div className="hubListItem" key={challenge.id}><strong>{challenge.name}</strong><span>{challenge.progress}/{challenge.targetCount} · +{challenge.rewardPoints} pts</span></div>)}</div></article>
         <article className="hubPanel hubSpan"><h2>Perks</h2><div className="hubCards">{perks.map((perk) => <div className="miniCard" key={perk.id}><strong>{perk.name}</strong><span>{perk.costPoints} points · {perk.stock} left</span><button className="secondaryButton hubButton" disabled={busy || perk.stock <= 0 || (wallet?.balance ?? 0) < perk.costPoints} onClick={() => void redeem(perk)}>Redeem</button></div>)}</div></article>
       </section>}
 
       {tab === 'provider' && <section className="hubGrid">
-        <article className="hubPanel"><h2>Provider applications</h2><form className="hubForm" onSubmit={(event) => void applyProvider(event)}><input name="name" placeholder="Provider/business name" required /><button className="primaryButton hubButton" disabled={busy}>Apply as provider</button></form></article>
-        <article className="hubPanel"><h2>Your providers</h2><div className="hubList">{providers.map((provider) => <div className="hubListItem" key={provider.id}><strong>{provider.name}</strong><span>{provider.status} · v{provider.version}</span></div>)}</div><p className="smallText">Approved provider accounts can manage locations, slots, bookings, EV connectors, roadside assignments and property listings through the same authenticated platform API.</p></article>
+        <article className="hubPanel"><h2>Provider application</h2><form className="hubForm" onSubmit={(event) => void applyProvider(event)}><input name="name" placeholder="Provider/business name" required /><button className="primaryButton hubButton" disabled={busy}>Apply as provider</button></form></article>
+        <article className="hubPanel"><h2>Your providers</h2><div className="hubList">{providers.map((provider) => <div className="hubListItem" key={provider.id}><strong>{provider.name}</strong><span>{provider.status} · v{provider.version}</span></div>)}</div><p className="smallText">Approved providers can manage locations, slots, bookings, EV connectors, roadside assignments and property listings through the authenticated platform API.</p></article>
       </section>}
 
       {tab === 'admin' && profile.role === 'ADMIN' && <section className="hubGrid">
         <article className="hubPanel"><h2>Provider approvals</h2><div className="hubList">{adminProviders.map((provider) => <div className="hubListItem" key={provider.id}><strong>{provider.name}</strong><span>{provider.status}</span>{provider.status !== 'ACTIVE' && <button className="textButton" disabled={busy} onClick={() => void approveProvider(provider)}>Approve</button>}</div>)}</div></article>
         <article className="hubPanel"><h2>Contribution moderation</h2><div className="hubList">{moderationQueue.map((item) => <div className="hubListItem" key={item.id}><strong>{item.kind}</strong><span>{item.status}</span><div><button className="textButton" disabled={busy} onClick={() => void moderateContribution(item, 'APPROVED')}>Approve</button><button className="textButton" disabled={busy} onClick={() => void moderateContribution(item, 'REJECTED')}>Reject</button></div></div>)}</div></article>
-        <article className="hubPanel hubSpan"><h2>Feature rollout</h2><p className="smallText">Property is intentionally off by default in new environments and should be enabled only after moderation/support readiness.</p><button className="secondaryButton hubButton" disabled={busy || !propertyFlag} onClick={() => void togglePropertyModule()}>{propertyFlag?.enabled ? 'Disable property module' : 'Enable property module'}</button></article>
+        <article className="hubPanel hubSpan"><h2>Feature rollout</h2><p className="smallText">Property is off by default and should be enabled only after moderation/support readiness.</p><button className="secondaryButton hubButton" disabled={busy || !propertyFlag} onClick={() => void togglePropertyModule()}>{propertyFlag?.enabled ? 'Disable property module' : 'Enable property module'}</button></article>
       </section>}
 
       {tab === 'properties' && <section className="hubGrid">
