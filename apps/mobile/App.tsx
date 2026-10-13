@@ -1,10 +1,10 @@
 import '@expo/metro-runtime';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import * as AuthSession from 'expo-auth-session';
 import * as Location from 'expo-location';
 import { StatusBar } from 'expo-status-bar';
 import * as WebBrowser from 'expo-web-browser';
-import { SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Linking, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { colors, radii, spacing } from '@nearfind/design-tokens';
 import {
   clearAuthSession,
@@ -14,6 +14,7 @@ import {
   saveAuthSession,
   type StoredAuthSession,
 } from './auth';
+import { fetchAllNearbyServices, movedAtLeastMeters, type NearbyService } from './nearby';
 import { PlatformHub } from './PlatformHub';
 
 WebBrowser.maybeCompleteAuthSession();
@@ -30,17 +31,6 @@ interface Category {
   id: string;
   slug: string;
   name: string;
-}
-
-interface NearbyService {
-  id: string;
-  name: string;
-  address: string;
-  city: string;
-  rating: number;
-  reviewCount: number;
-  distanceMeters: number;
-  category: { slug: string; name: string; icon: string };
 }
 
 interface Profile {
@@ -67,6 +57,7 @@ const apiBaseUrl = (process.env.EXPO_PUBLIC_API_BASE_URL ?? 'http://localhost:40
 const oidcIssuer = process.env.EXPO_PUBLIC_OIDC_ISSUER_URL?.replace(/\/$/, '');
 const oidcClientId = process.env.EXPO_PUBLIC_OIDC_CLIENT_ID;
 const redirectUri = AuthSession.makeRedirectUri({ scheme: 'nearfind', path: 'auth/callback' });
+const LOCATION_REFRESH_DISTANCE_METERS = 250;
 
 export default function App() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -82,6 +73,9 @@ export default function App() {
   const [authBusy, setAuthBusy] = useState(true);
   const [viewMode, setViewMode] = useState<ViewMode>('explore');
   const [discovery, setDiscovery] = useState<AuthSession.DiscoveryDocument | null>(null);
+  const locationSubscriptionRef = useRef<Location.LocationSubscription | null>(null);
+  const lastLoadedCoordsRef = useRef<{ lat: number; lng: number } | null>(null);
+  const nearbyRefreshSequenceRef = useRef(0);
 
   const [authRequest, , promptAuth] = AuthSession.useAuthRequest(
     {
@@ -97,14 +91,23 @@ export default function App() {
   const favoriteIds = useMemo(() => new Set(favorites.map((favorite) => favorite.placeId)), [favorites]);
   const visibleServices = useMemo(() => {
     const normalized = query.trim().toLowerCase();
-    if (!normalized) return services;
-    return services.filter((service) =>
-      `${service.name} ${service.category.name} ${service.address} ${service.city}`.toLowerCase().includes(normalized),
-    );
-  }, [query, services]);
+    return services.filter((service) => {
+      if (activeCategory && service.category.slug !== activeCategory) return false;
+      if (!normalized) return true;
+      return `${service.name} ${service.category.name} ${service.address} ${service.city}`.toLowerCase().includes(normalized);
+    });
+  }, [activeCategory, query, services]);
+  const hasOpenStreetMapData = useMemo(
+    () => services.some((service) => service.sourceProvider === 'openstreetmap'),
+    [services],
+  );
 
   useEffect(() => {
     void restoreSession();
+    return () => {
+      locationSubscriptionRef.current?.remove();
+      locationSubscriptionRef.current = null;
+    };
   }, []);
 
   useEffect(() => {
@@ -261,12 +264,43 @@ export default function App() {
     return loaded;
   }
 
-  async function loadNearby(lat: number, lng: number, category = activeCategory): Promise<void> {
-    const params = new URLSearchParams({ lat: String(lat), lng: String(lng), radiusMeters: '10000', limit: '30' });
-    if (category) params.set('category', category);
-    const response = await fetch(`${apiBaseUrl}/discovery/nearby?${params.toString()}`);
-    if (!response.ok) throw new Error('Unable to load nearby services');
-    setServices((await response.json()) as NearbyService[]);
+  async function refreshNearby(nextCoords: { lat: number; lng: number }, resetFilters: boolean): Promise<void> {
+    if (!resetFilters && !movedAtLeastMeters(lastLoadedCoordsRef.current, nextCoords, LOCATION_REFRESH_DISTANCE_METERS)) return;
+
+    lastLoadedCoordsRef.current = nextCoords;
+    setCoords(nextCoords);
+    if (resetFilters) {
+      setActiveCategory('');
+      setQuery('');
+    }
+
+    const refreshSequence = ++nearbyRefreshSequenceRef.current;
+    setLoading(true);
+    try {
+      const allServices = await fetchAllNearbyServices(apiBaseUrl, nextCoords.lat, nextCoords.lng);
+      if (refreshSequence !== nearbyRefreshSequenceRef.current) return;
+      setServices(allServices);
+      setStatus(`Showing all ${allServices.length} available services near your current location. Foreground location updates are active.`);
+    } catch (error) {
+      if (refreshSequence !== nearbyRefreshSequenceRef.current) return;
+      setStatus(error instanceof Error ? error.message : 'Unable to load nearby services.');
+    } finally {
+      if (refreshSequence === nearbyRefreshSequenceRef.current) setLoading(false);
+    }
+  }
+
+  async function startLocationWatch(): Promise<void> {
+    locationSubscriptionRef.current?.remove();
+    locationSubscriptionRef.current = await Location.watchPositionAsync(
+      {
+        accuracy: Location.Accuracy.Balanced,
+        distanceInterval: LOCATION_REFRESH_DISTANCE_METERS,
+        timeInterval: 15000,
+      },
+      (location) => {
+        void refreshNearby({ lat: location.coords.latitude, lng: location.coords.longitude }, false);
+      },
+    );
   }
 
   async function useMyLocation(): Promise<void> {
@@ -281,9 +315,8 @@ export default function App() {
       }
       const location = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
       const nextCoords = { lat: location.coords.latitude, lng: location.coords.longitude };
-      setCoords(nextCoords);
-      await loadNearby(nextCoords.lat, nextCoords.lng);
-      setStatus('Showing services near your current location.');
+      await refreshNearby(nextCoords, true);
+      await startLocationWatch();
     } catch (error) {
       setStatus(error instanceof Error ? error.message : 'Unable to load nearby services.');
     } finally {
@@ -291,18 +324,8 @@ export default function App() {
     }
   }
 
-  async function selectCategory(slug: string): Promise<void> {
-    const next = slug === activeCategory ? '' : slug;
-    setActiveCategory(next);
-    if (!coords) return;
-    setLoading(true);
-    try {
-      await loadNearby(coords.lat, coords.lng, next);
-    } catch (error) {
-      setStatus(error instanceof Error ? error.message : 'Unable to filter nearby services.');
-    } finally {
-      setLoading(false);
-    }
+  function selectCategory(slug: string): void {
+    setActiveCategory(slug === activeCategory ? '' : slug);
   }
 
   async function toggleFavorite(placeId: string): Promise<void> {
@@ -349,76 +372,47 @@ export default function App() {
         {profile ? <Text style={styles.accountText}>Signed in as {profile.displayName ?? profile.email ?? 'NearFind user'} · {profile.role}</Text> : null}
 
         <View style={styles.tabRow}>
-          <TouchableOpacity
-            accessibilityRole="tab"
-            accessibilityState={{ selected: viewMode === 'explore' }}
-            style={[styles.tab, viewMode === 'explore' && styles.tabActive]}
-            onPress={() => setViewMode('explore')}
-          >
+          <TouchableOpacity accessibilityRole="tab" accessibilityState={{ selected: viewMode === 'explore' }} style={[styles.tab, viewMode === 'explore' && styles.tabActive]} onPress={() => setViewMode('explore')}>
             <Text style={[styles.tabText, viewMode === 'explore' && styles.tabTextActive]}>Explore</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            accessibilityRole="tab"
-            accessibilityState={{ selected: viewMode === 'saved' }}
-            style={[styles.tab, viewMode === 'saved' && styles.tabActive]}
-            onPress={() => setViewMode('saved')}
-          >
+          <TouchableOpacity accessibilityRole="tab" accessibilityState={{ selected: viewMode === 'saved' }} style={[styles.tab, viewMode === 'saved' && styles.tabActive]} onPress={() => setViewMode('saved')}>
             <Text style={[styles.tabText, viewMode === 'saved' && styles.tabTextActive]}>Saved ({favorites.length})</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            accessibilityRole="tab"
-            accessibilityState={{ selected: viewMode === 'hub' }}
-            style={[styles.tab, viewMode === 'hub' && styles.tabActive]}
-            onPress={() => setViewMode('hub')}
-          >
+          <TouchableOpacity accessibilityRole="tab" accessibilityState={{ selected: viewMode === 'hub' }} style={[styles.tab, viewMode === 'hub' && styles.tabActive]} onPress={() => setViewMode('hub')}>
             <Text style={[styles.tabText, viewMode === 'hub' && styles.tabTextActive]}>Journey</Text>
           </TouchableOpacity>
         </View>
 
         {viewMode === 'explore' ? (
           <>
-            <TextInput
-              accessibilityLabel="Search nearby services"
-              placeholder="Search fuel, ATM, hospital…"
-              placeholderTextColor={colors.text.muted}
-              style={styles.search}
-              returnKeyType="search"
-              value={query}
-              onChangeText={setQuery}
-            />
+            <TextInput accessibilityLabel="Search nearby services" placeholder="Search fuel, ATM, hospital…" placeholderTextColor={colors.text.muted} style={styles.search} returnKeyType="search" value={query} onChangeText={setQuery} />
             <TouchableOpacity accessibilityRole="button" style={styles.locationButton} onPress={() => void useMyLocation()} disabled={loading}>
-              <Text style={styles.locationButtonText}>{loading ? 'Loading nearby…' : 'Use my location'}</Text>
+              <Text style={styles.locationButtonText}>{loading ? 'Loading nearby…' : coords ? 'Refresh my location' : 'Use my location'}</Text>
             </TouchableOpacity>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoryRow}>
+              {categories.length > 0 ? (
+                <TouchableOpacity accessibilityRole="button" accessibilityState={{ selected: activeCategory === '' }} onPress={() => setActiveCategory('')} style={[styles.chip, activeCategory === '' && styles.chipActive]}>
+                  <Text style={[styles.chipText, activeCategory === '' && styles.chipTextActive]}>All</Text>
+                </TouchableOpacity>
+              ) : null}
               {categories.map((category) => (
-                <TouchableOpacity
-                  accessibilityRole="button"
-                  accessibilityState={{ selected: activeCategory === category.slug }}
-                  key={category.id}
-                  onPress={() => void selectCategory(category.slug)}
-                  style={[styles.chip, activeCategory === category.slug && styles.chipActive]}
-                >
+                <TouchableOpacity accessibilityRole="button" accessibilityState={{ selected: activeCategory === category.slug }} key={category.id} onPress={() => selectCategory(category.slug)} style={[styles.chip, activeCategory === category.slug && styles.chipActive]}>
                   <Text style={[styles.chipText, activeCategory === category.slug && styles.chipTextActive]}>{category.name}</Text>
                 </TouchableOpacity>
               ))}
             </ScrollView>
             <View style={styles.sectionHeader}>
-              <View>
-                <Text style={styles.eyebrow}>Near your current area</Text>
-                <Text style={styles.sectionTitle}>Nearby services</Text>
-              </View>
-              <Text style={styles.filterText}>{visibleServices.length} found</Text>
+              <View><Text style={styles.eyebrow}>Near your current area</Text><Text style={styles.sectionTitle}>Nearby services</Text></View>
+              <Text style={styles.filterText}>{visibleServices.length} shown · {services.length} loaded</Text>
             </View>
             <View style={styles.cards}>
               {visibleServices.map((service) => (
-                <ServiceCard
-                  key={service.id}
-                  service={service}
-                  saved={favoriteIds.has(service.id)}
-                  onToggleFavorite={() => void toggleFavorite(service.id)}
-                />
+                <ServiceCard key={service.id} service={service} saved={favoriteIds.has(service.id)} onToggleFavorite={() => void toggleFavorite(service.id)} />
               ))}
             </View>
+            {hasOpenStreetMapData ? (
+              <Text style={styles.attribution}>Place data © <Text accessibilityRole="link" style={styles.attributionLink} onPress={() => void Linking.openURL('https://www.openstreetmap.org/copyright')}>OpenStreetMap contributors</Text> · ODbL.</Text>
+            ) : null}
           </>
         ) : viewMode === 'saved' ? (
           <SavedView favorites={favorites} signedIn={Boolean(session)} onSignIn={() => void signIn()} onRemove={(placeId) => void toggleFavorite(placeId)} />
@@ -437,24 +431,26 @@ export default function App() {
 }
 
 function ServiceCard({ service, saved, onToggleFavorite }: { service: NearbyService; saved: boolean; onToggleFavorite: () => void }) {
+  const [expanded, setExpanded] = useState(false);
+  const destination = encodeURIComponent(`${service.coordinates.lat},${service.coordinates.lng}`);
+  const ratingSummary = service.rating > 0 ? `★ ${service.rating.toFixed(1)} (${service.reviewCount})` : 'Live place';
+
   return (
     <View style={styles.card}>
       <View style={styles.iconBubble}><Text style={styles.iconText}>{service.category.name.charAt(0)}</Text></View>
       <View style={styles.cardBody}>
         <View style={styles.cardHeading}>
-          <View style={styles.cardHeadingCopy}>
-            <Text style={styles.categoryLabel}>{service.category.name}</Text>
-            <Text style={styles.cardTitle}>{service.name}</Text>
-          </View>
+          <View style={styles.cardHeadingCopy}><Text style={styles.categoryLabel}>{service.category.name}</Text><Text style={styles.cardTitle}>{service.name}</Text></View>
           <TouchableOpacity accessibilityRole="button" accessibilityLabel={saved ? `Remove ${service.name} from saved places` : `Save ${service.name}`} onPress={onToggleFavorite} style={styles.saveButton}>
             <Text style={styles.saveButtonText}>{saved ? 'Saved' : 'Save'}</Text>
           </TouchableOpacity>
         </View>
-        <Text style={styles.meta}>{formatDistance(service.distanceMeters)} • ★ {service.rating.toFixed(1)} ({service.reviewCount})</Text>
-        <Text style={styles.meta}>{service.address}, {service.city}</Text>
+        <Text style={styles.meta}>{formatDistance(service.distanceMeters)} • {ratingSummary}</Text>
+        <Text style={styles.meta}>{service.address}{service.city ? `, ${service.city}` : ''}</Text>
+        {expanded ? <Text style={styles.meta}>Coordinates: {service.coordinates.lat.toFixed(5)}, {service.coordinates.lng.toFixed(5)}{service.sourceAttribution ? ` · ${service.sourceAttribution}` : ''}</Text> : null}
         <View style={styles.actions}>
-          <TouchableOpacity accessibilityRole="button" style={styles.secondaryButton}><Text style={styles.secondaryButtonText}>Details</Text></TouchableOpacity>
-          <TouchableOpacity accessibilityRole="button" style={styles.primaryButton}><Text style={styles.primaryButtonText}>Route</Text></TouchableOpacity>
+          <TouchableOpacity accessibilityRole="button" style={styles.secondaryButton} onPress={() => setExpanded((value) => !value)}><Text style={styles.secondaryButtonText}>{expanded ? 'Hide details' : 'Details'}</Text></TouchableOpacity>
+          <TouchableOpacity accessibilityRole="link" style={styles.primaryButton} onPress={() => void Linking.openURL(`https://www.google.com/maps/dir/?api=1&destination=${destination}`)}><Text style={styles.primaryButtonText}>Route</Text></TouchableOpacity>
         </View>
       </View>
     </View>
@@ -480,8 +476,8 @@ function SavedView({ favorites, signedIn, onSignIn, onRemove }: { favorites: Fav
           <View style={styles.cardBody}>
             <Text style={styles.categoryLabel}>{favorite.category?.name ?? 'Service'}</Text>
             <Text style={styles.cardTitle}>{favorite.name}</Text>
-            <Text style={styles.meta}>★ {favorite.rating.toFixed(1)} ({favorite.reviewCount})</Text>
-            <Text style={styles.meta}>{favorite.address}, {favorite.city}</Text>
+            {favorite.rating > 0 ? <Text style={styles.meta}>★ {favorite.rating.toFixed(1)} ({favorite.reviewCount})</Text> : <Text style={styles.meta}>Rating not yet available</Text>}
+            <Text style={styles.meta}>{favorite.address}{favorite.city ? `, ${favorite.city}` : ''}</Text>
             <TouchableOpacity accessibilityRole="button" accessibilityLabel={`Remove ${favorite.name} from saved places`} style={styles.secondaryButton} onPress={() => onRemove(favorite.placeId)}>
               <Text style={styles.secondaryButtonText}>Remove</Text>
             </TouchableOpacity>
@@ -533,6 +529,8 @@ const styles = StyleSheet.create({
   categoryLabel: { color: colors.brand.secondary, fontSize: 12, fontWeight: '700' },
   cardTitle: { color: colors.text.primary, fontSize: 17, fontWeight: '700', marginTop: 2 },
   meta: { color: colors.text.muted, fontSize: 14, lineHeight: 20, marginTop: 4 },
+  attribution: { color: colors.text.muted, fontSize: 12, lineHeight: 18, marginTop: spacing.md },
+  attributionLink: { color: colors.brand.primaryStrong, textDecorationLine: 'underline' },
   saveButton: { minHeight: 38, paddingHorizontal: spacing.sm, borderRadius: radii.control, backgroundColor: '#F9DFF0', alignItems: 'center', justifyContent: 'center' },
   saveButtonText: { color: colors.brand.primaryStrong, fontWeight: '700' },
   actions: { flexDirection: 'row', justifyContent: 'flex-end', gap: spacing.sm, marginTop: 12 },

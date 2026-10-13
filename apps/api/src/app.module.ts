@@ -28,6 +28,11 @@ const envSchema = z
     S3_SECRET_ACCESS_KEY: z.string().min(1).optional(),
     EMERGENCY_REGION: z.string().min(2).max(20).default('IN'),
     EMERGENCY_NUMBER: z.string().min(2).max(20).default('112'),
+    EXTERNAL_PLACES_PROVIDER: z.enum(['none', 'overpass']).default('overpass'),
+    OVERPASS_API_URL: z.string().url().optional(),
+    EXTERNAL_PLACES_USER_AGENT: z.string().min(8).max(240).optional(),
+    EXTERNAL_PLACES_DEFAULT_COUNTRY: z.string().regex(/^[A-Za-z]{2}$/).default('IN'),
+    EXTERNAL_PLACES_MAX_RADIUS_METERS: z.coerce.number().int().min(100).max(20_000).default(10_000),
   })
   .superRefine((env, context) => {
     const deployed = env.NODE_ENV === 'staging' || env.NODE_ENV === 'production';
@@ -41,6 +46,29 @@ const envSchema = z
     }
     if (env.NODE_ENV === 'production' && env.S3_ENDPOINT && !env.S3_ENDPOINT.startsWith('https://')) {
       context.addIssue({ code: 'custom', path: ['S3_ENDPOINT'], message: 'S3_ENDPOINT must use HTTPS in production' });
+    }
+    if (deployed && env.EXTERNAL_PLACES_PROVIDER === 'none') {
+      context.addIssue({ code: 'custom', path: ['EXTERNAL_PLACES_PROVIDER'], message: 'An external places provider is required in staging and production' });
+    }
+    if (env.EXTERNAL_PLACES_PROVIDER === 'overpass' && deployed && !env.OVERPASS_API_URL) {
+      context.addIssue({ code: 'custom', path: ['OVERPASS_API_URL'], message: 'OVERPASS_API_URL is required for deployed Overpass discovery' });
+    }
+    if (env.EXTERNAL_PLACES_PROVIDER === 'overpass' && deployed && !env.EXTERNAL_PLACES_USER_AGENT) {
+      context.addIssue({ code: 'custom', path: ['EXTERNAL_PLACES_USER_AGENT'], message: 'Identify NearFind to the Overpass operator with a contactable User-Agent' });
+    }
+    if (env.NODE_ENV === 'production' && env.OVERPASS_API_URL) {
+      const overpassUrl = new URL(env.OVERPASS_API_URL);
+      if (overpassUrl.protocol !== 'https:') {
+        context.addIssue({ code: 'custom', path: ['OVERPASS_API_URL'], message: 'OVERPASS_API_URL must use HTTPS in production' });
+      }
+      const host = overpassUrl.hostname.toLowerCase();
+      if (host === 'overpass-api.de' || host.endsWith('.overpass-api.de')) {
+        context.addIssue({
+          code: 'custom',
+          path: ['OVERPASS_API_URL'],
+          message: 'Use a self-hosted or commercial Overpass endpoint in production; public community instances are not a production dependency',
+        });
+      }
     }
   });
 

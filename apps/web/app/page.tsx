@@ -1,12 +1,9 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { fetchAllNearbyServices, movedAtLeastMeters, type NearbyService } from '../lib/nearby-client';
 
 interface Category { id: string; slug: string; name: string; }
-interface NearbyService {
-  id: string; name: string; address: string; city: string; rating: number; reviewCount: number; distanceMeters: number;
-  category: { slug: string; name: string; icon: string };
-}
 interface Profile { id: string; displayName: string | null; email: string | null; role: string; }
 interface Favorite {
   placeId: string; name: string; address: string; city: string; rating: number; reviewCount: number;
@@ -15,6 +12,7 @@ interface Favorite {
 interface SessionResponse { authenticated: boolean; profile?: Profile; }
 
 const apiBaseUrl = (process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:4000/v1').replace(/\/$/, '');
+const LOCATION_REFRESH_DISTANCE_METERS = 250;
 
 export default function HomePage() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -28,19 +26,33 @@ export default function HomePage() {
   const [loading, setLoading] = useState(false);
   const [favoriteBusyId, setFavoriteBusyId] = useState<string | null>(null);
   const [status, setStatus] = useState('Location is requested only after you choose “Use my location”.');
+  const locationWatchIdRef = useRef<number | null>(null);
+  const lastLoadedCoordsRef = useRef<{ lat: number; lng: number } | null>(null);
+  const nearbyRequestRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     void loadSession();
+    return () => {
+      if (locationWatchIdRef.current !== null && navigator.geolocation) {
+        navigator.geolocation.clearWatch(locationWatchIdRef.current);
+      }
+      nearbyRequestRef.current?.abort();
+    };
   }, []);
 
   const savedIds = useMemo(() => new Set(favorites.map((favorite) => favorite.placeId)), [favorites]);
   const visibleServices = useMemo(() => {
     const normalized = query.trim().toLowerCase();
-    if (!normalized) return services;
-    return services.filter((service) =>
-      `${service.name} ${service.category.name} ${service.address} ${service.city}`.toLowerCase().includes(normalized),
-    );
-  }, [query, services]);
+    return services.filter((service) => {
+      if (activeCategory && service.category.slug !== activeCategory) return false;
+      if (!normalized) return true;
+      return `${service.name} ${service.category.name} ${service.address} ${service.city}`.toLowerCase().includes(normalized);
+    });
+  }, [activeCategory, query, services]);
+  const hasOpenStreetMapData = useMemo(
+    () => services.some((service) => service.sourceProvider === 'openstreetmap'),
+    [services],
+  );
 
   async function loadSession(): Promise<void> {
     try {
@@ -84,17 +96,53 @@ export default function HomePage() {
 
   async function loadCategories(): Promise<void> {
     if (categories.length > 0) return;
-    const response = await fetch(`${apiBaseUrl}/discovery/categories`);
+    const response = await fetch(`${apiBaseUrl}/discovery/categories`, { cache: 'no-store' });
     if (!response.ok) throw new Error('Unable to load categories');
     setCategories((await response.json()) as Category[]);
   }
 
-  async function loadNearby(lat: number, lng: number, category = activeCategory): Promise<void> {
-    const params = new URLSearchParams({ lat: String(lat), lng: String(lng), radiusMeters: '10000', limit: '30' });
-    if (category) params.set('category', category);
-    const response = await fetch(`${apiBaseUrl}/discovery/nearby?${params.toString()}`);
-    if (!response.ok) throw new Error('Unable to load nearby services');
-    setServices((await response.json()) as NearbyService[]);
+  async function refreshNearby(nextCoords: { lat: number; lng: number }, resetFilters: boolean): Promise<void> {
+    if (!resetFilters && !movedAtLeastMeters(lastLoadedCoordsRef.current, nextCoords, LOCATION_REFRESH_DISTANCE_METERS)) return;
+
+    lastLoadedCoordsRef.current = nextCoords;
+    setCoords(nextCoords);
+    if (resetFilters) {
+      setActiveCategory('');
+      setQuery('');
+    }
+
+    nearbyRequestRef.current?.abort();
+    const controller = new AbortController();
+    nearbyRequestRef.current = controller;
+    setLoading(true);
+    try {
+      const allServices = await fetchAllNearbyServices(apiBaseUrl, nextCoords.lat, nextCoords.lng, controller.signal);
+      if (controller.signal.aborted) return;
+      setServices(allServices);
+      setStatus(`Showing all ${allServices.length} available services near your current location. Foreground location updates are active.`);
+    } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') return;
+      setStatus(error instanceof Error ? error.message : 'Unable to load nearby services.');
+    } finally {
+      if (nearbyRequestRef.current === controller) {
+        nearbyRequestRef.current = null;
+        setLoading(false);
+      }
+    }
+  }
+
+  function startLocationWatch(): void {
+    if (!navigator.geolocation) return;
+    if (locationWatchIdRef.current !== null) navigator.geolocation.clearWatch(locationWatchIdRef.current);
+    locationWatchIdRef.current = navigator.geolocation.watchPosition(
+      (position) => {
+        void refreshNearby({ lat: position.coords.latitude, lng: position.coords.longitude }, false);
+      },
+      () => {
+        setStatus('Live location refresh paused. Existing nearby results remain available; use Refresh my location to retry.');
+      },
+      { enableHighAccuracy: false, timeout: 15000, maximumAge: 30000 },
+    );
   }
 
   function useMyLocation(): void {
@@ -103,33 +151,25 @@ export default function HomePage() {
       return;
     }
     setLoading(true);
-    setStatus('Requesting location permission…');
-    void loadCategories().catch(() => undefined);
+    setStatus('Requesting foreground location…');
+    void loadCategories().catch((error: unknown) => {
+      setStatus(error instanceof Error ? error.message : 'Unable to load service categories.');
+    });
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const nextCoords = { lat: position.coords.latitude, lng: position.coords.longitude };
-        setCoords(nextCoords);
-        void loadNearby(nextCoords.lat, nextCoords.lng)
-          .then(() => setStatus('Showing services near your current location.'))
-          .catch((error: unknown) => setStatus(error instanceof Error ? error.message : 'Unable to load nearby services.'))
-          .finally(() => setLoading(false));
+        void refreshNearby(nextCoords, true).then(startLocationWatch);
       },
       () => {
         setStatus('Location permission was not granted. You can allow it later in browser settings.');
         setLoading(false);
       },
-      { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 },
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 30000 },
     );
   }
 
-  async function selectCategory(slug: string): Promise<void> {
-    const next = slug === activeCategory ? '' : slug;
-    setActiveCategory(next);
-    if (!coords) return;
-    setLoading(true);
-    try { await loadNearby(coords.lat, coords.lng, next); }
-    catch (error) { setStatus(error instanceof Error ? error.message : 'Unable to filter nearby services.'); }
-    finally { setLoading(false); }
+  function selectCategory(slug: string): void {
+    setActiveCategory(slug === activeCategory ? '' : slug);
   }
 
   return (
@@ -155,7 +195,7 @@ export default function HomePage() {
 
         <div className="searchRow" role="search">
           <label className="searchBox"><span className="srOnly">Search nearby services</span><input type="search" placeholder="Search fuel, ATM, hospital, mechanic…" value={query} onChange={(event) => setQuery(event.target.value)} /></label>
-          <button className="primaryButton" type="button" onClick={useMyLocation} disabled={loading}>{loading ? 'Loading…' : 'Use my location'}</button>
+          <button className="primaryButton" type="button" onClick={useMyLocation} disabled={loading}>{loading ? 'Loading…' : coords ? 'Refresh my location' : 'Use my location'}</button>
         </div>
         <p className="smallText" aria-live="polite">{status}</p>
 
@@ -172,14 +212,15 @@ export default function HomePage() {
         </section>
 
         <div className="chipRow" aria-label="Service categories">
+          {categories.length > 0 ? <button className={activeCategory === '' ? 'chip chipActive' : 'chip'} type="button" aria-pressed={activeCategory === ''} onClick={() => setActiveCategory('')}>All</button> : null}
           {categories.map((category) => (
-            <button className={activeCategory === category.slug ? 'chip chipActive' : 'chip'} key={category.id} type="button" aria-pressed={activeCategory === category.slug} onClick={() => void selectCategory(category.slug)}>{category.name}</button>
+            <button className={activeCategory === category.slug ? 'chip chipActive' : 'chip'} key={category.id} type="button" aria-pressed={activeCategory === category.slug} onClick={() => selectCategory(category.slug)}>{category.name}</button>
           ))}
         </div>
 
         <div className="exploreGrid">
           <section className="resultsPane" aria-labelledby="nearby-title">
-            <div className="sectionHeading"><div><p className="eyebrow">Near your current area</p><h2 id="nearby-title">Nearby services</h2></div><span className="smallText">{visibleServices.length} found</span></div>
+            <div className="sectionHeading"><div><p className="eyebrow">Near your current area</p><h2 id="nearby-title">Nearby services</h2></div><span className="smallText">{visibleServices.length} shown · {services.length} loaded</span></div>
             <div className="resultList">
               {visibleServices.map((service) => {
                 const saved = savedIds.has(service.id);
@@ -187,8 +228,8 @@ export default function HomePage() {
                   <article className="serviceCard" key={service.id}>
                     <div className="serviceIcon" aria-hidden="true">{service.category.name.slice(0, 1)}</div>
                     <div className="serviceBody">
-                      <div className="cardTitleRow"><div><p className="categoryLabel">{service.category.name}</p><h3>{service.name}</h3></div><span className="statusBadge">★ {service.rating.toFixed(1)}</span></div>
-                      <p className="serviceMeta">{formatDistance(service.distanceMeters)} • {service.reviewCount} reviews</p><p className="smallText">{service.address}, {service.city}</p>
+                      <div className="cardTitleRow"><div><p className="categoryLabel">{service.category.name}</p><h3>{service.name}</h3></div>{service.rating > 0 ? <span className="statusBadge">★ {service.rating.toFixed(1)}</span> : <span className="statusBadge">Live place</span>}</div>
+                      <p className="serviceMeta">{formatDistance(service.distanceMeters)}{service.reviewCount > 0 ? ` • ${service.reviewCount} reviews` : ''}</p><p className="smallText">{service.address}{service.city ? `, ${service.city}` : ''}</p>
                       <div className="cardActions">
                         <button className="secondaryButton" type="button" aria-pressed={saved} disabled={favoriteBusyId === service.id} onClick={() => void toggleFavorite(service.id)}>{favoriteBusyId === service.id ? 'Saving…' : saved ? 'Saved' : 'Save'}</button>
                         <a className="secondaryButton" href={`${apiBaseUrl}/discovery/places/${service.id}`}>Details</a>
@@ -199,13 +240,14 @@ export default function HomePage() {
                 );
               })}
             </div>
+            {hasOpenStreetMapData ? <p className="smallText">Place data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap contributors</a> · ODbL.</p> : null}
           </section>
 
           <section className="mapPane" aria-labelledby="map-title">
-            <div className="mapToolbar"><div><p className="eyebrow">Live area view</p><h2 id="map-title">Map</h2></div><span className="privacyBadge">Location private by default</span></div>
-            <div className="mapCanvas" role="img" aria-label="Stylized preview of the future interactive service map"><div className="road roadA" /><div className="road roadB" /><div className="road roadC" />
+            <div className="mapToolbar"><div><p className="eyebrow">Live area view</p><h2 id="map-title">Map</h2></div><span className="privacyBadge">Foreground location only</span></div>
+            <div className="mapCanvas" role="img" aria-label="Stylized preview of nearby service positions"><div className="road roadA" /><div className="road roadB" /><div className="road roadC" />
               {visibleServices.slice(0, 3).map((service, index) => <span className={`mapPin pin${String.fromCharCode(65 + index)}`} key={service.id}>{service.category.name.slice(0, 1)}</span>)}
-              <div className="mapHint"><strong>Map provider abstraction comes next.</strong><span>The list is database-backed and location opt-in. The interactive map will query by viewport and radius.</span></div>
+              <div className="mapHint"><strong>Nearby results update as your foreground location changes.</strong><span>All active services inside the search radius are loaded first; search and category filters are applied locally.</span></div>
             </div>
           </section>
         </div>

@@ -29,4 +29,10 @@ export class NearbyQueryDto {
   @Min(1)
   @Max(100)
   limit = 30;
+
+  @Type(() => Number)
+  @IsInt()
+  @Min(0)
+  @Max(10_000)
+  offset = 0;
 }
