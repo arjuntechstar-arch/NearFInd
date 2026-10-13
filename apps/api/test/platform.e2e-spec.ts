@@ -86,16 +86,14 @@ void describe('Platform Phase 1-7 workflows (e2e)', () => {
   });
 
   async function inject(token: string, request: TestRequest): Promise<TestResponse> {
-    const response = await app.getHttpAdapter().getInstance().inject({
+    return app.getHttpAdapter().getInstance().inject({
       ...request,
       headers: { authorization: `Bearer ${token}` },
     });
-    return response as TestResponse;
   }
 
   async function publicRequest(request: TestRequest): Promise<TestResponse> {
-    const response = await app.getHttpAdapter().getInstance().inject(request);
-    return response as TestResponse;
+    return app.getHttpAdapter().getInstance().inject(request);
   }
 
   void it('completes provider, community, routing, booking, roadside, rewards and property flows', async () => {
