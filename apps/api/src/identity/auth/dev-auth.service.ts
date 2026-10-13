@@ -1,9 +1,10 @@
 import { ForbiddenException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { InjectRepository } from '@nestjs/typeorm';
 import { randomBytes } from 'node:crypto';
 import { SignJWT, jwtVerify } from 'jose';
-import { IdentityService } from '../identity.service.js';
-import { UserRole } from '../entities/user.entity.js';
+import type { Repository } from 'typeorm';
+import { User, UserRole } from '../entities/user.entity.js';
 import type { TokenVerifier, VerifiedIdentity } from './token-verifier.js';
 
 export const DEV_TOKEN_PREFIX = 'nfdev.';
@@ -17,7 +18,7 @@ export class DevAuthService implements TokenVerifier {
 
   constructor(
     @Inject(ConfigService) private readonly config: ConfigService,
-    @Inject(IdentityService) private readonly identity: IdentityService,
+    @InjectRepository(User) private readonly users: Repository<User>,
   ) {}
 
   isEnabled(): boolean {
@@ -34,7 +35,7 @@ export class DevAuthService implements TokenVerifier {
       email: `${roleName}@nearfind.local`,
       avatarUrl: null,
     };
-    await this.identity.ensureDevelopmentUser(identity, role);
+    await this.provisionUser(identity, role);
 
     const jwt = await new SignJWT({ name: identity.displayName, email: identity.email })
       .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
@@ -71,6 +72,20 @@ export class DevAuthService implements TokenVerifier {
       if (error instanceof UnauthorizedException) throw error;
       throw new UnauthorizedException('Invalid or expired development access token');
     }
+  }
+
+  private async provisionUser(identity: VerifiedIdentity, role: UserRole): Promise<void> {
+    await this.users
+      .createQueryBuilder()
+      .insert()
+      .into(User)
+      .values({ ...identity, displayName: identity.displayName, avatarUrl: identity.avatarUrl, role })
+      .orIgnore()
+      .execute();
+    await this.users.update(
+      { issuer: identity.issuer, subject: identity.subject },
+      { displayName: identity.displayName, email: identity.email, avatarUrl: identity.avatarUrl, role },
+    );
   }
 
   private assertEnabled(): void {
