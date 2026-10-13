@@ -3,6 +3,15 @@ import { ConfigService } from '@nestjs/config';
 import { z } from 'zod';
 import type { ExternalPlace, ExternalPlacesSearch } from './external-places.types.js';
 
+export interface OverpassElement {
+  type: 'node' | 'way' | 'relation';
+  id: number;
+  lat?: number;
+  lon?: number;
+  center?: { lat: number; lon: number };
+  tags?: Record<string, string>;
+}
+
 const overpassElementSchema = z.object({
   type: z.enum(['node', 'way', 'relation']),
   id: z.number().int(),
@@ -12,11 +21,7 @@ const overpassElementSchema = z.object({
   tags: z.record(z.string(), z.string()).optional(),
 });
 
-const overpassResponseSchema = z.object({
-  elements: z.array(overpassElementSchema),
-});
-
-type OverpassElement = z.infer<typeof overpassElementSchema>;
+const overpassResponseSchema = z.object({ elements: z.array(overpassElementSchema) });
 
 type SupportedCategory = ExternalPlace['categorySlug'];
 
@@ -32,8 +37,6 @@ export class OverpassPlacesProvider {
     const endpoint = this.config.get<string>('OVERPASS_API_URL') ?? 'https://overpass-api.de/api/interpreter';
     const userAgent = this.config.get<string>('EXTERNAL_PLACES_USER_AGENT') ?? 'NearFind-development/0.1';
     const defaultCountry = (this.config.get<string>('EXTERNAL_PLACES_DEFAULT_COUNTRY') ?? 'IN').toUpperCase();
-    const query = buildOverpassQuery(search);
-
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
     try {
@@ -43,12 +46,10 @@ export class OverpassPlacesProvider {
           'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
           'User-Agent': userAgent,
         },
-        body: new URLSearchParams({ data: query }).toString(),
+        body: new URLSearchParams({ data: buildOverpassQuery(search) }).toString(),
         signal: controller.signal,
       });
-      if (!response.ok) {
-        throw new Error(`Overpass request failed with status ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`Overpass request failed with status ${response.status}`);
       const parsed = overpassResponseSchema.parse(await response.json());
       return parsed.elements
         .slice(0, MAX_RESULTS)
@@ -68,9 +69,11 @@ export function buildOverpassQuery(search: ExternalPlacesSearch): string {
     `nwr(${around})[\"amenity\"=\"charging_station\"];\n` +
     `nwr(${around})[\"amenity\"=\"atm\"];\n` +
     `nwr(${around})[\"amenity\"=\"hospital\"];\n` +
+    `nwr(${around})[\"amenity\"=\"clinic\"];\n` +
     `nwr(${around})[\"amenity\"=\"bank\"];\n` +
     `nwr(${around})[\"amenity\"=\"pharmacy\"];\n` +
     `nwr(${around})[\"shop\"=\"car_repair\"];\n` +
+    `nwr(${around})[\"craft\"=\"car_repair\"];\n` +
     `);\nout center tags;`;
 }
 
