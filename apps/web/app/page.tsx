@@ -49,6 +49,10 @@ export default function HomePage() {
       return `${service.name} ${service.category.name} ${service.address} ${service.city}`.toLowerCase().includes(normalized);
     });
   }, [activeCategory, query, services]);
+  const hasOpenStreetMapData = useMemo(
+    () => services.some((service) => service.sourceProvider === 'openstreetmap'),
+    [services],
+  );
 
   async function loadSession(): Promise<void> {
     try {
@@ -224,8 +228,8 @@ export default function HomePage() {
                   <article className="serviceCard" key={service.id}>
                     <div className="serviceIcon" aria-hidden="true">{service.category.name.slice(0, 1)}</div>
                     <div className="serviceBody">
-                      <div className="cardTitleRow"><div><p className="categoryLabel">{service.category.name}</p><h3>{service.name}</h3></div><span className="statusBadge">★ {service.rating.toFixed(1)}</span></div>
-                      <p className="serviceMeta">{formatDistance(service.distanceMeters)} • {service.reviewCount} reviews</p><p className="smallText">{service.address}, {service.city}</p>
+                      <div className="cardTitleRow"><div><p className="categoryLabel">{service.category.name}</p><h3>{service.name}</h3></div>{service.rating > 0 ? <span className="statusBadge">★ {service.rating.toFixed(1)}</span> : <span className="statusBadge">Live place</span>}</div>
+                      <p className="serviceMeta">{formatDistance(service.distanceMeters)}{service.reviewCount > 0 ? ` • ${service.reviewCount} reviews` : ''}</p><p className="smallText">{service.address}{service.city ? `, ${service.city}` : ''}</p>
                       <div className="cardActions">
                         <button className="secondaryButton" type="button" aria-pressed={saved} disabled={favoriteBusyId === service.id} onClick={() => void toggleFavorite(service.id)}>{favoriteBusyId === service.id ? 'Saving…' : saved ? 'Saved' : 'Save'}</button>
                         <a className="secondaryButton" href={`${apiBaseUrl}/discovery/places/${service.id}`}>Details</a>
@@ -236,6 +240,7 @@ export default function HomePage() {
                 );
               })}
             </div>
+            {hasOpenStreetMapData ? <p className="smallText">Place data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap contributors</a> · ODbL.</p> : null}
           </section>
 
           <section className="mapPane" aria-labelledby="map-title">
