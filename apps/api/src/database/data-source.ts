@@ -1,14 +1,17 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
+import { loadRepositoryEnv } from '../config/load-repository-env.js';
 import { ServiceCategory } from '../discovery/entities/service-category.entity.js';
 import { ServiceLocation } from '../discovery/entities/service-location.entity.js';
 import { Favorite } from '../identity/entities/favorite.entity.js';
 import { User } from '../identity/entities/user.entity.js';
 import { PLATFORM_ENTITIES } from '../platform/entities.js';
-import { InitialDiscoverySchema1728730000000 } from './migrations/1728730000000-InitialDiscoverySchema.js';
-import { IdentityAndFavorites1728731000000 } from './migrations/1728731000000-IdentityAndFavorites.js';
-import { PlatformPhases1728732000000 } from './migrations/1728732000000-PlatformPhases.js';
 import { ExternalPlaceDiscovery1728733000000 } from './migrations/1728733000000-ExternalPlaceDiscovery.js';
+import { IdentityAndFavorites1728731000000 } from './migrations/1728731000000-IdentityAndFavorites.js';
+import { InitialDiscoverySchema1728730000000 } from './migrations/1728730000000-InitialDiscoverySchema.js';
+import { PlatformPhases1728732000000 } from './migrations/1728732000000-PlatformPhases.js';
+
+loadRepositoryEnv();
 
 const localDatabaseUrl = 'postgresql://nearfind:nearfind_local@localhost:5432/nearfind';
 const nodeEnv = process.env.NODE_ENV ?? 'development';
