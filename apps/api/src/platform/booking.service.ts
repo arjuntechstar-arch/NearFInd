@@ -1,4 +1,4 @@
-import { ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { randomUUID } from 'node:crypto';
 import { DataSource, type EntityManager, In, LessThan, Repository } from 'typeorm';
@@ -24,8 +24,8 @@ export class BookingService {
     @InjectRepository(Booking) private readonly bookings: Repository<Booking>,
     @InjectRepository(PaymentReference) private readonly payments: Repository<PaymentReference>,
     @InjectRepository(ServiceLocation) private readonly locations: Repository<ServiceLocation>,
-    private readonly dataSource: DataSource,
-    private readonly access: AccessService,
+    @Inject(DataSource) private readonly dataSource: DataSource,
+    @Inject(AccessService) private readonly access: AccessService,
   ) {}
 
   async createSlot(
