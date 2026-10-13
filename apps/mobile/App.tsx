@@ -16,12 +16,12 @@ import {
 } from './auth';
 import { fetchAllNearbyServices, movedAtLeastMeters, type NearbyService } from './nearby';
 import { PlatformHub } from './PlatformHub';
+import { resolveMobileApiBaseUrl } from './runtime-config';
 
 WebBrowser.maybeCompleteAuthSession();
 
 declare const process: {
   env: {
-    EXPO_PUBLIC_API_BASE_URL?: string;
     EXPO_PUBLIC_DEV_AUTH_ENABLED?: string;
     EXPO_PUBLIC_OIDC_ISSUER_URL?: string;
     EXPO_PUBLIC_OIDC_CLIENT_ID?: string;
@@ -59,7 +59,7 @@ interface DevelopmentLoginResponse {
 
 type ViewMode = 'explore' | 'saved' | 'hub';
 
-const apiBaseUrl = (process.env.EXPO_PUBLIC_API_BASE_URL ?? 'http://localhost:4000/v1').replace(/\/$/, '');
+const apiBaseUrl = resolveMobileApiBaseUrl();
 const devAuthEnabled = process.env.EXPO_PUBLIC_DEV_AUTH_ENABLED === 'true';
 const oidcIssuer = process.env.EXPO_PUBLIC_OIDC_ISSUER_URL?.replace(/\/$/, '');
 const oidcClientId = process.env.EXPO_PUBLIC_OIDC_CLIENT_ID;
