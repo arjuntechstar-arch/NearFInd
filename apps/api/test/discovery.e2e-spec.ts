@@ -62,6 +62,26 @@ void describe('Discovery API (e2e)', () => {
     }
   });
 
+  void it('supports deterministic pagination so clients can load every nearby service', async () => {
+    const firstResponse = await app.getHttpAdapter().getInstance().inject({
+      method: 'GET',
+      url: '/v1/discovery/nearby?lat=13.0604&lng=80.2496&radiusMeters=5000&limit=2&offset=0',
+    });
+    const secondResponse = await app.getHttpAdapter().getInstance().inject({
+      method: 'GET',
+      url: '/v1/discovery/nearby?lat=13.0604&lng=80.2496&radiusMeters=5000&limit=2&offset=2',
+    });
+
+    assert.equal(firstResponse.statusCode, 200);
+    assert.equal(secondResponse.statusCode, 200);
+    const firstPage = firstResponse.json<NearbyResult[]>();
+    const secondPage = secondResponse.json<NearbyResult[]>();
+    assert.equal(firstPage.length, 2);
+    assert.ok(secondPage.length >= 1);
+    assert.equal(new Set([...firstPage, ...secondPage].map((place) => place.id)).size, firstPage.length + secondPage.length);
+    assert.ok(firstPage.at(-1)!.distanceMeters <= secondPage[0]!.distanceMeters);
+  });
+
   void it('filters nearby places by category', async () => {
     const response = await app.getHttpAdapter().getInstance().inject({
       method: 'GET',
