@@ -3,6 +3,7 @@ import {
   ForbiddenException,
   HttpException,
   HttpStatus,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -47,10 +48,10 @@ export class RoadsideService {
     @InjectRepository(ChatMessage) private readonly messages: Repository<ChatMessage>,
     @InjectRepository(ServiceProvider) private readonly providers: Repository<ServiceProvider>,
     @InjectRepository(Vehicle) private readonly vehicles: Repository<Vehicle>,
-    private readonly dataSource: DataSource,
-    private readonly access: AccessService,
-    private readonly crypto: FieldCryptoService,
-    private readonly storage: StorageService,
+    @Inject(DataSource) private readonly dataSource: DataSource,
+    @Inject(AccessService) private readonly access: AccessService,
+    @Inject(FieldCryptoService) private readonly crypto: FieldCryptoService,
+    @Inject(StorageService) private readonly storage: StorageService,
   ) {}
 
   async createRequest(
