@@ -70,6 +70,90 @@ jobs:
       - name: Run API integration tests
         run: pnpm --filter @nearfind/api test:integration
 
+  runtime-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgis/postgis:17-3.5
+        env:
+          POSTGRES_DB: nearfind
+          POSTGRES_USER: nearfind
+          POSTGRES_PASSWORD: nearfind_local
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U nearfind -d nearfind"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    env:
+      NODE_ENV: development
+      DEV_AUTH_ENABLED: 'true'
+      EXTERNAL_PLACES_PROVIDER: none
+      DATABASE_URL: postgresql://nearfind:nearfind_local@127.0.0.1:5432/nearfind
+      CORS_ORIGINS: http://127.0.0.1:3000,http://localhost:3000
+      API_BASE_URL: http://127.0.0.1:4000/v1
+      NEXT_PUBLIC_API_BASE_URL: http://127.0.0.1:4000/v1
+      WEB_BASE_URL: http://127.0.0.1:3000
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          version: 12.11.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Prepare database
+        run: |
+          pnpm --filter @nearfind/api migration:run
+          pnpm --filter @nearfind/api db:seed
+      - name: Build API
+        run: pnpm --filter @nearfind/api build
+      - name: Start API and web
+        run: |
+          pnpm --filter @nearfind/api start > /tmp/nearfind-api.log 2>&1 &
+          echo $! > /tmp/nearfind-api.pid
+          pnpm --filter @nearfind/web dev > /tmp/nearfind-web.log 2>&1 &
+          echo $! > /tmp/nearfind-web.pid
+      - name: Verify real runtime flow
+        run: |
+          set -euo pipefail
+          trap 'echo "--- API log ---"; tail -200 /tmp/nearfind-api.log || true; echo "--- Web log ---"; tail -200 /tmp/nearfind-web.log || true' ERR
+
+          curl --retry 30 --retry-delay 1 --retry-connrefused -fsS http://127.0.0.1:4000/v1/health/ready > /tmp/health.json
+          curl --retry 30 --retry-delay 1 --retry-connrefused -fsS http://127.0.0.1:3000/ > /tmp/home.html
+          grep -q 'Find what you need nearby' /tmp/home.html
+
+          curl -sS -D /tmp/login.headers -c /tmp/cookies.txt -o /dev/null 'http://127.0.0.1:3000/auth/login?role=ADMIN&next=/'
+          grep -Eq '^HTTP/.* 30[2378]' /tmp/login.headers
+          grep -qi '^set-cookie: nearfind_access_token=' /tmp/login.headers
+
+          curl -fsS -b /tmp/cookies.txt http://127.0.0.1:3000/api/session > /tmp/session.json
+          node -e "const fs=require('fs');const x=JSON.parse(fs.readFileSync('/tmp/session.json','utf8'));if(!x.authenticated||x.profile?.role!=='ADMIN')throw new Error('web session did not authenticate as ADMIN')"
+
+          curl -fsS 'http://127.0.0.1:4000/v1/discovery/nearby?lat=13.0604&lng=80.2496&radiusMeters=5000&limit=20' > /tmp/nearby.json
+          node -e "const fs=require('fs');const x=JSON.parse(fs.readFileSync('/tmp/nearby.json','utf8'));if(!Array.isArray(x)||x.length===0||!x[0].coordinates)throw new Error('nearby discovery returned no usable services');fs.writeFileSync('/tmp/place-id',x[0].id)"
+
+          PLACE_ID=$(cat /tmp/place-id)
+          curl -fsS -b /tmp/cookies.txt -H 'Origin: http://127.0.0.1:3000' -X POST "http://127.0.0.1:3000/api/favorites/$PLACE_ID" > /tmp/favorite.json
+          curl -fsS -b /tmp/cookies.txt http://127.0.0.1:3000/api/favorites > /tmp/favorites.json
+          node -e "const fs=require('fs');const id=fs.readFileSync('/tmp/place-id','utf8');const x=JSON.parse(fs.readFileSync('/tmp/favorites.json','utf8'));if(!Array.isArray(x)||!x.some(v=>v.placeId===id))throw new Error('favorite did not persist through web BFF')"
+
+          curl -fsS -b /tmp/cookies.txt http://127.0.0.1:3000/api/platform/account/preferences > /tmp/preferences.json
+          node -e "const fs=require('fs');const x=JSON.parse(fs.readFileSync('/tmp/preferences.json','utf8'));if(typeof x!=='object'||x===null)throw new Error('platform BFF is not usable')"
+
+          curl -fsS "http://127.0.0.1:3000/places/$PLACE_ID" > /tmp/place.html
+          grep -q 'Route' /tmp/place.html
+          grep -q 'Open map' /tmp/place.html
+      - name: Stop runtime processes
+        if: always()
+        run: |
+          test ! -f /tmp/nearfind-web.pid || kill $(cat /tmp/nearfind-web.pid) || true
+          test ! -f /tmp/nearfind-api.pid || kill $(cat /tmp/nearfind-api.pid) || true
+
   security:
     runs-on: ubuntu-latest
     timeout-minutes: 20
