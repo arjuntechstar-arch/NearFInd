@@ -8,6 +8,19 @@ import { AppModule } from '../src/app.module.js';
 import { AUTH_TOKEN_VERIFIER, type TokenVerifier, type VerifiedIdentity } from '../src/identity/auth/token-verifier.js';
 import { User, UserRole } from '../src/identity/entities/user.entity.js';
 
+interface TestResponse {
+  statusCode: number;
+  json<T>(): T;
+}
+
+type TestMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE';
+
+interface TestRequest {
+  method: TestMethod;
+  url: string;
+  payload?: unknown;
+}
+
 const identities: Record<string, VerifiedIdentity> = {
   customer: {
     issuer: 'https://issuer.platform.test',
@@ -54,14 +67,16 @@ void describe('Platform Phase 1-7 workflows (e2e)', () => {
     app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true, forbidNonWhitelisted: true }));
     await app.init();
     await app.getHttpAdapter().getInstance().ready();
-    database = app.get(DataSource);
+    database = app.get<DataSource>(DataSource);
 
     for (const token of ['customer', 'provider', 'admin']) {
       const response = await inject(token, { method: 'GET', url: '/v1/me' });
       assert.equal(response.statusCode, 200);
     }
+    const adminIdentity = identities.admin;
+    assert.ok(adminIdentity);
     await database.getRepository(User).update(
-      { issuer: identities.admin!.issuer, subject: identities.admin!.subject },
+      { issuer: adminIdentity.issuer, subject: adminIdentity.subject },
       { role: UserRole.ADMIN },
     );
   });
@@ -70,11 +85,17 @@ void describe('Platform Phase 1-7 workflows (e2e)', () => {
     await app.close();
   });
 
-  async function inject(token: string, request: { method: string; url: string; payload?: unknown }) {
-    return app.getHttpAdapter().getInstance().inject({
+  async function inject(token: string, request: TestRequest): Promise<TestResponse> {
+    const response = await app.getHttpAdapter().getInstance().inject({
       ...request,
       headers: { authorization: `Bearer ${token}` },
     });
+    return response as TestResponse;
+  }
+
+  async function publicRequest(request: TestRequest): Promise<TestResponse> {
+    const response = await app.getHttpAdapter().getInstance().inject(request);
+    return response as TestResponse;
   }
 
   void it('completes provider, community, routing, booking, roadside, rewards and property flows', async () => {
@@ -93,7 +114,7 @@ void describe('Platform Phase 1-7 workflows (e2e)', () => {
     });
     assert.equal(providerApprove.statusCode, 200);
 
-    const categories = await app.getHttpAdapter().getInstance().inject({ method: 'GET', url: '/v1/discovery/categories' });
+    const categories = await publicRequest({ method: 'GET', url: '/v1/discovery/categories' });
     assert.equal(categories.statusCode, 200);
     const categoryId = categories.json<Array<{ id: string }>>()[0]?.id;
     assert.ok(categoryId);
@@ -231,30 +252,16 @@ void describe('Platform Phase 1-7 workflows (e2e)', () => {
     assert.equal(payment.statusCode, 201);
     assert.equal(payment.json<{ booking: { status: string } }>().booking.status, 'CONFIRMED');
 
-    const dispatchOne = await inject('customer', {
-      method: 'POST',
-      url: '/v1/dispatch-requests',
-      payload: {
-        vehicleId,
-        serviceType: 'TOW',
-        lat: 13.0604,
-        lng: 80.2496,
-        notes: 'Private roadside integration fixture',
-        idempotencyKey: 'platform-dispatch-001',
-      },
-    });
-    const dispatchTwo = await inject('customer', {
-      method: 'POST',
-      url: '/v1/dispatch-requests',
-      payload: {
-        vehicleId,
-        serviceType: 'TOW',
-        lat: 13.0604,
-        lng: 80.2496,
-        notes: 'Private roadside integration fixture',
-        idempotencyKey: 'platform-dispatch-001',
-      },
-    });
+    const dispatchPayload = {
+      vehicleId,
+      serviceType: 'TOW',
+      lat: 13.0604,
+      lng: 80.2496,
+      notes: 'Private roadside integration fixture',
+      idempotencyKey: 'platform-dispatch-001',
+    };
+    const dispatchOne = await inject('customer', { method: 'POST', url: '/v1/dispatch-requests', payload: dispatchPayload });
+    const dispatchTwo = await inject('customer', { method: 'POST', url: '/v1/dispatch-requests', payload: dispatchPayload });
     assert.equal(dispatchOne.statusCode, 201);
     assert.equal(dispatchTwo.statusCode, 201);
     const dispatchId = dispatchOne.json<{ id: string }>().id;
@@ -306,9 +313,11 @@ void describe('Platform Phase 1-7 workflows (e2e)', () => {
     assert.equal(chat.statusCode, 200);
     assert.equal(chat.json<Array<unknown>>().length, 1);
 
+    const customerIdentity = identities.customer;
+    assert.ok(customerIdentity);
     const customer = await database.getRepository(User).findOneByOrFail({
-      issuer: identities.customer!.issuer,
-      subject: identities.customer!.subject,
+      issuer: customerIdentity.issuer,
+      subject: customerIdentity.subject,
     });
     const award = await inject('admin', {
       method: 'POST',
@@ -359,7 +368,7 @@ void describe('Platform Phase 1-7 workflows (e2e)', () => {
       })).statusCode,
       200,
     );
-    const publicProperty = await app.getHttpAdapter().getInstance().inject({ method: 'GET', url: `/v1/properties/${propertyId}` });
+    const publicProperty = await publicRequest({ method: 'GET', url: `/v1/properties/${propertyId}` });
     assert.equal(publicProperty.statusCode, 200);
     assert.ok(Array.isArray(publicProperty.json<{ nearbyServices: unknown[] }>().nearbyServices));
 
@@ -373,7 +382,7 @@ void describe('Platform Phase 1-7 workflows (e2e)', () => {
     });
     assert.equal(inspection.statusCode, 201);
 
-    const emergency = await app.getHttpAdapter().getInstance().inject({ method: 'GET', url: '/v1/emergency/config' });
+    const emergency = await publicRequest({ method: 'GET', url: '/v1/emergency/config' });
     assert.equal(emergency.statusCode, 200);
     assert.match(emergency.json<{ disclaimer: string }>().disclaimer, /separate/i);
   });
