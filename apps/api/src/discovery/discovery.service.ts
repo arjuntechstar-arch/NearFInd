@@ -63,6 +63,8 @@ export class DiscoveryService {
       .andWhere('ST_DWithin(location.location, ST_GeogFromText(:point), :radiusMeters)')
       .setParameters({ point, radiusMeters: query.radiusMeters })
       .orderBy('"distanceMeters"', 'ASC')
+      .addOrderBy('location.id', 'ASC')
+      .offset(query.offset)
       .limit(query.limit);
 
     if (query.category) {
