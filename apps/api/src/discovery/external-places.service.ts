@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { DataSource } from 'typeorm';
+import { DataSource, type EntityManager } from 'typeorm';
 import type { NearbyQueryDto } from './dto/nearby-query.dto.js';
 import type { ExternalPlace } from './external-places.types.js';
 import { OverpassPlacesProvider } from './overpass-places.provider.js';
@@ -73,7 +73,7 @@ export class ExternalPlacesService {
 }
 
 async function persistPlace(
-  manager: { query: (sql: string, parameters?: unknown[]) => Promise<unknown> },
+  manager: EntityManager,
   categoryId: string,
   place: ExternalPlace,
   expiresAt: Date,
