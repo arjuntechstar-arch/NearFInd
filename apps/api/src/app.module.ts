@@ -77,6 +77,7 @@ const envSchema = z
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,
+      envFilePath: ['.env', '../../.env'],
       validate: (config: Record<string, unknown>) => {
         const parsed = envSchema.parse(config);
         return { ...parsed, DATABASE_URL: parsed.DATABASE_URL ?? localDatabaseUrl };
