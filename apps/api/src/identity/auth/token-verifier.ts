@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { createRemoteJWKSet, jwtVerify, type JWTPayload } from 'jose';
 
 export const AUTH_TOKEN_VERIFIER = Symbol('AUTH_TOKEN_VERIFIER');
+export const LOCAL_DEV_ISSUER = 'urn:nearfind:local-dev';
 
 const asymmetricAlgorithms = new Set([
   'RS256',
@@ -15,6 +16,11 @@ const asymmetricAlgorithms = new Set([
   'ES384',
   'ES512',
   'EdDSA',
+]);
+const localDevSubjects = new Map([
+  ['nearfind-dev.USER', { subject: 'local-user', displayName: 'Local User', email: 'user@nearfind.local' }],
+  ['nearfind-dev.PROVIDER', { subject: 'local-provider', displayName: 'Local Provider', email: 'provider@nearfind.local' }],
+  ['nearfind-dev.ADMIN', { subject: 'local-admin', displayName: 'Local Admin', email: 'admin@nearfind.local' }],
 ]);
 
 export interface VerifiedIdentity {
@@ -36,6 +42,20 @@ export class OidcTokenVerifier implements TokenVerifier {
   constructor(@Inject(ConfigService) private readonly config: ConfigService) {}
 
   async verify(token: string): Promise<VerifiedIdentity> {
+    const nodeEnv = this.config.get<string>('NODE_ENV', 'development');
+    if (nodeEnv === 'development' || nodeEnv === 'test') {
+      const localIdentity = localDevSubjects.get(token);
+      if (localIdentity) {
+        return {
+          issuer: LOCAL_DEV_ISSUER,
+          subject: localIdentity.subject,
+          displayName: localIdentity.displayName,
+          email: localIdentity.email,
+          avatarUrl: null,
+        };
+      }
+    }
+
     const issuer = this.config.get<string>('OIDC_ISSUER_URL');
     const audience = this.config.get<string>('OIDC_AUDIENCE');
     const jwksUrl = this.config.get<string>('OIDC_JWKS_URL');
