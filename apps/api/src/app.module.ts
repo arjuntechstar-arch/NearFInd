@@ -84,6 +84,7 @@ const envSchema = z
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,
+      envFilePath: ['.env', '../../.env'],
       ignoreEnvFile: true,
       validate: (config: Record<string, unknown>) => {
         const parsed = envSchema.parse(config);

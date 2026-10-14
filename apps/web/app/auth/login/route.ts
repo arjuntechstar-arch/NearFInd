@@ -1,3 +1,6 @@
+import { NextResponse, type NextRequest } from 'next/server';
+import {
+  createLocalDevToken,
 import { NextResponse } from 'next/server';
 import {
   createPkceChallenge,
@@ -5,6 +8,17 @@ import {
   getDiscovery,
   getWebAuthConfig,
   getWebBaseUrl,
+  isLocalDevAuthEnabled,
+  setAccessTokenCookie,
+  setLoginCookies,
+} from '../../../lib/server-auth';
+
+export async function GET(request: NextRequest): Promise<NextResponse> {
+  try {
+    if (isLocalDevAuthEnabled()) {
+      const role = request.nextUrl.searchParams.get('role');
+      const response = NextResponse.redirect(new URL('/', getWebBaseUrl()));
+      setAccessTokenCookie(response, createLocalDevToken(role), 86_400);
   isDevelopmentAuthEnabled,
   requestDevelopmentAccessToken,
   setAccessTokenCookie,

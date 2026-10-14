@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -19,17 +20,24 @@ async function bootstrap(): Promise<void> {
     }),
     { bufferLogs: true },
   );
+  const config = app.get(ConfigService);
+  const nodeEnv = config.get<string>('NODE_ENV', 'development');
+  const corsOrigins = config
+    .get<string>('CORS_ORIGINS', 'http://localhost:3000')
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean);
 
   await app.register(helmet, {
     contentSecurityPolicy: false,
     crossOriginEmbedderPolicy: false,
-    strictTransportSecurity: process.env.NODE_ENV === 'production' ? { maxAge: 31_536_000, includeSubDomains: true } : false,
+    strictTransportSecurity: nodeEnv === 'production' ? { maxAge: 31_536_000, includeSubDomains: true } : false,
     referrerPolicy: { policy: 'no-referrer' },
   });
 
   app.setGlobalPrefix('v1');
   app.enableCors({
-    origin: process.env.CORS_ORIGINS?.split(',').map((value) => value.trim()).filter(Boolean) ?? [],
+    origin: corsOrigins,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   });
@@ -48,7 +56,7 @@ async function bootstrap(): Promise<void> {
   SwaggerModule.setup('docs', app, document, { jsonDocumentUrl: 'openapi.json' });
 
   app.enableShutdownHooks();
-  const port = Number(process.env.PORT ?? 4000);
+  const port = config.get<number>('PORT', 4000);
   await app.listen(port, '0.0.0.0');
 }
 
