@@ -7,16 +7,26 @@ const STATE_COOKIE = 'nearfind_oauth_state';
 const VERIFIER_COOKIE = 'nearfind_pkce_verifier';
 const TRANSIENT_MAX_AGE_SECONDS = 600;
 const ACCESS_TOKEN_MAX_AGE_SECONDS = 3600;
+const LOCAL_DEV_ROLES = new Set(['USER', 'PROVIDER', 'ADMIN']);
 
 interface OidcDiscovery {
   authorization_endpoint: string;
   token_endpoint: string;
 }
 
+export function isLocalDevAuthEnabled(): boolean {
+  const nodeEnv = process.env.NODE_ENV ?? 'development';
+  return (nodeEnv === 'development' || nodeEnv === 'test') && process.env.LOCAL_DEV_AUTH !== 'false';
+}
+
+export function getWebBaseUrl(): string {
+  return process.env.WEB_BASE_URL?.replace(/\/$/, '') ?? 'http://localhost:3000';
+}
+
 export function getWebAuthConfig() {
   const issuer = process.env.OIDC_WEB_ISSUER_URL?.replace(/\/$/, '');
   const clientId = process.env.OIDC_WEB_CLIENT_ID;
-  const baseUrl = process.env.WEB_BASE_URL?.replace(/\/$/, '') ?? 'http://localhost:3000';
+  const baseUrl = getWebBaseUrl();
   const redirectUri = process.env.OIDC_WEB_REDIRECT_URI ?? `${baseUrl}/auth/callback`;
   if (!issuer || !clientId) throw new Error('Web OIDC is not configured');
   return { issuer, clientId, baseUrl, redirectUri };
@@ -33,6 +43,13 @@ export async function getDiscovery(): Promise<OidcDiscovery> {
   const body = (await response.json()) as Partial<OidcDiscovery>;
   if (!body.authorization_endpoint || !body.token_endpoint) throw new Error('OIDC discovery document is incomplete');
   return { authorization_endpoint: body.authorization_endpoint, token_endpoint: body.token_endpoint };
+}
+
+export function createLocalDevToken(role: string | null): string {
+  if (!isLocalDevAuthEnabled()) throw new Error('Local development authentication is disabled');
+  const normalized = (role ?? 'USER').toUpperCase();
+  if (!LOCAL_DEV_ROLES.has(normalized)) throw new Error('Unsupported local development role');
+  return `nearfind-dev.${normalized}`;
 }
 
 export function generateOpaqueValue(bytes = 32): string {
@@ -92,9 +109,8 @@ export async function getAccessToken(): Promise<string | null> {
 }
 
 export function assertSameOrigin(request: Request): void {
-  const { baseUrl } = getWebAuthConfig();
   const origin = request.headers.get('origin');
-  if (!origin || origin !== new URL(baseUrl).origin) throw new Error('Invalid request origin');
+  if (!origin || origin !== new URL(getWebBaseUrl()).origin) throw new Error('Invalid request origin');
 }
 
 export async function apiFetch(path: string, init: RequestInit = {}): Promise<Response> {
