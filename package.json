@@ -5,7 +5,7 @@
   "packageManager": "pnpm@12.11.2",
   "engines": { "node": ">=24.0.0" },
   "scripts": {
-    "dev": "turbo dev",
+    "dev": "node scripts/dev.mjs",
     "build": "turbo build",
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",

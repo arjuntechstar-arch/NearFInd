@@ -74,7 +74,7 @@ export default function HomePage() {
 
   async function toggleFavorite(placeId: string): Promise<void> {
     if (!profile) {
-      window.location.assign('/auth/login');
+      window.location.assign('/auth/login?next=/');
       return;
     }
     const saved = savedIds.has(placeId);
@@ -82,7 +82,7 @@ export default function HomePage() {
     try {
       const response = await fetch(`/api/favorites/${placeId}`, { method: saved ? 'DELETE' : 'POST' });
       if (response.status === 401) {
-        window.location.assign('/auth/login');
+        window.location.assign('/auth/login?next=/');
         return;
       }
       if (!response.ok) throw new Error('Unable to update saved place');
@@ -177,8 +177,12 @@ export default function HomePage() {
       <aside className="rail" aria-label="Primary navigation">
         <a className="brand" href="#top" aria-label="NearFind home"><span className="brandMark" aria-hidden="true">N</span><span>NearFind</span></a>
         <nav className="railNav">
-          <a className="navItem active" href="#explore">Explore</a><a className="navItem" href="#browse">Browse</a>
-          <a className="navItem" href="#saved">Saved & SOS</a><a className="navItem" href="#community">Community</a><a className="navItem" href="#profile">Profile</a>
+          <a className="navItem active" href="#explore">Explore</a>
+          <a className="navItem" href="#nearby-title">Nearby</a>
+          <a className="navItem" href="#saved">Saved</a>
+          <a className="navItem" href="/hub">Journey hub</a>
+          <a className="navItem" href="/hub">Community</a>
+          <a className="navItem" href="/hub">Profile</a>
         </nav>
         <div className="railFooter"><p className="eyebrow">Safety first</p><p className="smallText">Emergency features never delay direct access to local emergency numbers.</p></div>
       </aside>
@@ -188,8 +192,12 @@ export default function HomePage() {
           <div><p className="eyebrow">Driver companion</p><h1>Find what you need nearby.</h1></div>
           <div className="cardActions" id="profile">
             {authReady && profile ? (
-              <><span className="smallText">{profile.displayName ?? profile.email ?? 'Signed in'}</span><form action="/auth/logout" method="post"><button className="ghostButton" type="submit">Sign out</button></form></>
-            ) : authReady ? <a className="ghostButton" href="/auth/login">Sign in</a> : <span className="smallText">Checking session…</span>}
+              <>
+                <span className="smallText">{profile.displayName ?? profile.email ?? 'Signed in'}</span>
+                <a className="ghostButton" href="/hub">Journey hub</a>
+                <form action="/auth/logout" method="post"><button className="ghostButton" type="submit">Sign out</button></form>
+              </>
+            ) : authReady ? <a className="ghostButton" href="/auth/login?next=/">Sign in</a> : <span className="smallText">Checking session…</span>}
           </div>
         </header>
 
@@ -202,7 +210,7 @@ export default function HomePage() {
         <section id="saved" aria-labelledby="saved-title">
           <div className="sectionHeading">
             <div><p className="eyebrow">Your places</p><h2 id="saved-title">Saved</h2></div>
-            {profile ? <span className="smallText">{favorites.length} saved</span> : <a className="secondaryButton" href="/auth/login">Sign in to save</a>}
+            {profile ? <span className="smallText">{favorites.length} saved</span> : <a className="secondaryButton" href="/auth/login?next=/">Sign in to save</a>}
           </div>
           {profile && favorites.length > 0 ? (
             <div className="chipRow" aria-label="Saved places">
@@ -232,8 +240,8 @@ export default function HomePage() {
                       <p className="serviceMeta">{formatDistance(service.distanceMeters)}{service.reviewCount > 0 ? ` • ${service.reviewCount} reviews` : ''}</p><p className="smallText">{service.address}{service.city ? `, ${service.city}` : ''}</p>
                       <div className="cardActions">
                         <button className="secondaryButton" type="button" aria-pressed={saved} disabled={favoriteBusyId === service.id} onClick={() => void toggleFavorite(service.id)}>{favoriteBusyId === service.id ? 'Saving…' : saved ? 'Saved' : 'Save'}</button>
-                        <a className="secondaryButton" href={`${apiBaseUrl}/discovery/places/${service.id}`}>Details</a>
-                        <a className="primaryButton compact" href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${service.name}, ${service.address}, ${service.city}`)}`} target="_blank" rel="noreferrer">Route</a>
+                        <a className="secondaryButton" href={`/places/${service.id}`}>Details</a>
+                        <a className="primaryButton compact" href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${service.coordinates.lat},${service.coordinates.lng}`)}`} target="_blank" rel="noreferrer">Route</a>
                       </div>
                     </div>
                   </article>

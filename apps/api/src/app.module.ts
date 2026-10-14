@@ -2,10 +2,13 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { z } from 'zod';
+import { loadRepositoryEnv } from './config/load-repository-env.js';
 import { DiscoveryModule } from './discovery/discovery.module.js';
 import { HealthController } from './health/health.controller.js';
 import { IdentityModule } from './identity/identity.module.js';
 import { PlatformModule } from './platform/platform.module.js';
+
+loadRepositoryEnv();
 
 const localDatabaseUrl = 'postgresql://nearfind:nearfind_local@localhost:5432/nearfind';
 
@@ -16,6 +19,7 @@ const envSchema = z
     CORS_ORIGINS: z.string().default('http://localhost:3000'),
     DATABASE_URL: z.string().min(1).optional(),
     REDIS_URL: z.string().min(1).optional(),
+    DEV_AUTH_ENABLED: z.enum(['true', 'false']).optional(),
     OIDC_ISSUER_URL: z.string().url().optional(),
     OIDC_AUDIENCE: z.string().min(1).optional(),
     OIDC_JWKS_URL: z.string().url().optional(),
@@ -36,6 +40,9 @@ const envSchema = z
   })
   .superRefine((env, context) => {
     const deployed = env.NODE_ENV === 'staging' || env.NODE_ENV === 'production';
+    if (deployed && env.DEV_AUTH_ENABLED === 'true') {
+      context.addIssue({ code: 'custom', path: ['DEV_AUTH_ENABLED'], message: 'Development authentication must be disabled outside local development' });
+    }
     if (deployed && !env.DATABASE_URL) {
       context.addIssue({ code: 'custom', path: ['DATABASE_URL'], message: 'DATABASE_URL is required in staging and production' });
     }
@@ -77,6 +84,7 @@ const envSchema = z
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,
+      ignoreEnvFile: true,
       validate: (config: Record<string, unknown>) => {
         const parsed = envSchema.parse(config);
         return { ...parsed, DATABASE_URL: parsed.DATABASE_URL ?? localDatabaseUrl };
