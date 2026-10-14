@@ -1,4 +1,14 @@
+import { loadEnvFile } from 'node:process';
+import { fileURLToPath } from 'node:url';
 import type { NextConfig } from 'next';
+
+for (const envFile of [new URL('../../.env.local', import.meta.url), new URL('../../.env', import.meta.url)]) {
+  try {
+    loadEnvFile(fileURLToPath(envFile));
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+  }
+}
 
 const securityHeaders = [
   { key: 'X-Content-Type-Options', value: 'nosniff' },

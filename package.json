@@ -7,6 +7,7 @@
   "scripts": {
     "setup:local": "docker compose up -d && pnpm install --frozen-lockfile && pnpm --filter @nearfind/api migration:run && pnpm --filter @nearfind/api db:seed",
     "dev": "turbo dev",
+    "dev": "node scripts/dev.mjs",
     "build": "turbo build",
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",

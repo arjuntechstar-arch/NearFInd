@@ -17,10 +17,20 @@ interface OidcDiscovery {
 export function isLocalDevAuthEnabled(): boolean {
   const nodeEnv = process.env.NODE_ENV ?? 'development';
   return (nodeEnv === 'development' || nodeEnv === 'test') && process.env.LOCAL_DEV_AUTH !== 'false';
+export type DevelopmentRole = 'USER' | 'PROVIDER' | 'ADMIN';
+
+interface DevelopmentLoginResponse {
+  accessToken: string;
+  expiresIn: number;
+  role: DevelopmentRole;
 }
 
 export function getWebBaseUrl(): string {
   return process.env.WEB_BASE_URL?.replace(/\/$/, '') ?? 'http://localhost:3000';
+}
+
+export function isDevelopmentAuthEnabled(): boolean {
+  return process.env.NODE_ENV === 'development' && process.env.DEV_AUTH_ENABLED !== 'false';
 }
 
 export function getWebAuthConfig() {
@@ -34,6 +44,18 @@ export function getWebAuthConfig() {
 
 export function getApiBaseUrl(): string {
   return (process.env.API_BASE_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:4000/v1').replace(/\/$/, '');
+}
+
+export async function requestDevelopmentAccessToken(role: DevelopmentRole): Promise<DevelopmentLoginResponse> {
+  if (!isDevelopmentAuthEnabled()) throw new Error('Development authentication is disabled');
+  const response = await fetch(`${getApiBaseUrl()}/dev-auth/login`, {
+    method: 'POST',
+    cache: 'no-store',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ role }),
+  });
+  if (!response.ok) throw new Error('Unable to create local development session');
+  return (await response.json()) as DevelopmentLoginResponse;
 }
 
 export async function getDiscovery(): Promise<OidcDiscovery> {
