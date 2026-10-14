@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ServiceLocation } from '../discovery/entities/service-location.entity.js';
-import type { VerifiedIdentity } from './auth/token-verifier.js';
+import { LOCAL_DEV_ISSUER, type VerifiedIdentity } from './auth/token-verifier.js';
 import { Favorite } from './entities/favorite.entity.js';
 import { User, UserRole } from './entities/user.entity.js';
 
@@ -15,6 +15,7 @@ export class IdentityService {
   ) {}
 
   async resolveUser(identity: VerifiedIdentity): Promise<User> {
+    const localRole = resolveLocalDevRole(identity);
     await this.users
       .createQueryBuilder()
       .insert()
@@ -25,7 +26,7 @@ export class IdentityService {
         displayName: identity.displayName,
         email: identity.email,
         avatarUrl: identity.avatarUrl,
-        role: UserRole.USER,
+        role: localRole ?? UserRole.USER,
       })
       .orIgnore()
       .execute();
@@ -36,6 +37,7 @@ export class IdentityService {
         displayName: identity.displayName,
         email: identity.email,
         avatarUrl: identity.avatarUrl,
+        ...(localRole ? { role: localRole } : {}),
       },
     );
 
@@ -89,4 +91,11 @@ export class IdentityService {
     await this.favorites.delete({ userId, serviceLocationId: placeId });
     return { placeId, saved: false };
   }
+}
+
+function resolveLocalDevRole(identity: VerifiedIdentity): UserRole | null {
+  if (identity.issuer !== LOCAL_DEV_ISSUER) return null;
+  if (identity.subject === 'local-admin') return UserRole.ADMIN;
+  if (identity.subject === 'local-provider') return UserRole.PROVIDER;
+  return UserRole.USER;
 }
