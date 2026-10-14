@@ -5,6 +5,7 @@
   "packageManager": "pnpm@12.11.2",
   "engines": { "node": ">=24.0.0" },
   "scripts": {
+    "setup:local": "docker compose up -d && pnpm install --frozen-lockfile && pnpm --filter @nearfind/api migration:run && pnpm --filter @nearfind/api db:seed",
     "dev": "turbo dev",
     "build": "turbo build",
     "lint": "turbo lint",
