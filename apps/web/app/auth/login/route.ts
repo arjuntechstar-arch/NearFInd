@@ -13,7 +13,7 @@ import {
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
-    if (isLocalDevAuthEnabled() && (!process.env.OIDC_WEB_ISSUER_URL || !process.env.OIDC_WEB_CLIENT_ID)) {
+    if (isLocalDevAuthEnabled()) {
       const role = request.nextUrl.searchParams.get('role');
       const response = NextResponse.redirect(new URL('/', getWebBaseUrl()));
       setAccessTokenCookie(response, createLocalDevToken(role), 86_400);
