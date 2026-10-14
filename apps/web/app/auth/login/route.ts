@@ -1,8 +1,25 @@
-import { NextResponse } from 'next/server';
-import { createPkceChallenge, generateOpaqueValue, getDiscovery, getWebAuthConfig, setLoginCookies } from '../../../lib/server-auth';
+import { NextResponse, type NextRequest } from 'next/server';
+import {
+  createLocalDevToken,
+  createPkceChallenge,
+  generateOpaqueValue,
+  getDiscovery,
+  getWebAuthConfig,
+  getWebBaseUrl,
+  isLocalDevAuthEnabled,
+  setAccessTokenCookie,
+  setLoginCookies,
+} from '../../../lib/server-auth';
 
-export async function GET(): Promise<NextResponse> {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
+    if (isLocalDevAuthEnabled() && (!process.env.OIDC_WEB_ISSUER_URL || !process.env.OIDC_WEB_CLIENT_ID)) {
+      const role = request.nextUrl.searchParams.get('role');
+      const response = NextResponse.redirect(new URL('/', getWebBaseUrl()));
+      setAccessTokenCookie(response, createLocalDevToken(role), 86_400);
+      return response;
+    }
+
     const config = getWebAuthConfig();
     const discovery = await getDiscovery();
     const state = generateOpaqueValue();
